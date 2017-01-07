@@ -6,12 +6,33 @@
 </div>
 <div class="container-fluid">
   <hr>
-  <ul>
-    {% for server in servers %}
-        <li>{{ server.hostname }}</li>
-    {% endfor %}
-</ul>
+
+<div class="widget-box">
+  <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+    <h5>Data table</h5>
+  </div>
+  <div class="widget-content nopadding">
+    <table class="table table-bordered data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hostname</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for server in servers %}
+        <tr>
+          <td>{{ server.id}}</td>
+          <td>{{ server.hostname }}</td>
+          <td>{{ server.type }}</td>
+        </tr>
+      </tbody>
+        {% endfor %}
+    </table>
       </div>
-      </div>
+    </div>
+    </div>
+</div>
 
 {{ include('footer.html.twig') }}

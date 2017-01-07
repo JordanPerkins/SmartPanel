@@ -24,3 +24,7 @@ login:
 servers:
     path: /servers
     defaults:  { _controller: AppBundle:Server:list }
+
+view_servers:
+    path: /servers/{page}
+    defaults:  { _controller: AppBundle:Server:view }
