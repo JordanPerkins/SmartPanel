@@ -1,0 +1,26 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+logout:
+    path: /logout
+
+profile:
+    path:  /profile
+    defaults:  { _controller: AppBundle:Default:profile }
+
+home:
+    path: /
+    defaults:  { _controller: AppBundle:Default:index }
+
+password:
+    path: /password
+    defaults:  { _controller: AppBundle:Default:password }
+
+login:
+    path: /login
+    defaults:  { _controller: AppBundle:Security:login }
+
+servers:
+    path: /servers
+    defaults:  { _controller: AppBundle:Server:list }
