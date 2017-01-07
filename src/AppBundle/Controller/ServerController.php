@@ -21,7 +21,7 @@ class ServerController extends Controller
 
       $servers = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
-        ->findAllByID($user->getId());
+        ->findAllByUID($user->getId());
 
         if (!$servers) {
         throw $this->createNotFoundException(
@@ -32,7 +32,7 @@ class ServerController extends Controller
         // replace this example code with whatever you need
         return $this->render('server/list.html.twig', [
             'page_title' => 'My Servers',
-            'servers' => $servers->getResult()
+            'servers' => $servers
         ]);
     }
 
