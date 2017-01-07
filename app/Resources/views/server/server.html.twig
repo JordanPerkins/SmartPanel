@@ -1,0 +1,17 @@
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 3 }) }}
+<div id="content">
+<div id="content-header">
+  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="servers" class="tip-bottom">Virtual Servers</a> <a href="#" class="tip-bottom">{{ server.hostname }}</a> </div>
+  <h1>{{ server.hostname }}</h1>
+</div>
+<div class="container-fluid">
+  <hr>
+
+<div class="widget-box">
+
+      </div>
+    </div>
+    </div>
+</div>
+
+{{ include('footer.html.twig') }}

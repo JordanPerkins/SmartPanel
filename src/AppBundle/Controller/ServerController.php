@@ -16,7 +16,7 @@ use AppBundle\Entity\Server;
 class ServerController extends Controller
 {
 
-    public function listAction(Request $request, UserInterface $user)
+    public function listAction(UserInterface $user)
     {
 
       $servers = $this->getDoctrine()
@@ -33,6 +33,29 @@ class ServerController extends Controller
         return $this->render('server/list.html.twig', [
             'page_title' => 'My Servers',
             'servers' => $servers
+        ]);
+    }
+
+    public function viewAction($page, UserInterface $user)
+    {
+
+      $server = $this->getDoctrine()
+        ->getRepository('AppBundle:Server')
+        ->findByID($page);
+
+        if (!$server) {
+          throw $this->createNotFoundException(
+            'No server found'
+          );
+        } elseif($user->getId() != $server->getUID()) {
+          throw $this->createNotFoundException(
+            'Server does not belong to the user'
+          );
+        }
+        // replace this example code with whatever you need
+        return $this->render('server/server.html.twig', [
+            'page_title' => 'Manage Server',
+            'server' => $server
         ]);
     }
 
