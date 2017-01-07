@@ -12,15 +12,22 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Form\Model\Credentials;
+use AppBundle\Entity\Server;
 
 class DefaultController extends Controller
 {
 
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, UserInterface $user)
     {
+
+      $server_count = count($this->getDoctrine()
+        ->getRepository('AppBundle:Server')
+        ->findAllByUID($user->getId()));
+
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
-            'page_title' => 'Dashboard'
+            'page_title' => 'Dashboard',
+            'server_count' => $server_count
         ]);
     }
 
