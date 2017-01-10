@@ -9,6 +9,14 @@ profile:
     path:  /profile
     defaults:  { _controller: AppBundle:Default:profile }
 
+reset:
+    path:  /reset
+    defaults:  { _controller: AppBundle:Security:reset }
+
+update:
+    path:  /reset/{id}/{hash}
+    defaults:  { _controller: AppBundle:Security:update }
+
 home:
     path: /
     defaults:  { _controller: AppBundle:Default:index }

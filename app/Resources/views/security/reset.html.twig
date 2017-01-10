@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <title>{{ page_title }} - SmartPanel :: VPS Panel</title><meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/bootstrap-responsive.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('css/matrix-login.css') }}" />
+        <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
+
+    </head>
+    <body>
+
+                <div id="loginbox">
+                    {{ form_start(form, {'attr': {'class': 'form-vertical', 'id': 'loginform'}}) }}
+        				 <p class="normal_text">Enter your username below and we will send you instructions on how to recover your password.</p>
+                        <div class="control-group">
+                            <div class="controls">
+                                <div class="main_input_box">
+                                    <span class="add-on bg_lg"><i class="icon-user"> </i></span>{{ form_widget(form.username, {'attr': {'placeholder': 'Username'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <span class="pull-left"><a href="login" class="flip-link btn btn-info" id="to-recover">Login</a></span>
+                            <span class="pull-right">{{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}</span>
+                        </div>
+                     {{ form_end(form) }}
+                </div>
+
+    </body>
+
+</html>
