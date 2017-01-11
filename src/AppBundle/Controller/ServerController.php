@@ -56,10 +56,15 @@ class ServerController extends Controller
           throw $this->createNotFoundException('Server does not belong to the user');
       }
 
+      $node = $this->getDoctrine()
+        ->getRepository('AppBundle:Node')
+        ->findByID($server->getNid());
+
         // Render the page, passing the information as the server variable.
         return $this->render('server/server.html.twig', [
             'page_title' => 'Manage Server',
-            'server' => $server
+            'server' => $server,
+            'node' => $node->checkNode()
         ]);
 
     }

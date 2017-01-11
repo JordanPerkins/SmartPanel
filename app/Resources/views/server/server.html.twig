@@ -7,6 +7,7 @@
 <div class="container-fluid">
   <hr>
 
+  {% if node %}
   <div class="row-fluid">
     <div class="span6">
     <div class="widget-box">
@@ -97,6 +98,9 @@
             </div>
           </div>
         </div>
+  {% else %}
+  {{ include('notify.html.twig', { 'title': "Error", 'text': "Error communicating with host node.", image: "/img/demo/envelope.png" }) }}
+  {% endif %}
 </div>
 
 {{ include('footer.html.twig') }}
