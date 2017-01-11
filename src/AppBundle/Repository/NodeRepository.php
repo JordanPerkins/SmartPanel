@@ -7,7 +7,7 @@ namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class ServerRepository extends EntityRepository
+class NodeRepository extends EntityRepository
 {
 
   /* This will find a particular node by node ID.
