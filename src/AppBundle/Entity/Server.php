@@ -1,6 +1,9 @@
 <?php
-
-// src/AppBundle/Entity/User.php
+/* Server entity created by Jordan Perkins
+ * This is used to store individual user virtual servers
+ * There are no special functions, just all the entities
+ * and all getter/setter methods.
+*/
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

@@ -1,6 +1,9 @@
 <?php
 
-// src/AppBundle/Entity/User.php
+/* Entity used to store password reset info
+ * Created by Jordan Perkins
+ * There are no special methods, just getter/setter.
+*/
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

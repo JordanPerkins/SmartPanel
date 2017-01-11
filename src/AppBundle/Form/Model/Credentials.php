@@ -1,5 +1,9 @@
 <?php
-
+/* This class is form control for allowing password updates.
+ * Created by Jordan Perkins
+ * It is simply used as temporary storage for the form.
+ * The Validator is used alongside it.
+*/
 namespace AppBundle\Form\Model;
 
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
@@ -42,6 +46,7 @@ class Credentials
      /**
       * @Assert\IsTrue(message = "Your passwords did not match.")
       */
+      // Function that is validated to ensure the two passwords the user entered match.
       public function isPasswordMatching()
       {
         return $this->newPassword == $this->verifyPassword;

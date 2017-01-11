@@ -1,5 +1,7 @@
 <?php
-
+/* The controller for the server pages
+ * Created by Jordan Perkins
+*/
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,47 +18,50 @@ use AppBundle\Entity\Server;
 class ServerController extends Controller
 {
 
+    // Used on route /servers to display user's virtual servers
     public function listAction(UserInterface $user)
     {
 
+      // Get servers using the entity repository using the active user's ID
       $servers = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
         ->findAllByUID($user->getId());
 
-        if (!$servers) {
-        throw $this->createNotFoundException(
-            'No active servers'
-        );
+      // No active servers
+      if (!$servers) {
+        throw $this->createNotFoundException('No active servers');
+      }
 
-        }
-        // replace this example code with whatever you need
-        return $this->render('server/list.html.twig', [
-            'page_title' => 'My Servers',
-            'servers' => $servers
-        ]);
+      // Render page returning server list as the servers variable
+      return $this->render('server/list.html.twig', [
+                            'page_title' => 'My Servers',
+                            'servers' => $servers
+                          ]);
     }
 
+    // Used on route /servers/<id> to view a specific server.
     public function viewAction($page, UserInterface $user)
     {
 
+      // Get the specific server using the entity repository.
       $server = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
         ->findByID($page);
 
-        if (!$server) {
-          throw $this->createNotFoundException(
-            'No server found'
-          );
-        } elseif($user->getId() != $server->getUID()) {
-          throw $this->createNotFoundException(
-            'Server does not belong to the user'
-          );
-        }
-        // replace this example code with whatever you need
+      // Server does not exist
+      if (!$server) {
+          throw $this->createNotFoundException('No server found');
+      // Server does not belong to the user
+      } elseif($user->getId() != $server->getUID()) {
+          throw $this->createNotFoundException('Server does not belong to the user');
+      }
+
+        // Render the page, passing the information as the server variable.
         return $this->render('server/server.html.twig', [
             'page_title' => 'Manage Server',
             'server' => $server
         ]);
+
     }
 
 }

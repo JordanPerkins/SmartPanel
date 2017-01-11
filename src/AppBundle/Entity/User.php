@@ -1,6 +1,5 @@
 <?php
-
-// src/AppBundle/Entity/User.php
+// User class taken from Symfony documentation.
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
