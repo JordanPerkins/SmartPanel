@@ -29,6 +29,11 @@ class Server
     private $uid;
 
     /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $nid;
+
+    /**
      * @ORM\Column(type="string", length=64)
      */
     private $hostname;
@@ -119,5 +124,29 @@ class Server
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set nid
+     *
+     * @param integer $nid
+     *
+     * @return Server
+     */
+    public function setNid($nid)
+    {
+        $this->nid = $nid;
+
+        return $this;
+    }
+
+    /**
+     * Get nid
+     *
+     * @return integer
+     */
+    public function getNid()
+    {
+        return $this->nid;
     }
 }
