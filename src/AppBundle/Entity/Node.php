@@ -46,8 +46,8 @@ class Node
     public function command($cmd, $data) {
 
         $postfields = array();
-        $postfields["username"] = $this->getUsername();
-        $postfields["password"] = $this->getPassword();
+        $postfields["user"] = $this->getUsername();
+        $postfields["pass"] = $this->getPassword();
         if ($cmd) {
           $postfields["cmd"] = $cmd;
           $postfields = array_merge($postfields, $data);
@@ -72,7 +72,7 @@ class Node
     // Function to check if node is working
     public function checkNode() {
       $data = $this->command(false, NULL);
-      if ($data["error"] == 0) {
+      if (isset($data["error"]) && $data["error"] == 0) {
         return true;
       } else {
         return false;
