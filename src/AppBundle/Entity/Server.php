@@ -43,6 +43,14 @@ class Server
      * @Assert\Choice({"openvz", "kvm"})
      */
     private $type;
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $ctid;
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $uuid;
 
     /**
      * Get id
@@ -149,4 +157,53 @@ class Server
     {
         return $this->nid;
     }
+
+    /**
+     * Set ctid
+     *
+     * @param string $ctid
+     *
+     * @return Server
+     */
+    public function setCtid($ctid)
+    {
+        $this->ctid = $ctid;
+
+        return $this;
+    }
+
+    /**
+     * Get ctid
+     *
+     * @return string
+     */
+    public function getCtid()
+    {
+        return $this->ctid;
+    }
+
+    /**
+     * Set uuid
+     *
+     * @param string $uuid
+     *
+     * @return Server
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
 }

@@ -60,11 +60,17 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
 
+      $status = $node->command("status", $server->getType(), [
+            'ctid' => $server->getCtid(),
+          ]);
+
         // Render the page, passing the information as the server variable.
         return $this->render('server/server.html.twig', [
             'page_title' => 'Manage Server',
             'server' => $server,
-            'node' => $node->checkNode()
+            'node'=> $node->getName(),
+            'error' => $status["error"],
+            'status' => $status["data"]
         ]);
 
     }

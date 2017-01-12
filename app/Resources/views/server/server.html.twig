@@ -7,7 +7,7 @@
 <div class="container-fluid">
   <hr>
 
-  {% if node %}
+  {% if error == "0" %}
   <div class="row-fluid">
     <div class="span6">
     <div class="widget-box">
@@ -19,7 +19,13 @@
              <tbody>
                <tr>
                  <td>Status</td>
-                 <td>Online</td>
+                 <td>
+                 {% if status.status == "running" %}
+                   <span class="label label-success">Online</span>
+                {% else %}
+                   <span class="label label-important">Offline</span>
+                {% endif %}
+                 </td>
                </tr>
                <tr>
                  <td>Type</td>
@@ -38,7 +44,7 @@
                </tr>
                <tr>
                  <td>Node</td>
-                 <td>NL1</td>
+                 <td>{{ node }}</td>
                </tr>
              </tbody>
            </table>
@@ -59,7 +65,7 @@
                </tr>
                <tr>
                <td>HDD</td>
-               <td><div class="progress progress-striped"><div class="bar" style="width: 60%;">RAM 50%</div></div></td>
+               <td><div class="progress progress-striped"><div class="bar" style="width: 60%;">{{ status.disk }}</div></div></td>
                </tr>
                <tr>
                <td>Bandwidth</td>
@@ -67,7 +73,7 @@
                </tr>
                <tr>
                  <td>Load Average</td>
-                 <td>0.0 0.0 0.0</td>
+                 <td>{% if status.status == "running" %} {{ status.loadavg }} {% endif %}</td>
                </tr>
              </tbody>
            </table>

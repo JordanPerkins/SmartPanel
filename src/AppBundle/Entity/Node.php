@@ -43,15 +43,14 @@ class Node
     private $password;
 
     // Function for sending commands to the node.
-    public function command($cmd, $data) {
+    public function command($cmd, $type, $data) {
 
         $postfields = array();
         $postfields["user"] = $this->getUsername();
         $postfields["pass"] = $this->getPassword();
-        if ($cmd) {
-          $postfields["cmd"] = $cmd;
-          $postfields = array_merge($postfields, $data);
-        }
+        $postfields["cmd"] = $cmd;
+        $postfields["type"] = $type;
+        $postfields = array_merge($postfields, $data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://".$this->getIp().":8471/command.php");
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -68,18 +67,6 @@ class Node
         return $response;
 
     }
-
-    // Function to check if node is working
-    public function checkNode() {
-      $data = $this->command(false, NULL);
-      if (isset($data["error"]) && $data["error"] == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-
 
     /**
      * Get id
