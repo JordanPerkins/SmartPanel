@@ -70,7 +70,8 @@ class ServerController extends Controller
             'server' => $server,
             'node'=> $node->getName(),
             'error' => $status["error"],
-            'status' => $status["data"]
+            'status' => $status["data"],
+            'percent'=> $server->getPercent($status["data"])
         ]);
 
     }

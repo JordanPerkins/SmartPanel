@@ -36,7 +36,7 @@
                </tr>
                <tr>
                  <td>Main IP</td>
-                 <td>127.0.0.1</td>
+                 <td>{{ server.ip }}</td>
                </tr>
                <tr>
                  <td>OS</td>
@@ -59,21 +59,25 @@
          <div class="widget-content nopadding">
            <table class="table table-bordered table-striped">
              <tbody>
+             <tr>
+               <td>Load Average</td>
+               <td>{{ status.loadavg }}</td>
+             </tr>
                <tr>
                  <td class="span3">RAM</td>
-                 <td><div class="progress progress-striped"><div class="bar" style="width: 60%;">RAM 50%</div></div></td>
+                 <td><div class="progress progress-striped"><div class="bar" style="width: {{ percent.ram }}%;">{{ percent.ram }}%</div></div>
+                 <span class="badge">{{ status.ram }} MB / {{ server.ram }} MB</span>
+                 </td>
                </tr>
                <tr>
                <td>HDD</td>
-               <td><div class="progress progress-striped"><div class="bar" style="width: 60%;">{{ status.disk }}</div></div></td>
+               <td><div class="progress progress-striped"><div class="bar" style="width: {{ percent.disk }}%;">{{ percent.disk }}%</div></div>
+               <span class="badge">{{ status.disk }} GB / {{ server.disk }} GB</span>
+               </td>
                </tr>
                <tr>
                <td>Bandwidth</td>
                <td><div class="progress progress-striped"><div class="bar" style="width: 60%;">RAM 50%</div></div></td>
-               </tr>
-               <tr>
-                 <td>Load Average</td>
-                 <td>{% if status.status == "running" %} {{ status.loadavg }} {% endif %}</td>
                </tr>
              </tbody>
            </table>

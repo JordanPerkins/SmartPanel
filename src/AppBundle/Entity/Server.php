@@ -1,8 +1,8 @@
 <?php
 /* Server entity created by Jordan Perkins
  * This is used to store individual user virtual servers
- * There are no special functions, just all the entities
- * and all getter/setter methods.
+ * There is a function which returns the percentage resource usage
+ * based on the live values in the input.
 */
 namespace AppBundle\Entity;
 
@@ -51,6 +51,35 @@ class Server
      * @ORM\Column(type="string", length=64)
      */
     private $uuid;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $disk;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $ram;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $bandwidth;
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $ip;
+
+    // Percentage Usage calculator
+    public function getPercent($status)
+    {
+        $result = array();
+        if ($this->getRam() == 0 || $this->getDisk() == 0) {
+          return false;
+        } else {
+          $result["ram"] = round($status["ram"]*100 / $this->getRam(), 0);
+          $result["disk"] = round($status["disk"]*100 / $this->getDisk(), 0);
+          return $result;
+        }
+    }
 
     /**
      * Get id
@@ -206,4 +235,100 @@ class Server
         return $this->uuid;
     }
 
+
+    /**
+     * Set disk
+     *
+     * @param integer $disk
+     *
+     * @return Server
+     */
+    public function setDisk($disk)
+    {
+        $this->disk = $disk;
+
+        return $this;
+    }
+
+    /**
+     * Get disk
+     *
+     * @return integer
+     */
+    public function getDisk()
+    {
+        return $this->disk;
+    }
+
+    /**
+     * Set ram
+     *
+     * @param integer $ram
+     *
+     * @return Server
+     */
+    public function setRam($ram)
+    {
+        $this->ram = $ram;
+
+        return $this;
+    }
+
+    /**
+     * Get ram
+     *
+     * @return integer
+     */
+    public function getRam()
+    {
+        return $this->ram;
+    }
+
+    /**
+     * Set bandwidth
+     *
+     * @param integer $bandwidth
+     *
+     * @return Server
+     */
+    public function setBandwidth($bandwidth)
+    {
+        $this->bandwidth = $bandwidth;
+
+        return $this;
+    }
+
+    /**
+     * Get bandwidth
+     *
+     * @return integer
+     */
+    public function getBandwidth()
+    {
+        return $this->bandwidth;
+    }
+
+    /**
+     * Set ip
+     *
+     * @param string $ip
+     *
+     * @return Server
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    /**
+     * Get ip
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
 }
