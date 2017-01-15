@@ -28,7 +28,7 @@
         <tr>
           <td>{{ server.id}}</td>
           <td>{{ server.hostname }}</td>
-          <td>127.0.0.1</td>
+          <td>{{ server.ip }}</td>
           <td>
           {% if server.type == "openvz" %} <img src="{{ asset('img/vz.png') }}" alt="OpenVZ" height="25" width="25"> OpenVZ {% endif %}
           {% if server.type == "kvm" %} <img src="{{ asset('img/kvm.png') }}" alt="KVM" height="25" width="25"> KVM {% endif %}

@@ -43,7 +43,7 @@ class SecurityController extends Controller
      $form->handleRequest($request);
 
      // Check for submissions
-     if ($form->isSubmitted()) {
+     if ($form->isSubmitted() && $form->isValid()) {
 
        // Get information on the user with username submitted.
        $user = $this->getDoctrine()
