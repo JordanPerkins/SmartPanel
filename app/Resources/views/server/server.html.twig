@@ -1,13 +1,18 @@
 {{ include('header.html.twig', { 'page_title': page_title, 'page_id': 3 }) }}
+<script src="{{ asset('js/control.js') }}"></script>
+<script src="{{ asset('js/matrix.popover.js') }}"></script>
+
 <div id="content">
 <div id="content-header">
-  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="/servers" class="tip-bottom">Virtual Servers</a> <a href="#" class="tip-bottom">{{ server.hostname }}</a> </div>
-  <h1>{{ server.hostname }}</h1>
+  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="/servers" class="tip-bottom">Virtual Servers</a> <a href="#" class="tip-bottom"><div class="hostname"></div></a> </div>
+  <h1 class="hostname"></h1>
 </div>
+<img src="{{ asset('img/cross.png') }}" style="display: none;">
+<img src="{{ asset('img/tick.png') }}" style="display: none;">
+<img src="{{ asset('img/spinner.gif') }}" style="display: none;">
 <div class="container-fluid">
   <hr>
 
-  {% if error == "0" %}
   <div class="row-fluid">
     <div class="span6">
     <div class="widget-box">
@@ -20,11 +25,7 @@
                <tr>
                  <td>Status</td>
                  <td>
-                 {% if status.status == "running" %}
-                   <span class="label label-success">Online</span>
-                {% else %}
-                   <span class="label label-important">Offline</span>
-                {% endif %}
+                   <span class="label" id="power"></span>
                  </td>
                </tr>
                <tr>
@@ -36,7 +37,7 @@
                </tr>
                <tr>
                  <td>Main IP</td>
-                 <td>{{ server.ip }}</td>
+                 <td><div id="ip"></div></td>
                </tr>
                <tr>
                  <td>OS</td>
@@ -44,7 +45,7 @@
                </tr>
                <tr>
                  <td>Node</td>
-                 <td>{{ node }}</td>
+                 <td><div id="node"></div></td>
                </tr>
              </tbody>
            </table>
@@ -61,18 +62,18 @@
              <tbody>
              <tr>
                <td>Load Average</td>
-               <td>{{ status.loadavg }}</td>
+               <td><div id="loadavg"></div></td>
              </tr>
                <tr>
                  <td class="span3">RAM</td>
-                 <td><div class="progress progress-striped"><div class="bar" style="width: {{ percent.ram }}%;">{{ percent.ram }}%</div></div>
-                 <span class="badge">{{ status.ram }} MB / {{ server.ram }} MB</span>
+                 <td><div class="progress progress-striped active"><div id="ram_bar" class="bar" style="width: 20%;"></div></div>
+                 <span class="badge"><span id="ram"></span> MB / {{ server.ram }} MB</span>
                  </td>
                </tr>
                <tr>
                <td>HDD</td>
-               <td><div class="progress progress-striped"><div class="bar" style="width: {{ percent.disk }}%;">{{ percent.disk }}%</div></div>
-               <span class="badge">{{ status.disk }} GB / {{ server.disk }} GB</span>
+               <td><div class="progress progress-striped active"><div id="disk_bar" class="bar" style="width: 20%;"></div></div>
+               <span class="badge"><span id="disk"></span> GB / {{ server.disk }} GB</span>
                </td>
                </tr>
                <tr>
@@ -94,11 +95,25 @@
           </div>
           <div class="widget-content tab-content">
             <div id="tab1" class="tab-pane active">
+            {{ form_start(form, {'attr': {'id': 'actionform'}}) }}
+            {{ form_widget(form.action) }}
+            {{ form_widget(form.save, {'attr': {'style': 'display: none;'}}) }}
+            {{ form_end(form) }}
             <ul class="quick-actions">
-              <li class="bg_lg"> <a href="buttons.html"> <i class="icon-play"></i> Start</a> </li>
-              <li class="bg_lr"> <a href="interface.html"> <i class="icon-stop"></i>Shutdown</a> </li>
-              <li class="bg_lb"> <a href="calendar.html"> <i class="icon-refresh"></i> Reboot</a> </li>
+              <li class="bg_lg"> <a class="action" href="javascript:void(0);" data-value="start"> <i class="icon-play"></i> Start</a> </li>
+              <li class="bg_lr"> <a href="#shutdown" data-toggle="modal"><i class="icon-stop"></i>Shutdown</a> </li>
+              <li class="bg_lb"> <a onclick="action('restart')" href="javascript:void(0);"> <i class="icon-refresh"></i> Reboot</a> </li>
               </ul>
+              <div id="shutdown" class="modal hide">
+      <div class="modal-header">
+      <button data-dismiss="modal" class="close" type="button">×</button>
+      <h3>Are you sure?</h3>
+      </div>
+      <div class="modal-body">
+      <p>Please confirm you wish to shutdown this virtual server</p>
+      </div>
+      <div class="modal-footer"> <a data-dismiss="modal" data-value="stop" class="action btn btn-primary" href="javascript:void(0);">Confirm</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
+      </div>
             </div>
             <div id="tab2" class="tab-pane">
               <p> waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
@@ -108,9 +123,7 @@
             </div>
           </div>
         </div>
-  {% else %}
-  {{ include('notify.html.twig', { 'title': "Error", 'text': "Error communicating with host node.", image: "/img/demo/envelope.png" }) }}
-  {% endif %}
+        <div id="form_output"></div>
 </div>
 
 {{ include('footer.html.twig') }}

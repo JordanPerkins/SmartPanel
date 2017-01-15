@@ -9,11 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Server;
+use AppBundle\Form\Model\Action;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ServerController extends Controller
 {
@@ -40,7 +40,7 @@ class ServerController extends Controller
     }
 
     // Used on route /servers/<id> to view a specific server.
-    public function viewAction($page, UserInterface $user)
+    public function viewAction($page, UserInterface $user, Request $request)
     {
 
       // Get the specific server using the entity repository.
@@ -60,19 +60,66 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
 
-      $status = $node->command("status", $server->getType(), [
-            'ctid' => $server->getCtid(),
-          ]);
+        $action = new Action();
+        $result = false;
+
+        $form = $this->createFormBuilder($action)
+                ->add('action', HiddenType::class, array('error_bubbling' => true))
+                ->add('save', SubmitType::class, array('label' => "Start Server"))
+                ->getForm();
+
+        $form->handleRequest($request);
+
+        // Check for submission and validate it using Validator.
+        if ($form->isSubmitted()) {
+          if ($form->isValid()) {
+            // Update action entity
+            $action = $form->getData();
+            $result = $action->handle($server, $node);
+          } else {
+            $result = 0;
+          }
+
+         return new Response($result);
+
+       } else {
 
         // Render the page, passing the information as the server variable.
         return $this->render('server/server.html.twig', [
             'page_title' => 'Manage Server',
             'server' => $server,
-            'node'=> $node->getName(),
-            'error' => $status["error"],
-            'status' => $status["data"],
-            'percent'=> $server->getPercent($status["data"])
+            'form' => $form->createView(),
         ]);
+
+      }
+
+    }
+
+    public function jsonAction($page, UserInterface $user) {
+
+      // Get the specific server using the entity repository.
+      $server = $this->getDoctrine()
+        ->getRepository('AppBundle:Server')
+        ->findByID($page);
+
+      // Server does not exist
+      if (!$server) {
+          throw $this->createNotFoundException('No server found');
+      // Server does not belong to the user
+      } elseif($user->getId() != $server->getUID()) {
+          throw $this->createNotFoundException('Server does not belong to the user');
+      }
+
+      $node = $this->getDoctrine()
+        ->getRepository('AppBundle:Node')
+        ->findByID($server->getNid());
+
+      $data = $server->getStatus($node);
+
+      $response = new JsonResponse();
+      $response->setData($data);
+
+      return $response;
 
     }
 

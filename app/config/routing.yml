@@ -36,3 +36,7 @@ servers:
 view_servers:
     path: /servers/{page}
     defaults:  { _controller: AppBundle:Server:view }
+
+json:
+    path: /servers/{page}/json
+    defaults:  { _controller: AppBundle:Server:json }

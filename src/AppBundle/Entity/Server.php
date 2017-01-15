@@ -8,13 +8,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 /**
  * @ORM\Table(name="app_servers")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ServerRepository")
  */
-class Server
+class Server extends Controller
 {
     /**
      * @ORM\Column(type="integer")
@@ -68,18 +69,26 @@ class Server
      */
     private $ip;
 
-    // Percentage Usage calculator
-    public function getPercent($status)
+    // Fetch server status
+    public function getStatus($node)
     {
-        $result = array();
-        if ($this->getRam() == 0 || $this->getDisk() == 0) {
-          return false;
-        } else {
-          $result["ram"] = round($status["ram"]*100 / $this->getRam(), 0);
-          $result["disk"] = round($status["disk"]*100 / $this->getDisk(), 0);
-          return $result;
-        }
+
+      $status = $node->command("status", $this->getType(), [
+              'ctid' => $this->getCtid(),
+            ]);
+
+      if (isset($status["error"]) && $status["error"] == 0) {
+
+        $status["data"]["ram_percent"] = round($status["data"]["ram"]*100 / $this->getRam(), 0);
+        $status["data"]["disk_percent"] = round($status["data"]["disk"]*100 / $this->getDisk(), 0);
+        $status["data"]["ip"] = $this->getIp();
+        $status["data"]["node"] = $node->getName();
+        $status["data"]["hostname"] = $this->getHostname();
+        return $status;
+      } else {
+        return false;
     }
+  }
 
     /**
      * Get id
