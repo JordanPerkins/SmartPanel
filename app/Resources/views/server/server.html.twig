@@ -98,32 +98,56 @@
             {{ form_start(form, {'attr': {'id': 'actionform'}}) }}
             {{ form_widget(form.action) }}
             {{ form_widget(form.save, {'attr': {'style': 'display: none;'}}) }}
-            {{ form_end(form) }}
             <ul class="quick-actions">
               <li class="bg_lg"> <a class="action" href="javascript:void(0);" data-value="start"> <i class="icon-play"></i> Start</a> </li>
               <li class="bg_lr"> <a href="#shutdown" data-toggle="modal"><i class="icon-stop"></i>Shutdown</a> </li>
-              <li class="bg_lb"> <a onclick="action('restart')" href="javascript:void(0);"> <i class="icon-refresh"></i> Reboot</a> </li>
+              <li class="bg_lb"> <a href="#restart" data-toggle="modal"> <i class="icon-refresh"></i> Reboot</a> </li>
               </ul>
               <div id="shutdown" class="modal hide">
-      <div class="modal-header">
-      <button data-dismiss="modal" class="close" type="button">×</button>
-      <h3>Are you sure?</h3>
-      </div>
-      <div class="modal-body">
-      <p>Please confirm you wish to shutdown this virtual server</p>
-      </div>
-      <div class="modal-footer"> <a data-dismiss="modal" data-value="stop" class="action btn btn-primary" href="javascript:void(0);">Confirm</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
-      </div>
+              <div class="modal-header">
+              <button data-dismiss="modal" class="close" type="button">×</button>
+              <h3>Are you sure?</h3>
+              </div>
+              <div class="modal-body">
+              <p>Please confirm you wish to shutdown this virtual server</p>
+              </div>
+              <div class="modal-footer"> <a data-dismiss="modal" data-value="stop" class="action btn btn-primary" href="javascript:void(0);">Confirm</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
+              </div>
+              <div id="restart" class="modal hide">
+              <div class="modal-header">
+              <button data-dismiss="modal" class="close" type="button">×</button>
+              <h3>Are you sure?</h3>
+              </div>
+              <div class="modal-body">
+              <p>Please confirm you wish to restart this virtual server</p>
+              </div>
+              <div class="modal-footer"> <a data-dismiss="modal" data-value="restart" class="action btn btn-primary" href="javascript:void(0);">Confirm</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
+              </div>
             </div>
             <div id="tab2" class="tab-pane">
-              <p> waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
+            <ul class="quick-actions">
+              <li class="bg_ly"> <a href="#hostname" data-toggle="modal"> <i class="icon-tag"></i>Set Hostname</a> </li>
+              <li class="bg_ls"> <a href="#shutdown" data-toggle="modal"><i class="icon-lock"></i>Set Root Password</a> </li>
+              <li class="bg_lo"> <a href="#restart" data-toggle="modal"> <i class="icon-hdd"></i>Reinstall</a> </li>
+              </ul>
+              <div id="hostname" class="modal hide">
+              <div class="modal-header">
+              <button data-dismiss="modal" class="close" type="button">×</button>
+              <h3>Set Hostname</h3>
+              </div>
+              <div class="modal-body">
+              Enter Hostname - May only contain letters, numbers and periods.
+              <br>{{ form_widget(form.value) }}
+              </div>
+              <div class="modal-footer"> <a data-dismiss="modal" data-value="hostname" class="action btn btn-primary" href="javascript:void(0);">Change</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
+              </div>
             </div>
             <div id="tab3" class="tab-pane">
               <p>full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
             </div>
           </div>
         </div>
-        <div id="form_output"></div>
+        {{ form_end(form) }}
 </div>
 
 {{ include('footer.html.twig') }}

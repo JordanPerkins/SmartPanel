@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Server;
 use AppBundle\Form\Model\Action;
@@ -65,6 +66,7 @@ class ServerController extends Controller
 
         $form = $this->createFormBuilder($action)
                 ->add('action', HiddenType::class, array('error_bubbling' => true))
+                ->add('value', TextType::class, array('error_bubbling' => true))
                 ->add('save', SubmitType::class, array('label' => "Start Server"))
                 ->getForm();
 
@@ -76,6 +78,12 @@ class ServerController extends Controller
             // Update action entity
             $action = $form->getData();
             $result = $action->handle($server, $node);
+            if ($action->getAction() == "hostname") {
+              $server->setHostname($action->getValue());
+              $em = $this->getDoctrine()->getManager();
+              $em->persist($server);
+              $em->flush();
+            }
           } else {
             $result = 0;
           }

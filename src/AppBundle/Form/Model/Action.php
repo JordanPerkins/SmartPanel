@@ -11,26 +11,42 @@ class Action
 {
   /**
     * @Assert\Choice(
-    *     choices = { "start", "restart", "stop" },
+    *     choices = { "start", "restart", "stop", "hostname"},
     *     message = "Invalid action."
     * )
     */
      protected $action;
 
+     protected $value;
+
+     /**
+      * @Assert\IsTrue(message = "Validation fail.")
+      */
+      // Function that is validated to ensure that value data is clean.
+      public function isValid()
+      {
+        if ($this->getAction() == "hostname") {
+          return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $this->getValue()) //valid chars check
+           && preg_match("/^.{1,253}$/", $this->getValue()) //overall length check
+           && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $this->getValue())); //length of each label
+        }
+        return true;
+      }
+
+
      // Function for handling panel requests
      public function handle($server, $node) {
 
-       if ($this->getAction() == "start" || $this->getAction() == "stop" || $this->getAction() == "restart") {
-         $result = $node->command($this->getAction(), $server->getType(), [
-               'ctid' => $server->getCtid(),
-             ])["error"];
-         if ($result == 0) {
-           return 1;
-         } else {
-           return 0;
-         }
-       }
-     }
+       $result = $node->command($this->getAction(), $server->getType(), [
+         'ctid' => $server->getCtid(),
+         'value' => $this->getValue(),
+         ])["error"];
+      if ($result == 0) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
 
      // Getter / Setter Methods
      public function setAction($action)
@@ -48,5 +64,17 @@ class Action
      public function getAction()
      {
          return $this->action;
+     }
+
+     public function setValue($value)
+     {
+         $this->value = $value;
+
+         return $this;
+     }
+
+     public function getValue()
+     {
+         return $this->value;
      }
 }
