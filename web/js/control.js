@@ -9,6 +9,8 @@ $(document).ready(function () {
        sticky: true
        });
      $('#form_action').val($(this).data('value'));
+     $('#form_value').val($(".value[data-value="+ $(this).data('value') +"]").val());
+     $('.value').val('');
      $( "#actionform" ).trigger("submit");
    });
 
@@ -54,6 +56,11 @@ function status() {
         } else {
           $("#power").html("Offline");
           $("#power").attr('class','label label-important');
+        }
+        if (result.data.tuntap == 1) {
+          $("#tunon").attr('class','action btn btn-primary active');
+        } else {
+          $("#tunoff").attr('class','action btn btn-primary active');
         }
 	$("#loadavg").html(result.data.loadavg);
 	$("#ram").html(result.data.ram);

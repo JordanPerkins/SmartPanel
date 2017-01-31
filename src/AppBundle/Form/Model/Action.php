@@ -11,7 +11,7 @@ class Action
 {
   /**
     * @Assert\Choice(
-    *     choices = { "start", "restart", "stop", "hostname"},
+    *     choices = { "start", "restart", "stop", "hostname", "password", "tuntap_enable", "tuntap_disable"},
     *     message = "Invalid action."
     * )
     */
@@ -25,7 +25,9 @@ class Action
       // Function that is validated to ensure that value data is clean.
       public function isValid()
       {
-        if ($this->getAction() == "hostname") {
+        if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "''") !== false || strpos($this->getValue(), '"') !== false) {
+          return false;
+        } else if ($this->getAction() == "hostname") {
           return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $this->getValue()) //valid chars check
            && preg_match("/^.{1,253}$/", $this->getValue()) //overall length check
            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $this->getValue())); //length of each label
