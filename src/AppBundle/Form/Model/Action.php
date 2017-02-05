@@ -11,7 +11,7 @@ class Action
 {
   /**
     * @Assert\Choice(
-    *     choices = { "start", "restart", "stop", "hostname", "password", "tuntap_enable", "tuntap_disable"},
+    *     choices = { "start", "restart", "stop", "hostname", "password", "tuntap_enable", "tuntap_disable", "fuse_enable", "fuse_disable"},
     *     message = "Invalid action."
     * )
     */

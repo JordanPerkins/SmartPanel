@@ -59,8 +59,17 @@ function status() {
         }
         if (result.data.tuntap == 1) {
           $("#tunon").attr('class','action btn btn-primary active');
+          $("#tunoff").attr('class','action btn btn-primary');
         } else {
           $("#tunoff").attr('class','action btn btn-primary active');
+          $("#tunon").attr('class','action btn btn-primary');
+        }
+        if (result.data.fuse == 1) {
+          $("#fuseon").attr('class','action btn btn-primary active');
+          $("#fuseoff").attr('class','action btn btn-primary');
+        } else {
+          $("#fuseoff").attr('class','action btn btn-primary active');
+          $("#fuseon").attr('class','action btn btn-primary');
         }
 	$("#loadavg").html(result.data.loadavg);
 	$("#ram").html(result.data.ram);
