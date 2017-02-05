@@ -1,0 +1,64 @@
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 5 }) }}
+<div id="content">
+<div id="content-header">
+  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="tip-bottom">Event Log</a> </div>
+  <h1>Event Log</h1>
+</div>
+<div class="container-fluid">
+  <hr>
+
+<div class="widget-box">
+  <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+    <h5>Event Log</h5>
+  </div>
+  <div class="widget-content nopadding">
+    <table class="table table-bordered data-table">
+      <thead>
+        <tr>
+          <th>Date/Time</th>
+          <th>Service</th>
+          <th>IP</th>
+          <th>Action</th>
+          <th>Value</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.datetime|date("d/m/Y H:i:s") }}</td>
+          <td>{% if event.service == 0 %} n/a {%else%} <a href="/servers/{{ event.service }}">#{{ event.service }}</a> {%endif%}</td>
+          <td>{{ event.ip }}</td>
+          <td>
+          {% if event.action == "login" %}
+          User Login
+          {% elseif event.action == "start" %}
+          Start VM
+          {% elseif event.action == "stop" %}
+          Stop VM
+          {% elseif event.action == "restart" %}
+          Reboot VM
+          {% elseif event.action == "password" %}
+          Set VM Root Password
+          {% elseif event.action == "hostname" %}
+          Set VM Hostname
+          {% elseif event.action == "tuntap_enable" or event.action == "tuntap_disable"  %}
+          Toggle TUN/TAP
+          {% elseif event.action == "fuse_enable" or event.action == "fuse_disable"  %}
+          Toggle FUSE
+          {%endif %}
+
+
+          </td>
+          <td>{{ event.value }}</td>
+          <td>{% if event.result %} Success {%else%} Failed {%endif%}</td>
+        </tr>
+      </tbody>
+        {% endfor %}
+    </table>
+      </div>
+    </div>
+    </div>
+</div>
+
+{{ include('footer.html.twig') }}

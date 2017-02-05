@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Reset;
+use AppBundle\Entity\Log;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -19,10 +20,21 @@ class SecurityController extends Controller
      {
 
        $authenticationUtils = $this->get('security.authentication_utils');
+
        // get the login error if there is one
        $error = $authenticationUtils->getLastAuthenticationError();
        // last username entered by the user
        $lastUsername = $authenticationUtils->getLastUsername();
+
+       if ($error) {
+         $user = $this->getDoctrine()
+           ->getRepository('AppBundle:User')
+           ->findByUsername($lastUsername);
+         $log = new Log("login", new \DateTime("now"), $request->getClientIp(), null, 0, $user->getId(), false);
+         $em = $this->getDoctrine()->getManager();
+         $em->persist($log);
+         $em->flush();
+      }
 
        return $this->render('security/login.html.twig', array(
            'last_username'  => $lastUsername,

@@ -7,3 +7,6 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    authentication.success.listener:
+        class: AppBundle\EventListener\AuthenticationEventListener
+        arguments: ['@router', '@service_container']

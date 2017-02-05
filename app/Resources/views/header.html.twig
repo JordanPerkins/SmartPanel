@@ -19,7 +19,7 @@
 <script src="{{ asset('js/matrix.interface.js') }}"></script>
 <script src="{{ asset('js/matrix.popover.js') }}"></script>
 <script src="{{ asset('js/jquery.gritter.min.js') }}"></script>
-{% if page_id == 3 %}
+{% if page_id == 3 or page_id == 5 %}
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/matrix.tables.js') }}"></script>
 {% endif %}
@@ -60,6 +60,7 @@
     <li {% if page_id == 1 %} class="active" {% endif %}><a href="/"><i class="icon icon-home"></i> <span>Dashboard</span></a> </li>
     <li {% if page_id == 2 %} class="active" {% endif %}><a href="/profile"><i class="icon icon-user"></i> <span>My Profile</span></a> </li>
     <li {% if page_id == 3 %} class="active" {% endif %}><a href="/servers"><i class="icon icon-hdd"></i> <span>Virtual Servers</span></a> </li>
+    <li {% if page_id == 5 %} class="active" {% endif %}><a href="/logs"><i class="icon icon-book"></i> <span>Event Log</span></a> </li>
     <li {% if page_id == 4 %} class="active" {% endif %}><a href="tables.html"><i class="icon icon-globe"></i> <span>DNS</span></a></li>
   </ul>
 </div>

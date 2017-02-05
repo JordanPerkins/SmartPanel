@@ -30,6 +30,7 @@ security:
                 login_path: login
                 check_path: login
                 csrf_token_generator: security.csrf.token_manager
+                success_handler: authentication.success.listener
             provider: db
             logout:
                 path:   /logout

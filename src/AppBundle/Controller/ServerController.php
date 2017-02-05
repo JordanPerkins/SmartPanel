@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Server;
+use AppBundle\Entity\Log;
 use AppBundle\Form\Model\Action;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -77,6 +78,15 @@ class ServerController extends Controller
             // Update action entity
             $action = $form->getData();
             $result = $action->handle($server, $node);
+            //Add to event log
+            if ($action->getAction() == "password") {
+              $log = new Log($action->getAction(), new \DateTime("now"), $request->getClientIp(), null, $server->getId(), $user->getId(), $result);
+            } else {
+                $log = new Log($action->getAction(), new \DateTime("now"), $request->getClientIp(), $action->getValue(), $server->getId(), $user->getId(), $result);
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($log);
+            $em->flush();
             if ($result) {
               if ($action->getAction() == "hostname") {
                 $server->setHostname($action->getValue());
@@ -131,5 +141,26 @@ class ServerController extends Controller
       return $response;
 
     }
+
+    public function logAction(UserInterface $user)
+    {
+
+      // Get logs using the entity repository using the active user's ID
+      $logs = $this->getDoctrine()
+        ->getRepository('AppBundle:Log')
+        ->findAllByID($user->getId());
+
+      // No logs found
+      if (!$logs) {
+        throw $this->createNotFoundException('No active servers');
+      }
+
+      // Render page returning logs
+      return $this->render('server/logs.html.twig', [
+                            'page_title' => 'Event Log',
+                            'events' => $logs
+                          ]);
+
+  }
 
 }
