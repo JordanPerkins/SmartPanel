@@ -58,18 +58,18 @@ function status() {
           $("#power").attr('class','label label-important');
         }
         if (result.data.tuntap == 1) {
-          $("#tunon").attr('class','action btn btn-primary active');
-          $("#tunoff").attr('class','action btn btn-primary');
+          $("#tunon").attr('disabled', true);
+          $("#tunoff").attr('disabled', false);
         } else {
-          $("#tunoff").attr('class','action btn btn-primary active');
-          $("#tunon").attr('class','action btn btn-primary');
+          $("#tunoff").attr('disabled', true);
+          $("#tunon").attr('disabled', false);
         }
         if (result.data.fuse == 1) {
-          $("#fuseon").attr('class','action btn btn-primary active');
-          $("#fuseoff").attr('class','action btn btn-primary');
+          $("#fuseon").attr('disabled', true);
+          $("#fuseoff").attr('disabled', false);
         } else {
-          $("#fuseoff").attr('class','action btn btn-primary active');
-          $("#fuseon").attr('class','action btn btn-primary');
+          $("#fuseoff").attr('disabled', true);
+          $("#fuseon").attr('disabled', false);
         }
 	$("#loadavg").html(result.data.loadavg);
 	$("#ram").html(result.data.ram);

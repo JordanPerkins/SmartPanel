@@ -21,7 +21,7 @@ class AuthenticationEventListener implements AuthenticationSuccessHandlerInterfa
     {
         $this->router = $router;
         $this->container = $container;
-        $this->em = $this->container->get('doctrine')->getEntityManager();
+        $this->em = $this->container->get('doctrine')->getManager();
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
