@@ -9,7 +9,12 @@ $(document).ready(function () {
        sticky: true
        });
      $('#form_action').val($(this).data('value'));
-     $('#form_value').val($(".value[data-value="+ $(this).data('value') +"]").val());
+     if ($(this).data('value') == "mainip") {
+       $('#form_value').val($(this).data('setting'));
+     } else {
+       $('#form_value').val($(".value[data-value="+ $(this).data('value') +"]").val());
+     }
+     console.log($('#form_value').val());
      $('.value').val('');
      $( "#actionform" ).trigger("submit");
    });
@@ -88,6 +93,8 @@ function status() {
 	$("#disk_bar").width(result.data.disk_percent + "%");
   $("#vswap_bar").html(result.data.swap_percent + "%");
   $("#vswap_bar").width(result.data.swap_percent + "%");
+  $(".action[data-value='mainip']").show();
+  $(".action[data-setting='"+ result.data.ip + "']").hide();
 	});});
 	}
 	status();

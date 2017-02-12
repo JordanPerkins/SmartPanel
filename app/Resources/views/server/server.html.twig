@@ -207,7 +207,29 @@
             </div>
           </div>
             <div id="tab3" class="tab-pane">
-              <p>full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
+              <h2>IPv4</h2>
+              <table class="table table-bordered table-striped">
+             <thead>
+               <tr>
+                 <th>IP</th>
+                 <th>Reverse DNS</th>
+                 <th>Main IP</th>
+                 <th>Edit Reverse DNS</th>
+               </tr>
+             </thead>
+             <tbody>
+              {% for ip in ipv4 %}
+               <tr>
+                 <td>{{ ip.ip }}</td>
+                 <td>Change Me</td>
+                 <td>
+                 <a data-dismiss="modal" data-value="mainip" data-setting="{{ ip.ip }}" class="action btn btn-primary" href="javascript:void(0);">Set Main IP</a>
+                 </td>
+                 <td>Button</td>
+               </tr>
+               {% endfor %}
+               </tbody>
+             </table>
             </div>
           </div>
         </div>

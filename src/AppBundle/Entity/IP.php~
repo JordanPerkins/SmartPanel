@@ -1,0 +1,46 @@
+<?php
+/* Template entity created by Jordan Perkins
+ * This is used to store info regarding templates.
+*/
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+/**
+ * @ORM\Table(name="app_ip")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\IPRepository")
+ */
+class IP
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $ip;
+
+    /**
+     * @ORM\Column(type="integer", length=1)
+     */
+    private $version;
+
+    /**
+     * @ORM\Column(type="integer", length=64)
+     */
+    private $block;
+
+    /**
+     * @ORM\Column(type="integer", length=64)
+     */
+    private $sid;
+
+
+
+}

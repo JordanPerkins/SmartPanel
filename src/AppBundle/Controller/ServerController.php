@@ -61,6 +61,10 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Template')
         ->findByType($server->getType());
 
+      $ipv4 = $this->getDoctrine()
+          ->getRepository('AppBundle:IP')
+          ->findBySID($server->getId(), 4);
+
       $node = $this->getDoctrine()
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
@@ -94,6 +98,12 @@ class ServerController extends Controller
             if ($result) {
               if ($action->getAction() == "hostname") {
                 $server->setHostname($action->getValue());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($server);
+                $em->flush();
+              }
+              if ($action->getAction() == "mainip") {
+                $server->setIp($action->getValue());
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($server);
                 $em->flush();
@@ -134,6 +144,7 @@ class ServerController extends Controller
             'server' => $server,
             'form' => $form->createView(),
             'templates' => $template,
+            'ipv4' => $ipv4,
         ]);
 
       }
