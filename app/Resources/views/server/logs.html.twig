@@ -40,6 +40,8 @@
           Reboot VM
           {% elseif event.action == "password" %}
           Set VM Root Password
+          {% elseif event.action == "reinstall" %}
+          Reinstall OS
           {% elseif event.action == "hostname" %}
           Set VM Hostname
           {% elseif event.action == "tuntap_enable" or event.action == "tuntap_disable"  %}
@@ -50,7 +52,16 @@
 
 
           </td>
-          <td>{{ event.value }}</td>
+          <td>
+          {% if event.action == "reinstall" %}
+          {% for template in templates %}
+          {% if template.file == event.value %}
+          {{ template.name }}
+          {% endif %}
+            {% endfor %}
+          {% else %}
+          {{ event.value }}
+          {% endif %}</td>
           <td>{% if event.result %} Success {%else%} Failed {%endif%}</td>
         </tr>
       </tbody>

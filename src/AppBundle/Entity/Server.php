@@ -68,6 +68,22 @@ class Server extends Controller
      * @ORM\Column(type="string", length=30)
      */
     private $ip;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $tuntap;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $fuse;
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $os;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $swap;
 
     // Fetch server status
     public function getStatus($node)
@@ -81,9 +97,13 @@ class Server extends Controller
 
         $status["data"]["ram_percent"] = round($status["data"]["ram"]*100 / $this->getRam(), 0);
         $status["data"]["disk_percent"] = round($status["data"]["disk"]*100 / $this->getDisk(), 0);
+        $status["data"]["swap_percent"] = round($status["data"]["swap"]*100 / $this->getSwap(), 0);
         $status["data"]["ip"] = $this->getIp();
         $status["data"]["node"] = $node->getName();
         $status["data"]["hostname"] = $this->getHostname();
+        $status["data"]["tuntap"] = $this->getTuntap();
+        $status["data"]["fuse"] = $this->getFuse();
+        $status["data"]["os"] = $this->getOs();
         return $status;
       } else {
         return false;
@@ -339,5 +359,101 @@ class Server extends Controller
     public function getIp()
     {
         return $this->ip;
+    }
+
+    /**
+     * Set tuntap
+     *
+     * @param boolean $tuntap
+     *
+     * @return Server
+     */
+    public function setTuntap($tuntap)
+    {
+        $this->tuntap = $tuntap;
+
+        return $this;
+    }
+
+    /**
+     * Get tuntap
+     *
+     * @return boolean
+     */
+    public function getTuntap()
+    {
+        return $this->tuntap;
+    }
+
+    /**
+     * Set fuse
+     *
+     * @param boolean $fuse
+     *
+     * @return Server
+     */
+    public function setFuse($fuse)
+    {
+        $this->fuse = $fuse;
+
+        return $this;
+    }
+
+    /**
+     * Get fuse
+     *
+     * @return boolean
+     */
+    public function getFuse()
+    {
+        return $this->fuse;
+    }
+
+    /**
+     * Set os
+     *
+     * @param string $os
+     *
+     * @return Server
+     */
+    public function setOs($os)
+    {
+        $this->os = $os;
+
+        return $this;
+    }
+
+    /**
+     * Get os
+     *
+     * @return string
+     */
+    public function getOs()
+    {
+        return $this->os;
+    }
+
+    /**
+     * Set swap
+     *
+     * @param integer $swap
+     *
+     * @return Server
+     */
+    public function setSwap($swap)
+    {
+        $this->swap = $swap;
+
+        return $this;
+    }
+
+    /**
+     * Get swap
+     *
+     * @return integer
+     */
+    public function getSwap()
+    {
+        return $this->swap;
     }
 }

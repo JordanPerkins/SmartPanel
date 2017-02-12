@@ -50,9 +50,12 @@ $(document).ready(function () {
 
 function status() {
 			$(function() {$.getJSON(window.location.pathname + "/json",function(result){
-        if (result.data. status == "running") {
+        if (result.data.status == "running") {
           $("#power").html("Online");
           $("#power").attr('class','label label-success');
+        } else if (result.data.status == "suspended") {
+          $("#power").html("Suspended");
+          $("#power").attr('class','label label-inverse');
         } else {
           $("#power").html("Offline");
           $("#power").attr('class','label label-important');
@@ -73,14 +76,18 @@ function status() {
         }
 	$("#loadavg").html(result.data.loadavg);
 	$("#ram").html(result.data.ram);
+	$("#vswap").html(result.data.swap);
 	$("#disk").html(result.data.disk);
 	$("#node").html(result.data.node);
 	$(".hostname").html(result.data.hostname);
 	$("#ip").html(result.data.ip);
+  $("#os").html(result.data.os);
 	$("#ram_bar").html(result.data.ram_percent + "%");
 	$("#ram_bar").width(result.data.ram_percent + "%");
   $("#disk_bar").html(result.data.disk_percent + "%");
 	$("#disk_bar").width(result.data.disk_percent + "%");
+  $("#vswap_bar").html(result.data.swap_percent + "%");
+  $("#vswap_bar").width(result.data.swap_percent + "%");
 	});});
 	}
 	status();

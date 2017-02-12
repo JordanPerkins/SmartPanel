@@ -41,7 +41,7 @@
                </tr>
                <tr>
                  <td>OS</td>
-                 <td>CentOS 6.2</td>
+                 <td><div id="os"></div></td>
                </tr>
                <tr>
                  <td>Node</td>
@@ -69,6 +69,12 @@
                  <td class="span3">RAM</td>
                  <td><div class="progress progress-striped active"><div id="ram_bar" class="bar" style="width: 20%;"></div></div></td>
                  <td><span class="badge"><span id="ram"></span> MB / {{ server.ram }} MB</span>
+                 </td>
+               </tr>
+               <tr>
+                 <td class="span3">VSwap</td>
+                 <td><div class="progress progress-striped active"><div id="vswap_bar" class="bar" style="width: 20%;"></div></div></td>
+                 <td><span class="badge"><span id="vswap"></span> MB / {{ server.ram }} MB</span>
                  </td>
                </tr>
                <tr>
@@ -132,7 +138,7 @@
             <ul class="quick-actions">
               <li class="bg_ly"> <a href="#hostname" data-toggle="modal"> <i class="icon-tag"></i>Set Hostname</a> </li>
               <li class="bg_ls"> <a href="#password" data-toggle="modal"><i class="icon-lock"></i>Set Root Password</a> </li>
-              <li class="bg_lo"> <a href="#restart" data-toggle="modal"> <i class="icon-hdd"></i>Reinstall</a> </li>
+              <li class="bg_lo"> <a href="#reinstall" data-toggle="modal"> <i class="icon-hdd"></i>Reinstall</a> </li>
               </ul>
               <br><br><br><br><br>
               <div class="control-group">
@@ -184,7 +190,22 @@
               </div>
               <div class="modal-footer"> <a data-dismiss="modal" data-value="password" class="action btn btn-primary" href="javascript:void(0);">Change</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
               </div>
+            <div id="reinstall" class="modal hide">
+            <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button">×</button>
+            <h3>Reinstall OS</h3>
             </div>
+            <div class="modal-body">
+            Select OS
+            <br><select class="value" data-value="reinstall">
+            {% for template in templates %}
+            <option value="{{ template.file }}">{{ template.name }}</option>
+            {% endfor %}
+            </select>
+            </div>
+            <div class="modal-footer"> <a data-dismiss="modal" data-value="reinstall" class="action btn btn-primary" href="javascript:void(0);">Reinstall</a> <a data-dismiss="modal" class="btn" href="#">Cancel</a> </div>
+            </div>
+          </div>
             <div id="tab3" class="tab-pane">
               <p>full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
             </div>

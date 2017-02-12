@@ -11,7 +11,7 @@ class Action
 {
   /**
     * @Assert\Choice(
-    *     choices = { "start", "restart", "stop", "hostname", "password", "tuntap_enable", "tuntap_disable", "fuse_enable", "fuse_disable"},
+    *     choices = { "start", "restart", "stop", "hostname", "password", "tuntap_enable", "tuntap_disable", "fuse_enable", "fuse_disable", "reinstall"},
     *     message = "Invalid action."
     * )
     */
@@ -25,7 +25,7 @@ class Action
       // Function that is validated to ensure that value data is clean.
       public function isValid()
       {
-        if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "''") !== false || strpos($this->getValue(), '"') !== false) {
+        if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "'") !== false || strpos($this->getValue(), '"') !== false || strpos($this->getValue(), '\\') !== false || strpos($this->getValue(), '/') !== false) {
           return false;
         } else if ($this->getAction() == "hostname") {
           return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $this->getValue()) //valid chars check

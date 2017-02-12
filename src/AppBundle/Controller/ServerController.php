@@ -57,6 +57,10 @@ class ServerController extends Controller
           throw $this->createNotFoundException('Server does not belong to the user');
       }
 
+      $template = $this->getDoctrine()
+        ->getRepository('AppBundle:Template')
+        ->findByType($server->getType());
+
       $node = $this->getDoctrine()
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
@@ -94,6 +98,27 @@ class ServerController extends Controller
                 $em->persist($server);
                 $em->flush();
               }
+              if ($action->getAction() == "reinstall") {
+                $os = $this->getDoctrine()
+                  ->getRepository('AppBundle:Template')
+                  ->findByFile($action->getValue());
+                $server->setOs($os->getName());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($server);
+                $em->flush();
+              }
+              if ($action->getAction() == "tuntap_enable" || $action->getAction() == "tuntap_disable" || $action->getAction() == "fuse_enable" || $action->getAction() == "fuse_disable") {
+                $info = explode('_', $action->getAction());
+                $method = 'set'.ucfirst($info[0]);
+                if ($info[1] == "enable") {
+                  $server->$method(true);
+                } else {
+                  $server->$method(false);
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($server);
+                $em->flush();
+              }
             }
           } else {
             $result = 0;
@@ -108,6 +133,7 @@ class ServerController extends Controller
             'page_title' => 'Manage Server',
             'server' => $server,
             'form' => $form->createView(),
+            'templates' => $template,
         ]);
 
       }
@@ -150,6 +176,10 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Log')
         ->findAllByID($user->getId());
 
+      $templates = $this->getDoctrine()
+          ->getRepository('AppBundle:Template')
+          ->findAll();
+
       // No logs found
       if (!$logs) {
         throw $this->createNotFoundException('No active servers');
@@ -158,7 +188,8 @@ class ServerController extends Controller
       // Render page returning logs
       return $this->render('server/logs.html.twig', [
                             'page_title' => 'Event Log',
-                            'events' => $logs
+                            'events' => $logs,
+                            'templates' => $templates
                           ]);
 
   }
