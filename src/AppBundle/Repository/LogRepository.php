@@ -22,4 +22,20 @@ class LogRepository extends EntityRepository
     return $results->getResult();
   }
 
+  public function checkRateLimit($id, $limit, $period)
+  {
+    $results = $this->createQueryBuilder('u')
+        ->select('count(u.id)')
+        ->where('u.uid = :id AND TIME_DIFF(:now,u.datetime) <= :diff')
+        ->setParameter('id', $id)
+        ->setParameter('diff', $period)
+        ->setParameter('now', new \DateTime("now"))
+        ->getQuery()
+        ->getSingleScalarResult();
+    if ($results <= $limit) {
+      return true;
+    }
+    return false;
+  }
+
 }

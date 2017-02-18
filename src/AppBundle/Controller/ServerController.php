@@ -12,8 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Server;
-use AppBundle\Entity\Log;
-use AppBundle\Form\Model\Action;
+use AppBundle\Form\Model\OpenVZAction;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ServerController extends Controller
@@ -41,13 +40,13 @@ class ServerController extends Controller
     }
 
     // Used on route /servers/<id> to view a specific server.
-    public function viewAction($page, UserInterface $user, Request $request)
+    public function viewAction($sid, UserInterface $user, Request $request)
     {
 
       // Get the specific server using the entity repository.
       $server = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
-        ->findByID($page);
+        ->findByID($sid);
 
       // Server does not exist
       if (!$server) {
@@ -69,8 +68,10 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
 
-        $action = new Action();
-        $result = false;
+      if ($server->getType() == "openvz") {
+        $action = new OpenVZAction($server, $node, $template, $user, $request);
+        $page = 'server/openvz.html.twig';
+      }
 
         $form = $this->createFormBuilder($action)
                 ->add('action', HiddenType::class, array('error_bubbling' => true))
@@ -82,64 +83,30 @@ class ServerController extends Controller
 
         // Check for submission and validate it using Validator.
         if ($form->isSubmitted()) {
-          if ($form->isValid()) {
+          if ($form->isValid() && $this->getDoctrine()->getRepository('AppBundle:Log')->checkRateLimit($user->getId(), 1, 10)) {
             // Update action entity
             $action = $form->getData();
-            $result = $action->handle($server, $node);
-            //Add to event log
-            if ($action->getAction() == "password") {
-              $log = new Log($action->getAction(), new \DateTime("now"), $request->getClientIp(), null, $server->getId(), $user->getId(), $result);
-            } else {
-                $log = new Log($action->getAction(), new \DateTime("now"), $request->getClientIp(), $action->getValue(), $server->getId(), $user->getId(), $result);
-            }
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($log);
-            $em->flush();
-            if ($result) {
-              if ($action->getAction() == "hostname") {
-                $server->setHostname($action->getValue());
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($server);
-                $em->flush();
-              }
-              if ($action->getAction() == "mainip") {
-                $server->setIp($action->getValue());
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($server);
-                $em->flush();
-              }
-              if ($action->getAction() == "reinstall") {
-                $os = $this->getDoctrine()
-                  ->getRepository('AppBundle:Template')
-                  ->findByFile($action->getValue());
-                $server->setOs($os->getName());
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($server);
-                $em->flush();
-              }
-              if ($action->getAction() == "tuntap_enable" || $action->getAction() == "tuntap_disable" || $action->getAction() == "fuse_enable" || $action->getAction() == "fuse_disable") {
-                $info = explode('_', $action->getAction());
-                $method = 'set'.ucfirst($info[0]);
-                if ($info[1] == "enable") {
-                  $server->$method(true);
-                } else {
-                  $server->$method(false);
-                }
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($server);
-                $em->flush();
-              }
-            }
-          } else {
-            $result = 0;
-          }
+            $result = $action->handle();
 
-         return new Response($result);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($result[1]);
+            $em->flush();
+            if ($result[0] != null) {
+              $em = $this->getDoctrine()->getManager();
+              $em->persist($result[0]);
+              $em->flush();
+              return new Response(1);
+            } else {
+              return new Response(0);
+          }
+        } else {
+          return new Response(0);
+        }
 
        } else {
 
         // Render the page, passing the information as the server variable.
-        return $this->render('server/server.html.twig', [
+        return $this->render($page, [
             'page_title' => 'Manage Server',
             'server' => $server,
             'form' => $form->createView(),
@@ -151,12 +118,12 @@ class ServerController extends Controller
 
     }
 
-    public function jsonAction($page, UserInterface $user) {
+    public function jsonAction($sid, UserInterface $user) {
 
       // Get the specific server using the entity repository.
       $server = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
-        ->findByID($page);
+        ->findByID($sid);
 
       // Server does not exist
       if (!$server) {

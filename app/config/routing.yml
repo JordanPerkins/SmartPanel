@@ -38,9 +38,9 @@ servers:
     defaults:  { _controller: AppBundle:Server:list }
 
 view_servers:
-    path: /servers/{page}
+    path: /servers/{sid}
     defaults:  { _controller: AppBundle:Server:view }
 
 json:
-    path: /servers/{page}/json
+    path: /servers/{sid}/json
     defaults:  { _controller: AppBundle:Server:json }
