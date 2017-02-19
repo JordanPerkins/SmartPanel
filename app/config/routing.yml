@@ -44,3 +44,11 @@ view_servers:
 json:
     path: /servers/{sid}/json
     defaults:  { _controller: AppBundle:Server:json }
+
+settings:
+    path: /admin/settings
+    defaults:  { _controller: AppBundle:Settings:form }
+
+clients:
+    path: /admin/clients
+    defaults:  { _controller: AppBundle:Clients:list }

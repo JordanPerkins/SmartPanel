@@ -1,0 +1,42 @@
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 7, 'link': settings.clientarea_link }) }}
+<div id="content">
+<div id="content-header">
+  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="tip-bottom">Admin</a> <a href="#" class="tip-bottom">Clients</a> <a href="#" class="tip-bottom">List Clients</a> </div>
+  <h1>List Clients</h1>
+</div>
+<div class="container-fluid">
+  <hr>
+
+<div class="widget-box">
+  <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+    <h5>Client List</h5>
+  </div>
+  <div class="widget-content nopadding">
+    <table class="table table-bordered data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in clients %}
+        <tr>
+          <td>{{ client.id }} {% if client.isAdmin == true %} (Admin) {%endif%}</td>
+          <td>{{ client.username }}</td>
+          <td>{{ client.firstname }} {{ client.surname }}</td>
+          <td>{{ client.email }}</td>
+          <td><a href="servers/" class="btn btn-primary"><span class="icon"><i class="icon-pencil"></i></span> Edit</a> <a href="servers/" class="btn btn-primary"><span class="icon"><i class="icon-trash"></i></span> Delete</a></span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+      </div>
+    </div>
+    </div>
+</div>
+
+{{ include('footer.html.twig') }}

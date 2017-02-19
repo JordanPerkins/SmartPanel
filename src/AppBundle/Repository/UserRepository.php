@@ -33,4 +33,12 @@ class UserRepository extends EntityRepository
     return $results->getOneOrNullResult();
   }
 
+  // Fetch all
+  public function findAll()
+  {
+    $results = $this->createQueryBuilder('u')
+        ->getQuery();
+    return $results->getResult();
+  }
+
 }

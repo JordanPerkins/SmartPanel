@@ -22,6 +22,8 @@ class DefaultController extends Controller
     public function indexAction(Request $request, UserInterface $user)
     {
 
+      $settings = $this->get('app.settings')->get();
+
       // Uses the Server entity to fetch server count for display on dashboard.
       $server_count = count($this->getDoctrine()
         ->getRepository('AppBundle:Server')
@@ -30,13 +32,16 @@ class DefaultController extends Controller
         // Render the page, passing on that information.
       return $this->render('default/index.html.twig', [
                             'page_title' => 'Dashboard',
-                            'server_count' => $server_count
+                            'server_count' => $server_count,
+                            'settings' => $settings,
                             ]);
     }
 
     // Applies to the /profile route
     public function profileAction(Request $request, UserInterface $user)
     {
+
+      $settings = $this->get('app.settings')->get();
 
       // Render the form. Error bubbling enabled so errors display at the top, not by the input.
       $form = $this->createFormBuilder($user)
@@ -64,7 +69,8 @@ class DefaultController extends Controller
       return $this->render('default/profile.html.twig', [
                           'page_title' => 'Profile',
                           'form' => $form->createView(),
-                          'submitted' => $form->isSubmitted()
+                          'submitted' => $form->isSubmitted(),
+                          'settings' => $settings
                           ]);
 
     }
@@ -72,6 +78,8 @@ class DefaultController extends Controller
     // Used by the /password route.
     public function passwordAction(Request $request, UserInterface $user)
     {
+
+      $settings = $this->get('app.settings')->get();
 
       // Create a new Form Model object.
       $password = new Credentials();
@@ -106,7 +114,8 @@ class DefaultController extends Controller
       return $this->render('default/password.html.twig', [
                           'page_title' => 'Change Password',
                           'form' => $form->createView(),
-                          'submitted' => $form->isSubmitted()
+                          'submitted' => $form->isSubmitted(),
+                          'settings' => $settings
                           ]);
 
     }

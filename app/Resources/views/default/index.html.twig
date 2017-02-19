@@ -1,6 +1,6 @@
-{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 1 }) }}
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 1, 'link': settings.clientarea_link }) }}
 
-  {{ include('notify.html.twig', { 'title': "Welcome", 'text': "The time is " ~ "now"|date("m/d/Y H:i:s"), image: "img/demo/envelope.png" }) }}
+  {{ include('notify.html.twig', { 'title': "Welcome", 'text': settings.welcome_notification, image: "img/demo/envelope.png" }) }}
 
 <!--main-container-part-->
 <div id="content">

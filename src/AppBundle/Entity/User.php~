@@ -1,6 +1,5 @@
 <?php
-
-// src/AppBundle/Entity/User.php
+// User class taken from Symfony documentation.
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -54,6 +53,11 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=60)
      */
     private $surname;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isAdmin;
 
     public function __construct()
     {

@@ -1,0 +1,88 @@
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 6, 'link': settings.clientarea_link }) }}
+<div id="content">
+<div id="content-header">
+  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="tip-bottom">Admin</a> <a href="/admin/settings" class="tip-bottom">Settings</a> </div>
+  <h1>Settings</h1>
+</div>
+<div class="container-fluid">
+  <hr>
+  {% if app.user.isAdmin == true %}
+  {{ form_start(form) }}
+  <div class="widget-box">
+           <div class="widget-title">
+             <ul class="nav nav-tabs">
+               <li class="active"><a data-toggle="tab" href="#general">General</a></li>
+               <li><a data-toggle="tab" href="#security">Security</a></li>
+               <li><a data-toggle="tab" href="#logging">Logging</a></li>
+             </ul>
+           </div>
+           <div class="widget-content tab-content">
+             <div id="general" class="tab-pane active">
+             <div class="row-fluid">
+               <div class="span6">
+                 <div class="widget-box">
+                   <div class="widget-title"> <span class="icon"> <i class="icon-tag"></i> </span>
+                     <h5>Branding</h5>
+                   </div>
+                   <div class="widget-content"> Make branding customizations below.<hr>
+                   <label>Company name:</label> {{ form_widget(form.company_name) }}
+                   <label>Email from:</label> {{ form_widget(form.email_from) }}
+                   <label>Client Area Link:</label> {{ form_widget(form.clientarea_link) }}
+                   <label>Panel Location:</label> {{ form_widget(form.panel_location) }}
+                   <label>Welcome notification:</label> {{ form_widget(form.welcome_notification) }}
+                   </div>
+                 </div>
+               </div>
+               <div class="span6">
+                 <div class="widget-box">
+                   <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                     <h5>Half Width <code>class=Span6</code></h5>
+                   </div>
+                   <div class="widget-content"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </div>
+                 </div>
+               </div>
+             </div>
+               {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+             </div>
+             <div id="security" class="tab-pane">
+             <div class="row-fluid">
+               <div class="span6">
+                 <div class="widget-box">
+                   <div class="widget-title"> <span class="icon"> <i class="icon-play-circle"></i> </span>
+                     <h5>User Action Rate Limit</h5>
+                   </div>
+                   <div class="widget-content"> Commands/Actions issued on virtual servers by users can be rate limited according to the following settings.<hr>
+                   <label>Commands:</label> {{ form_widget(form.ratelimit_limit) }}
+                   <label>Per (Seconds):</label>{{ form_widget(form.ratelimit_time) }}
+                   </div>
+                 </div>
+               </div>
+               <div class="span6">
+                 <div class="widget-box">
+                   <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                     <h5>Password Reset <code>class=Span6</code></h5>
+                   </div>
+                   <div class="widget-content">
+                   <label>Reset Limit (Hours):</label> {{ form_widget(form.reset_limit) }}
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button>
+             </div>
+             <div id="logging" class="tab-pane">
+               <p>full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
+              <button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button>
+             </div>
+           </div>
+          {{ form_end(form) }}
+          {% else %}
+          You need admin permissions to view this page.
+          {% endif %}
+         </div>
+
+
+
+
+
+{{ include('footer.html.twig') }}

@@ -54,6 +54,11 @@ class User implements UserInterface, \Serializable
      */
     private $surname;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isAdmin;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -186,6 +191,19 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
+
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
+    }
+
 
     /**
      * Get isActive

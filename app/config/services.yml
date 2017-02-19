@@ -10,3 +10,7 @@ services:
     authentication.success.listener:
         class: AppBundle\EventListener\AuthenticationEventListener
         arguments: ['@router', '@service_container']
+
+    app.settings:
+      class:        AppBundle\Controller\SettingsController
+      arguments:    ["@doctrine.orm.entity_manager"]

@@ -46,6 +46,8 @@ class SecurityController extends Controller
    // Used by the /reset route. Handles password resets.
    public function resetAction(Request $request) {
 
+     $settings = $this->get('app.settings')->get();
+
      // Render the form to be used. Takes input of username only.
      $form = $this->createFormBuilder()
          ->add('username', TextType::class, array('error_bubbling' => true))
@@ -73,7 +75,7 @@ class SecurityController extends Controller
          ->checkReset($user->getId());
 
       // If a record exists and it was entered less than 3 hours ago, user is submitting too often.
-      if ($reset_check && (time() - $reset_check->getTime()->getTimestamp()) < 10800) {
+      if ($reset_check && (time() - $reset_check->getTime()->getTimestamp()) < (int)$settings["reset_limit"]*3600) {
         throw $this->createNotFoundException(
             'You can only request a password reset every 3 hours'
         );
@@ -97,7 +99,7 @@ class SecurityController extends Controller
       // Email out the reset link. Template reset.html.twig
       $message = \Swift_Message::newInstance()
             ->setSubject('Reset Password')
-            ->setFrom("panel@budgetnode.com")
+            ->setFrom($settings["email_from"])
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
@@ -107,7 +109,9 @@ class SecurityController extends Controller
                     'id' => $reset->getId(),
                     'firstname' => $user->getFirstname(),
                     'surname' => $user->getSurname(),
-                    'hash' => $hash
+                    'hash' => $hash,
+                    'company' => $settings["company_name"],
+                    'link' => $settings["panel_location"]
                   )
                 ),
                 'text/html'
@@ -127,6 +131,8 @@ class SecurityController extends Controller
   // Used by the /reset/<id>/<hash> route
   public function updateAction($id, $hash) {
 
+    $settings = $this->get('app.settings')->get();
+
     // Find the reset based on the information given.
     $reset = $this->getDoctrine()
       ->getRepository('AppBundle:Reset')
@@ -139,7 +145,7 @@ class SecurityController extends Controller
     } elseif (!$reset->getActive()) {
       $result = 'This link has already been used';
     // Link has expired. Generated more than 3 hours ago.
-    } elseif ((time() - $reset->getTime()->getTimestamp()) > 10800) {
+    } elseif ((time() - $reset->getTime()->getTimestamp()) > (int)$settings["reset_limit"]*3600) {
       $result = 'This link has expired';
     // Link is valid.
     } else {
@@ -169,7 +175,7 @@ class SecurityController extends Controller
       // Email new password - template newpassword.html.twig
       $message = \Swift_Message::newInstance()
             ->setSubject('Reset Password')
-            ->setFrom("panel@budgetnode.com")
+            ->setFrom($settings["email_from"])
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
@@ -178,7 +184,9 @@ class SecurityController extends Controller
                     'username' => $user->getUsername(),
                     'firstname' => $user->getFirstname(),
                     'surname' => $user->getSurname(),
-                    'password' => $randpass
+                    'password' => $randpass,
+                    'company' => $settings["company_name"],
+                    'link' => $settings["panel_location"]
                   )
                 ),
                 'text/html'

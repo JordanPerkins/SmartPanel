@@ -19,9 +19,12 @@
 <script src="{{ asset('js/matrix.interface.js') }}"></script>
 <script src="{{ asset('js/matrix.popover.js') }}"></script>
 <script src="{{ asset('js/jquery.gritter.min.js') }}"></script>
-{% if page_id == 3 or page_id == 5 %}
+{% if page_id == 3 or page_id == 5 or page_id == 7 %}
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/matrix.tables.js') }}"></script>
+{% endif %}
+{% if app.user.isAdmin == true %}
+<script src="{{ asset('js/custom.js') }}"></script>
 {% endif %}
 </head>
 <body>
@@ -44,7 +47,7 @@
         <li><a href="/logout"><i class="icon-signout"></i> Log Out</a></li>
       </ul>
     </li>
-    <li class=""><a title="" href="https://clients.budgetnode.com/"><i class="icon icon-dashboard"></i> <span class="text">Client Area</span></a></li>
+    <li class=""><a title="" href="{{ link }}"><i class="icon icon-dashboard"></i> <span class="text">Client Area</span></a></li>
   </ul>
 </div>
 
@@ -55,12 +58,57 @@
 <!--close-top-serch-->
 
 <!--sidebar-menu-->
-<div id="sidebar"> <a href="#" class="visible-phone"><i class="icon icon-fullscreen"></i>Full width</a>
+<div id="sidebar"> <a href="#" class="visible-phone"><i class="icon icon-fullscreen"></i>View Menu</a>
   <ul>
-    <li {% if page_id == 1 %} class="active" {% endif %}><a href="/"><i class="icon icon-home"></i> <span>Dashboard</span></a> </li>
-    <li {% if page_id == 2 %} class="active" {% endif %}><a href="/profile"><i class="icon icon-user"></i> <span>My Profile</span></a> </li>
-    <li {% if page_id == 3 %} class="active" {% endif %}><a href="/servers"><i class="icon icon-hdd"></i> <span>Virtual Servers</span></a> </li>
-    <li {% if page_id == 5 %} class="active" {% endif %}><a href="/logs"><i class="icon icon-book"></i> <span>Event Log</span></a> </li>
-    <li {% if page_id == 4 %} class="active" {% endif %}><a href="tables.html"><i class="icon icon-globe"></i> <span>DNS</span></a></li>
+    <li class="{% if page_id == 1 %} active {% endif %}"><a href="/"><i class="icon icon-home"></i> <span>Dashboard</span></a> </li>
+    {% if app.user.isAdmin == true %}
+    <li class="title"> <a href="#" id="userlink"><i class="icon icon-user-md"></i> <span>User</span></a></li>
+    {% endif %}
+    <li class="user {% if page_id == 2 %} active {% endif %}"><a href="/profile"><i class="icon icon-user"></i> <span>My Profile</span></a> </li>
+    <li class="user {% if page_id == 3 %} active {% endif %}"><a href="/servers"><i class="icon icon-hdd"></i> <span>Virtual Servers</span></a> </li>
+    <li class="user {% if page_id == 5 %} active {% endif %}"><a href="/logs"><i class="icon icon-book"></i> <span>Event Log</span></a> </li>
+    <li class="user {% if page_id == 4 %} active {% endif %}"><a href="tables.html"><i class="icon icon-globe"></i> <span>DNS</span></a></li>
+    {% if app.user.isAdmin == true %}
+    <li class="title"> <a href="#" id="adminlink"><i class="icon icon-briefcase"></i> <span>Admin</span></a></li>
+    <li class="submenu admin"> <a href="#"><i class="icon icon-group"></i> <span>Clients</span> <span class="label label-important">3</span></a>
+      <ul>
+        <li class="{% if page_id == 7 %} active {% endif %}"><a href="/admin/clients">List Clients</a></li>
+        <li><a href="form-validation.html">Add Client</a></li>
+      </ul>
+    </li>
+        <li class="submenu admin"><a href="#"><i class="icon icon-list-alt"></i> Virtual Servers</a>
+          <ul>
+            <li><a href="form-common.html">List Clients</a></li>
+            <li><a href="form-validation.html">Add Client</a></li>
+          </ul>
+        </li>
+        <li class="submenu admin"><a href="#"><i class="icon icon-random"></i> IP Management</a>
+          <ul>
+            <li><a href="form-common.html">List Clients</a></li>
+            <li><a href="form-validation.html">Add Client</a></li>
+          </ul>
+        </li>
+        <li class="submenu admin"><a href="#"><i class="icon icon-tasks"></i> Nodes</a>
+          <ul>
+            <li><a href="form-common.html">List Clients</a></li>
+            <li><a href="form-validation.html">Add Client</a></li>
+          </ul>
+        </li>
+        <li class="submenu admin"><a href="#"><i class="icon icon-filter"></i> Plans</a>
+          <ul>
+            <li><a href="form-common.html">List Clients</a></li>
+            <li><a href="form-validation.html">Add Client</a></li>
+          </ul>
+        </li>
+        <li class="submenu admin"><a href="#"><i class="icon icon-folder-close"></i> Templates</a>
+          <ul>
+            <li><a href="form-common.html">List Clients</a></li>
+            <li><a href="form-validation.html">Add Client</a></li>
+          </ul>
+        </li>
+        <li class="admin {% if page_id == 6 %} active {% endif %}"><a href="/admin/settings"><i class="icon icon-cogs"></i> Settings</a>
+        </li>
+    {% endif %}
+
   </ul>
 </div>

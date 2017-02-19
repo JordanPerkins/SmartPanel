@@ -22,6 +22,8 @@ class ServerController extends Controller
     public function listAction(UserInterface $user)
     {
 
+      $settings = $this->get('app.settings')->get();
+
       // Get servers using the entity repository using the active user's ID
       $servers = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
@@ -35,6 +37,7 @@ class ServerController extends Controller
       // Render page returning server list as the servers variable
       return $this->render('server/list.html.twig', [
                             'page_title' => 'My Servers',
+                            'settings' => $settings,
                             'servers' => $servers
                           ]);
     }
@@ -42,6 +45,8 @@ class ServerController extends Controller
     // Used on route /servers/<id> to view a specific server.
     public function viewAction($sid, UserInterface $user, Request $request)
     {
+
+      $settings = $this->get('app.settings')->get();
 
       // Get the specific server using the entity repository.
       $server = $this->getDoctrine()
@@ -83,7 +88,7 @@ class ServerController extends Controller
 
         // Check for submission and validate it using Validator.
         if ($form->isSubmitted()) {
-          if ($form->isValid() && $this->getDoctrine()->getRepository('AppBundle:Log')->checkRateLimit($user->getId(), 1, 10)) {
+          if ($form->isValid() && $this->getDoctrine()->getRepository('AppBundle:Log')->checkRateLimit($user->getId(), $settings["ratelimit_limit"], $settings["ratelimit_time"])) {
             // Update action entity
             $action = $form->getData();
             $result = $action->handle();
@@ -112,6 +117,7 @@ class ServerController extends Controller
             'form' => $form->createView(),
             'templates' => $template,
             'ipv4' => $ipv4,
+            'settings' => $settings,
         ]);
 
       }
@@ -149,6 +155,8 @@ class ServerController extends Controller
     public function logAction(UserInterface $user)
     {
 
+      $settings = $this->get('app.settings')->get();
+
       // Get logs using the entity repository using the active user's ID
       $logs = $this->getDoctrine()
         ->getRepository('AppBundle:Log')
@@ -167,7 +175,8 @@ class ServerController extends Controller
       return $this->render('server/logs.html.twig', [
                             'page_title' => 'Event Log',
                             'events' => $logs,
-                            'templates' => $templates
+                            'templates' => $templates,
+                            'settings' => $settings,
                           ]);
 
   }

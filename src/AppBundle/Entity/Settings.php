@@ -31,4 +31,62 @@ class Settings
      */
     private $value;
 
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set setting
+     *
+     * @param string $setting
+     *
+     * @return Settings
+     */
+    public function setSetting($setting)
+    {
+        $this->setting = $setting;
+
+        return $this;
+    }
+
+    /**
+     * Get setting
+     *
+     * @return string
+     */
+    public function getSetting()
+    {
+        return $this->setting;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     *
+     * @return Settings
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
