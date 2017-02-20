@@ -27,11 +27,16 @@ class AuthenticationEventListener implements AuthenticationSuccessHandlerInterfa
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
       $user = $token->getUser();
-      $log = new Log("login", new \DateTime("now"), $request->getClientIp(), null, 0, $user->getId(), true);
-      $this->em->persist($log);
-      $this->em->flush();
-      $response = new Response();
-      $response = new RedirectResponse('/');
+      if ($user->getIsActive()) {
+        $log = new Log("login", new \DateTime("now"), $request->getClientIp(), null, 0, $user->getId(), true);
+        $this->em->persist($log);
+        $this->em->flush();
+        $response = new Response();
+        $response = new RedirectResponse('/');
+      // User is not active - log them out.
+      } else {
+        $response = new RedirectResponse('/logout');
+      }
       return $response;
     }
 

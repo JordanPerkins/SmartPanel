@@ -6,6 +6,9 @@
 </div>
 <div class="container-fluid">
   <hr>
+  {% if servers is empty %}
+  You have no active servers.
+  {% else %}
 
 <div class="widget-box">
   <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
@@ -39,6 +42,7 @@
         {% endfor %}
       </tbody>
     </table>
+    {% endif %}
       </div>
     </div>
     </div>

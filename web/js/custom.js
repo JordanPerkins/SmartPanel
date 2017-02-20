@@ -10,5 +10,16 @@ $('.user').hide();
     $('.user').toggle();
  });
 
+ $('.delete').click(function() {
+   $("#clientusername").html($(this).data('value'));
+   $('#delete').data("value", $(this).data('value'));
+});
+
+$('#confirmdelete').click(function() {
+  $('#form_id').val($(this).data('value'));
+  $( "#deleteform" ).trigger("submit");
+});
+
+
 
 });

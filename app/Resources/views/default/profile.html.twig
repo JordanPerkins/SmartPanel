@@ -10,9 +10,9 @@
   <div class="alert alert-error">
   <button class="close" data-dismiss="alert">x</button>
   <strong>Error!</strong> {{ form_errors(form) }} </div>
-  {{ include('notify.html.twig', { 'title': "Error", 'text': "Your profile could not be updated.", image: "img/demo/envelope.png" }) }}
+  {{ include('notify.html.twig', { 'title': "Error", 'text': "Your profile could not be updated.", image: "/img/cross.png" }) }}
   {% elseif submitted %}
-  {{ include('notify.html.twig', { 'title': "Success", 'text': "Your profile has been updated successfully.", image: "img/demo/envelope.png" }) }}
+  {{ include('notify.html.twig', { 'title': "Success", 'text': "Your profile has been updated successfully.", image: "/img/tick.png" }) }}
   {% endif %}
   <div class="row-fluid">
     <div class="span6">

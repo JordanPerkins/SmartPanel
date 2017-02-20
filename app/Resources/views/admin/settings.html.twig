@@ -6,7 +6,15 @@
 </div>
 <div class="container-fluid">
   <hr>
-  {% if app.user.isAdmin == true %}
+{% if app.user.isAdmin == true %}
+  {% if form_errors(form) %}
+  <div class="alert alert-error">
+  <button class="close" data-dismiss="alert">x</button>
+  <strong>Error!</strong> {{ form_errors(form) }} </div>
+  {{ include('notify.html.twig', { 'title': "Error", 'text': "The settings could not be updated.", image: "/img/cross.png" }) }}
+  {% elseif submitted %}
+  {{ include('notify.html.twig', { 'title': "Success", 'text': "The settings have been updated successfully.", image: "/img/tick.png" }) }}
+  {% endif %}
   {{ form_start(form) }}
   <div class="widget-box">
            <div class="widget-title">

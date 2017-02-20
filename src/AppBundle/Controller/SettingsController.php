@@ -110,7 +110,8 @@ class SettingsController extends Controller
       return $this->render('admin/settings.html.twig', [
                             'page_title' => 'Settings',
                             'form' => $form->createView(),
-                            'settings' => $settings
+                            'settings' => $settings,
+                            'submitted' => $form->isSubmitted(),
                           ]);
 
     }

@@ -29,11 +29,6 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Server')
         ->findAllByUID($user->getId());
 
-      // No active servers
-      if (!$servers) {
-        throw $this->createNotFoundException('No active servers');
-      }
-
       // Render page returning server list as the servers variable
       return $this->render('server/list.html.twig', [
                             'page_title' => 'My Servers',
