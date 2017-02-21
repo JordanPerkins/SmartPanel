@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SettingsController extends Controller
 {
@@ -72,6 +73,12 @@ class SettingsController extends Controller
 
     public function formAction(UserInterface $user, Request $request)
     {
+
+      // User is not admin, redirect to dashboard.
+      if (!$user->getIsAdmin()) {
+        return new RedirectResponse('/');
+      }
+
       /* Get the settings into an array where the key is the value name.
       Also complete the creation on the form. */
 

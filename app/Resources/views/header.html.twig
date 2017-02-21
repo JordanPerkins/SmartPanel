@@ -18,6 +18,7 @@
 <script src="{{ asset('js/matrix.interface.js') }}"></script>
 <script src="{{ asset('js/matrix.popover.js') }}"></script>
 <script src="{{ asset('js/jquery.gritter.min.js') }}"></script>
+<script src="{{ asset('js/time.js') }}"></script>
 {% if page_id == 3 or page_id == 5 or page_id == 7 %}
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/matrix.tables.js') }}"></script>
@@ -52,7 +53,6 @@
 
 <!--start-top-serch-->
 <div id="search">
-  {{ "now"|date("m/d/Y H:i:s") }}
 </div>
 <!--close-top-serch-->
 
@@ -72,13 +72,13 @@
     <li class="submenu admin"> <a href="#"><i class="icon icon-group"></i> <span>Clients</span> <span class="label label-important">3</span></a>
       <ul>
         <li class="{% if page_id == 7 %} active {% endif %}"><a href="/admin/clients">List Clients</a></li>
-        <li><a href="form-validation.html">Add Client</a></li>
+        <li class="{% if page_id == 8 %} active {% endif %}"><a href="/admin/clients/new">Add Client</a></li>
       </ul>
     </li>
         <li class="submenu admin"><a href="#"><i class="icon icon-list-alt"></i> Virtual Servers</a>
           <ul>
-            <li><a href="form-common.html">List Clients</a></li>
-            <li><a href="form-validation.html">Add Client</a></li>
+            <li><a href="form-common.html">List Virtual Servers</a></li>
+            <li><a href="form-validation.html">Add Virtual Server</a></li>
           </ul>
         </li>
         <li class="submenu admin"><a href="#"><i class="icon icon-random"></i> IP Management</a>

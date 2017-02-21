@@ -6,7 +6,6 @@
 </div>
 <div class="container-fluid">
   <hr>
-{% if app.user.isAdmin == true %}
   {% if form_errors(form) %}
   <div class="alert alert-error">
   <button class="close" data-dismiss="alert">x</button>
@@ -84,9 +83,6 @@
              </div>
            </div>
           {{ form_end(form) }}
-          {% else %}
-          You need admin permissions to view this page.
-          {% endif %}
          </div>
 
 

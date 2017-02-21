@@ -12,7 +12,7 @@ $('.user').hide();
 
  $('.delete').click(function() {
    $("#clientusername").html($(this).data('value'));
-   $('#delete').data("value", $(this).data('value'));
+   $('#confirmdelete').data("value", $(this).data('value'));
 });
 
 $('#confirmdelete').click(function() {

@@ -52,3 +52,15 @@ settings:
 clients:
     path: /admin/clients
     defaults:  { _controller: AppBundle:Clients:list }
+
+client_new:
+    path: /admin/clients/new
+    defaults:  { _controller: AppBundle:Clients:new }
+
+client_edit:
+    path: /admin/clients/{cid}
+    defaults:  { _controller: AppBundle:Clients:edit }
+
+client_password:
+    path: /admin/clients/password/{cid}
+    defaults:  { _controller: AppBundle:Clients:password }

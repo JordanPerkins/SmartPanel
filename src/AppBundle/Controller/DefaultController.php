@@ -25,9 +25,9 @@ class DefaultController extends Controller
       $settings = $this->get('app.settings')->get();
 
       // Uses the Server entity to fetch server count for display on dashboard.
-      $server_count = count($this->getDoctrine()
+      $server_count = $this->getDoctrine()
         ->getRepository('AppBundle:Server')
-        ->findAllByUID($user->getId()));
+        ->countByID($user->getId());
 
         // Render the page, passing on that information.
       return $this->render('default/index.html.twig', [

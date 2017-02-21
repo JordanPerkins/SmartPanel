@@ -32,4 +32,14 @@ class ServerRepository extends EntityRepository
     return $results->getOneOrNullResult();
   }
 
+  // Return the server count based on user ID
+  public function countByID($uid) {
+    $results = $this->createQueryBuilder('u')
+    ->select('count(u.id)')
+    ->where('u.uid = :id')
+    ->setParameter('id', $uid)
+    ->getQuery();
+    return $results->getSingleScalarResult();
+  }
+
 }
