@@ -1,303 +1,378 @@
 {{ include('header.html.twig', { 'page_title': page_title, 'page_id': 1, 'link': settings.clientarea_link }) }}
 
-  {{ include('notify.html.twig', { 'title': "Welcome", 'text': settings.welcome_notification, image: "img/demo/envelope.png" }) }}
+<div id="page-content-wrapper">
+    <div id="page-content">
 
-<!--main-container-part-->
-<div id="content">
-<!--breadcrumbs-->
-  <div id="content-header">
-    <div id="breadcrumb"> <a href="index.html" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a></div>
-  </div>
-<!--End-breadcrumbs-->
+            <div class="container">
 
-<!--Action boxes-->
-  <div class="container-fluid">
-    <div class="quick-actions_homepage">
-      <ul class="quick-actions">
-        <li class="bg_lb span3"> <a href="servers"> <i class="icon-hdd"></i><span class="label label-important">{{ server_count }}</span> Virtual Servers</a> </li>
-        <li class="bg_ly"> <a href="widgets.html"> <i class="icon-user"></i> Profile </a> </li>
-        <li class="bg_lo"> <a href="tables.html"> <i class="icon-globe"></i> DNS</a> </li>
-        </ul><br><br><br><br><ul class="quick-actions">
-        <li class="bg_lo span3"> <a href="form-common.html"> <i class="icon-th-list"></i> Forms</a> </li>
-        <li class="bg_ls"> <a href="buttons.html"> <i class="icon-tint"></i> Buttons</a> </li>
-        <li class="bg_lb"> <a href="interface.html"> <i class="icon-pencil"></i>Elements</a> </li>
-        <li class="bg_lg"> <a href="calendar.html"> <i class="icon-calendar"></i> Calendar</a> </li>
-        <li class="bg_lr"> <a href="error404.html"> <i class="icon-info-sign"></i> Error</a> </li>
 
-      </ul>
-    </div>
-<!--End-Action boxes-->
+<!-- Sparklines charts -->
 
-<!--Chart-box-->
-    <div class="row-fluid">
-      <div class="widget-box">
-        <div class="widget-title bg_lg"><span class="icon"><i class="icon-signal"></i></span>
-          <h5>Site Analytics</h5>
-        </div>
-        <div class="widget-content" >
-          <div class="row-fluid">
-            <div class="span9">
-              <div class="chart"></div>
-            </div>
-            <div class="span3">
-              <ul class="site-stats">
-                <li class="bg_lh"><i class="icon-user"></i> <strong>2540</strong> <small>Total Users</small></li>
-                <li class="bg_lh"><i class="icon-plus"></i> <strong>120</strong> <small>New Users </small></li>
-                <li class="bg_lh"><i class="icon-shopping-cart"></i> <strong>656</strong> <small>Total Shop</small></li>
-                <li class="bg_lh"><i class="icon-tag"></i> <strong>9540</strong> <small>Total Orders</small></li>
-                <li class="bg_lh"><i class="icon-repeat"></i> <strong>10</strong> <small>Pending Orders</small></li>
-                <li class="bg_lh"><i class="icon-globe"></i> <strong>8540</strong> <small>Online Orders</small></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-<!--End-Chart-box-->
-    <hr/>
-    <div class="row-fluid">
-      <div class="span6">
-        <div class="widget-box">
-          <div class="widget-title bg_ly" data-toggle="collapse" href="#collapseG2"><span class="icon"><i class="icon-chevron-down"></i></span>
-            <h5>Latest Posts</h5>
-          </div>
-          <div class="widget-content nopadding collapse in" id="collapseG2">
-            <ul class="recent-posts">
-              <li>
-                <div class="user-thumb"> <img width="40" height="40" alt="User" src="img/demo/av1.jpg"> </div>
-                <div class="article-post"> <span class="user-info"> By: john Deo / Date: 2 Aug 2012 / Time:09:27 AM </span>
-                  <p><a href="#">This is a much longer one that will go on for a few lines.It has multiple paragraphs and is full of waffle to pad out the comment.</a> </p>
-                </div>
-              </li>
-              <li>
-                <div class="user-thumb"> <img width="40" height="40" alt="User" src="img/demo/av2.jpg"> </div>
-                <div class="article-post"> <span class="user-info"> By: john Deo / Date: 2 Aug 2012 / Time:09:27 AM </span>
-                  <p><a href="#">This is a much longer one that will go on for a few lines.It has multiple paragraphs and is full of waffle to pad out the comment.</a> </p>
-                </div>
-              </li>
-              <li>
-                <div class="user-thumb"> <img width="40" height="40" alt="User" src="img/demo/av4.jpg"> </div>
-                <div class="article-post"> <span class="user-info"> By: john Deo / Date: 2 Aug 2012 / Time:09:27 AM </span>
-                  <p><a href="#">This is a much longer one that will go on for a few lines.Itaffle to pad out the comment.</a> </p>
-                </div>
-              <li>
-                <button class="btn btn-warning btn-mini">View All</button>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title"> <span class="icon"><i class="icon-ok"></i></span>
-            <h5>To Do list</h5>
-          </div>
-          <div class="widget-content">
-            <div class="todo">
-              <ul>
-                <li class="clearfix">
-                  <div class="txt"> Luanch This theme on Themeforest <span class="by label">Alex</span></div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> Manage Pending Orders <span class="date badge badge-warning">Today</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> MAke your desk clean <span class="by label">Admin</span></div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> Today we celebrate the theme <span class="date badge badge-info">08.03.2013</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-                <li class="clearfix">
-                  <div class="txt"> Manage all the orders <span class="date badge badge-important">12.03.2013</span> </div>
-                  <div class="pull-right"> <a class="tip" href="#" title="Edit Task"><i class="icon-pencil"></i></a> <a class="tip" href="#" title="Delete"><i class="icon-remove"></i></a> </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title"> <span class="icon"><i class="icon-ok"></i></span>
-            <h5>Progress Box</h5>
-          </div>
-          <div class="widget-content">
-            <ul class="unstyled">
-              <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 81% Clicks <span class="pull-right strong">567</span>
-                <div class="progress progress-striped ">
-                  <div style="width: 81%;" class="bar"></div>
-                </div>
-              </li>
-              <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 72% Uniquie Clicks <span class="pull-right strong">507</span>
-                <div class="progress progress-success progress-striped ">
-                  <div style="width: 72%;" class="bar"></div>
-                </div>
-              </li>
-              <li> <span class="icon24 icomoon-icon-arrow-down-2 red"></span> 53% Impressions <span class="pull-right strong">457</span>
-                <div class="progress progress-warning progress-striped ">
-                  <div style="width: 53%;" class="bar"></div>
-                </div>
-              </li>
-              <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 3% Online Users <span class="pull-right strong">8</span>
-                <div class="progress progress-danger progress-striped ">
-                  <div style="width: 3%;" class="bar"></div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title bg_lo"  data-toggle="collapse" href="#collapseG3" > <span class="icon"> <i class="icon-chevron-down"></i> </span>
-            <h5>News updates</h5>
-          </div>
-          <div class="widget-content nopadding updates collapse in" id="collapseG3">
-            <div class="new-update clearfix"><i class="icon-ok-sign"></i>
-              <div class="update-done"><a title="" href="#"><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</strong></a> <span>dolor sit amet, consectetur adipiscing eli</span> </div>
-              <div class="update-date"><span class="update-day">20</span>jan</div>
-            </div>
-            <div class="new-update clearfix"> <i class="icon-gift"></i> <span class="update-notice"> <a title="" href="#"><strong>Congratulation Maruti, Happy Birthday </strong></a> <span>many many happy returns of the day</span> </span> <span class="update-date"><span class="update-day">11</span>jan</span> </div>
-            <div class="new-update clearfix"> <i class="icon-move"></i> <span class="update-alert"> <a title="" href="#"><strong>Maruti is a Responsive Admin theme</strong></a> <span>But already everything was solved. It will ...</span> </span> <span class="update-date"><span class="update-day">07</span>Jan</span> </div>
-            <div class="new-update clearfix"> <i class="icon-leaf"></i> <span class="update-done"> <a title="" href="#"><strong>Envato approved Maruti Admin template</strong></a> <span>i am very happy to approved by TF</span> </span> <span class="update-date"><span class="update-day">05</span>jan</span> </div>
-            <div class="new-update clearfix"> <i class="icon-question-sign"></i> <span class="update-notice"> <a title="" href="#"><strong>I am alwayse here if you have any question</strong></a> <span>we glad that you choose our template</span> </span> <span class="update-date"><span class="update-day">01</span>jan</span> </div>
-          </div>
-        </div>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/sparklines/sparklines.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/sparklines/sparklines-demo.js') }}"></script>
 
-      </div>
-      <div class="span6">
-        <div class="widget-box widget-chat">
-          <div class="widget-title bg_lb"> <span class="icon"> <i class="icon-comment"></i> </span>
-            <h5>Chat Option</h5>
-          </div>
-          <div class="widget-content nopadding collapse in" id="collapseG4">
-            <div class="chat-users panel-right2">
-              <div class="panel-title">
-                <h5>Online Users</h5>
-              </div>
-              <div class="panel-content nopadding">
-                <ul class="contact-list">
-                  <li id="user-Alex" class="online"><a href=""><img alt="" src="img/demo/av1.jpg" /> <span>Alex</span></a></li>
-                  <li id="user-Linda"><a href=""><img alt="" src="img/demo/av2.jpg" /> <span>Linda</span></a></li>
-                  <li id="user-John" class="online new"><a href=""><img alt="" src="img/demo/av3.jpg" /> <span>John</span></a><span class="msg-count badge badge-info">3</span></li>
-                  <li id="user-Mark" class="online"><a href=""><img alt="" src="img/demo/av4.jpg" /> <span>Mark</span></a></li>
-                  <li id="user-Maxi" class="online"><a href=""><img alt="" src="img/demo/av5.jpg" /> <span>Maxi</span></a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="chat-content panel-left2">
-              <div class="chat-messages" id="chat-messages">
-                <div id="chat-messages-inner"></div>
-              </div>
-              <div class="chat-message well">
-                <button class="btn btn-success">Send</button>
-                <span class="input-box">
-                <input type="text" name="msg-box" id="msg-box" />
-                </span> </div>
-            </div>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title"><span class="icon"><i class="icon-user"></i></span>
-            <h5>Our Partner (Box with Fix height)</h5>
-          </div>
-          <div class="widget-content nopadding fix_hgt">
-            <ul class="recent-posts">
-              <li>
-                <div class="user-thumb"> <img width="40" height="40" alt="User" src="img/demo/av1.jpg"> </div>
-                <div class="article-post"> <span class="user-info">John Deo</span>
-                  <p>Web Desginer &amp; creative Front end developer</p>
-                </div>
-              </li>
-              <li>
-                <div class="user-thumb"> <img width="40" height="40" alt="User" src="img/demo/av2.jpg"> </div>
-                <div class="article-post"> <span class="user-info">John Deo</span>
-                  <p>Web Desginer &amp; creative Front end developer</p>
-                </div>
-              </li>
-              <li>
-                <div class="user-thumb"> <img width="40" height="40" alt="User" src="img/demo/av4.jpg"> </div>
-                <div class="article-post"> <span class="user-info">John Deo</span>
-                  <p>Web Desginer &amp; creative Front end developer</p>
-                </div>
-            </ul>
-          </div>
-        </div>
-        <div class="accordion" id="collapse-group">
-          <div class="accordion-group widget-box">
-            <div class="accordion-heading">
-              <div class="widget-title"> <a data-parent="#collapse-group" href="#collapseGOne" data-toggle="collapse"> <span class="icon"><i class="icon-magnet"></i></span>
-                <h5>Accordion Example 1</h5>
-                </a> </div>
-            </div>
-            <div class="collapse in accordion-body" id="collapseGOne">
-              <div class="widget-content"> It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </div>
-            </div>
-          </div>
-          <div class="accordion-group widget-box">
-            <div class="accordion-heading">
-              <div class="widget-title"> <a data-parent="#collapse-group" href="#collapseGTwo" data-toggle="collapse"> <span class="icon"><i class="icon-magnet"></i></span>
-                <h5>Accordion Example 2</h5>
-                </a> </div>
-            </div>
-            <div class="collapse accordion-body" id="collapseGTwo">
-              <div class="widget-content">And is full of waffle to It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.</div>
-            </div>
-          </div>
-          <div class="accordion-group widget-box">
-            <div class="accordion-heading">
-              <div class="widget-title"> <a data-parent="#collapse-group" href="#collapseGThree" data-toggle="collapse"> <span class="icon"><i class="icon-magnet"></i></span>
-                <h5>Accordion Example 3</h5>
-                </a> </div>
-            </div>
-            <div class="collapse accordion-body" id="collapseGThree">
-              <div class="widget-content"> Waffle to It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just </div>
-            </div>
-          </div>
-        </div>
-        <div class="widget-box collapsible">
-          <div class="widget-title"> <a data-toggle="collapse" href="#collapseOne"> <span class="icon"><i class="icon-arrow-right"></i></span>
-            <h5>Toggle, Open by default, </h5>
-            </a> </div>
-          <div id="collapseOne" class="collapse in">
-            <div class="widget-content"> This box is opened by default, paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </div>
-          </div>
-          <div class="widget-title"> <a data-toggle="collapse" href="#collapseTwo"> <span class="icon"><i class="icon-remove"></i></span>
-            <h5>Toggle, closed by default</h5>
-            </a> </div>
-          <div id="collapseTwo" class="collapse">
-            <div class="widget-content"> This box is now open </div>
-          </div>
-          <div class="widget-title"> <a data-toggle="collapse" href="#collapseThree"> <span class="icon"><i class="icon-remove"></i></span>
-            <h5>Toggle, closed by default</h5>
-            </a> </div>
-          <div id="collapseThree" class="collapse">
-            <div class="widget-content"> This box is now open </div>
-          </div>
-        </div>
-        <div class="widget-box">
-          <div class="widget-title">
-            <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#tab1">Tab1</a></li>
-              <li><a data-toggle="tab" href="#tab2">Tab2</a></li>
-              <li><a data-toggle="tab" href="#tab3">Tab3</a></li>
-            </ul>
-          </div>
-          <div class="widget-content tab-content">
-            <div id="tab1" class="tab-pane active">
-              <p>And is full of waffle to It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment.</p>
-              <img src="img/demo/demo-image1.jpg" alt="demo-image"/></div>
-            <div id="tab2" class="tab-pane"> <img src="img/demo/demo-image2.jpg" alt="demo-image"/>
-              <p>And is full of waffle to It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment.</p>
-            </div>
-            <div id="tab3" class="tab-pane">
-              <p>And is full of waffle to It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. </p>
-              <img src="img/demo/demo-image3.jpg" alt="demo-image"/></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- Flot charts -->
+
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/flot/flot.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/flot/flot-resize.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/flot/flot-stack.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/flot/flot-pie.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/flot/flot-tooltip.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/flot/flot-demo-1.js') }}"></script>
+
+<!-- PieGage charts -->
+
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/piegage/piegage.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/charts/piegage/piegage-demo.js') }}"></script>
+
+<div id="page-title">
+    <h2>Dashboard</h2>
+    <p>The most complete user interface framework that can be used to create stunning admin dashboards and presentation websites.</p>
 </div>
 
-<!--end-main-container-part-->
+<div class="row">
+    <div class="col-md-4">
+        <div class="dashboard-box dashboard-box-chart bg-white content-box">
+            <div class="content-wrapper">
+                <div class="header">
+                    $34,657
+                    <span>Total Earnings<b> in last</b> ten <b>quarters</b></span>
+                </div>
+                <div class="bs-label bg-green">+18%</div>
+                <div class="center-div sparkline-big-alt">1245,1450,1312,1121,986,1489</div>
+                <div class="row list-grade">
+                    <div class="col-md-2">January</div>
+                    <div class="col-md-2">February</div>
+                    <div class="col-md-2">March</div>
+                    <div class="col-md-2">April</div>
+                    <div class="col-md-2">May</div>
+                    <div class="col-md-2">June</div>
+                </div>
+            </div>
+            <div class="button-pane">
+                <div class="size-md float-left">
+                    <a href="#" title="">
+                        Financial statistics
+                    </a>
+                </div>
+                <a href="#" class="btn btn-info float-right tooltip-button" data-placement="top" title="View details">
+                    <i class="glyph-icon icon-plus"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-box dashboard-box-chart bg-white content-box">
+            <div class="content-wrapper">
+                <div class="header">
+                    169
+                    <span>Total Subscriptions<b> in last</b> 6 days</span>
+                </div>
+                <div class="bs-label bg-red">-14%</div>
+                <div class="center-div sparkline-big-alt">21,41,31,50,18,41</div>
+                <div class="row list-grade">
+                    <div class="col-md-2">M</div>
+                    <div class="col-md-2">T</div>
+                    <div class="col-md-2">W</div>
+                    <div class="col-md-2">T</div>
+                    <div class="col-md-2">F</div>
+                    <div class="col-md-2">S</div>
+                </div>
+            </div>
+            <div class="button-pane">
+                <div class="size-md float-left">
+                    <a href="#" title="">
+                        View all members
+                    </a>
+                </div>
+                <a href="#" class="btn btn-default float-right tooltip-button" data-placement="top" title="View details">
+                    <i class="glyph-icon icon-angle-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-box dashboard-box-chart bg-white content-box">
+            <div class="content-wrapper">
+                <div class="header">
+                    8960
+                    <span>Total Downloads<b> in last</b> 6 years</span>
+                </div>
+                <div class="bs-label bg-orange">~51%</div>
+                <div class="center-div sparkline-big-alt">2210,2310,2010,2310,2123,2350</div>
+                <div class="row list-grade">
+                    <div class="col-md-2">2009</div>
+                    <div class="col-md-2">2010</div>
+                    <div class="col-md-2">2011</div>
+                    <div class="col-md-2">2012</div>
+                    <div class="col-md-2">2013</div>
+                    <div class="col-md-2">2014</div>
+                </div>
+            </div>
+            <div class="button-pane">
+                <div class="size-md float-left">
+                    <a href="#" title="">
+                        View more details
+                    </a>
+                </div>
+                <a href="#" class="btn btn-primary float-right tooltip-button" data-placement="top" title="View details">
+                    <i class="glyph-icon icon-caret-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel">
+            <div class="panel-body">
+                <h3 class="title-hero">
+                    Recent sales activity
+                </h3>
+                <div class="example-box-wrapper">
+                    <div id="data-example-1" class="mrg20B" style="width: 100%; height: 300px;"></div>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-4">
+                <a href="#" title="Example tile shortcut" class="tile-box tile-box-alt btn-success">
+                    <div class="tile-header">
+                        Photo Gallery
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <div class="chart-alt-10" data-percent="43"><span>43</span>%</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="#" title="Example tile shortcut" class="tile-box tile-box-alt btn-info">
+                    <div class="tile-header">
+                        Subscriptions
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <div class="chart-alt-10" data-percent="76"><span>76</span>%</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="#" title="Example tile shortcut" class="tile-box tile-box-alt btn-warning">
+                    <div class="tile-header">
+                        New Visitors
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <div class="chart-alt-10" data-percent="11"><span>11</span>%</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="content-box mrg20T">
+            <h3 class="content-box-header bg-primary">
+                Toggle button closed
+                <span class="header-buttons-separator">
+                    <a href="#" class="icon-separator toggle-button">
+                        <i class="glyph-icon icon-chevron-down"></i>
+                    </a>
+                </span>
+            </h3>
+            <div class="content-box-wrapper hide">
+                This content boxes has the header with <code>.bg-default</code>.
+            </div>
+        </div>
+
+        <div class="content-box">
+            <h3 class="content-box-header bg-default">
+                <i class="glyph-icon icon-cog"></i>
+                Live server status
+                <span class="header-buttons-separator">
+                    <a href="#" class="icon-separator">
+                        <i class="glyph-icon icon-question"></i>
+                    </a>
+                    <a href="#" class="icon-separator refresh-button" data-style="dark" data-theme="bg-white" data-opacity="40">
+                        <i class="glyph-icon icon-refresh"></i>
+                    </a>
+                    <a href="#" class="icon-separator remove-button" data-animation="flipOutX">
+                        <i class="glyph-icon icon-times"></i>
+                    </a>
+                </span>
+            </h3>
+            <div class="content-box-wrapper">
+                <div id="data-example-3" style="width: 100%; height: 250px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+        <div class="row mrg20B">
+            <div class="col-md-6">
+                <a href="#" title="Example tile shortcut" class="tile-box tile-box-shortcut btn-primary">
+                    <span class="bs-badge badge-absolute">5</span>
+                    <div class="tile-header">
+                        Dashboard
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <i class="glyph-icon icon-dashboard"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="#" title="Example tile shortcut" class="tile-box tile-box-shortcut btn-black">
+                    <span class="bs-badge badge-absolute">5</span>
+                    <div class="tile-header">
+                        Orders
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <i class="glyph-icon icon-cogs"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-body">
+                <h3 class="title-hero">
+                    Users activity
+                </h3>
+                <div class="example-box-wrapper">
+                    <div class="timeline-box timeline-box-left">
+                        <div class="tl-row">
+                            <div class="tl-item float-right">
+                                <div class="tl-icon bg-red">
+                                    <i class="glyph-icon icon-toggle-on"></i>
+                                </div>
+                                <div class="popover right">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <div class="tl-label bs-label label-info">Appointment</div>
+                                        <p class="tl-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. </p>
+                                        <div class="tl-time">
+                                            <i class="glyph-icon icon-clock-o"></i>
+                                            a few seconds ago
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tl-row">
+                            <div class="tl-item float-right">
+                                <div class="tl-icon bg-primary">
+                                    <i class="glyph-icon icon-wifi"></i>
+                                </div>
+                                <div class="popover right">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <div class="tl-label bs-label bg-yellow">Teleconference</div>
+                                        <p class="tl-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. </p>
+                                        <div class="tl-time">
+                                            <i class="glyph-icon icon-clock-o"></i>
+                                            a few seconds ago
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tl-row">
+                            <div class="tl-item float-right">
+                                <div class="tl-icon bg-black">
+                                    <i class="glyph-icon icon-headphones"></i>
+                                </div>
+                                <div class="popover right">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <div class="tl-label bs-label label-danger">Meeting</div>
+                                        <p class="tl-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. </p>
+                                        <div class="tl-time">
+                                            <i class="glyph-icon icon-clock-o"></i>
+                                            a few seconds ago
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-box bg-white post-box">
+            <textarea name="" class="textarea-autosize" placeholder="What are you doing right now?"></textarea>
+            <div class="button-pane">
+                <a href="#" class="btn btn-md btn-link hover-white" title="">
+                    <i class="glyph-icon icon-volume-down"></i>
+                </a>
+                <a href="#" class="btn btn-md btn-link hover-white" title="">
+                    <i class="glyph-icon icon-video-camera"></i>
+                </a>
+                <a href="#" class="btn btn-md btn-link hover-white" title="">
+                    <i class="glyph-icon icon-microphone"></i>
+                </a>
+                <a href="#" class="btn btn-md btn-link hover-white" title="">
+                    <i class="glyph-icon icon-picture-o"></i>
+                </a>
+
+                <a href="#" class="btn btn-md btn-post float-right btn-success" title="">
+                    Post
+                </a>
+
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-body">
+                <ul class="todo-box">
+                    <li class="border-red">
+                        <input type="checkbox" name="todo-1" id="todo-1">
+                        <label for="todo-1">This is an example task that i need to finish</label>
+                        <span class="bs-label bg-red" title="">Overdue</span>
+                        <a href="#" class="btn btn-xs btn-danger float-right" title="">
+                            <i class="glyph-icon icon-remove"></i>
+                        </a>
+                        <a href="#" class="btn btn-xs btn-success float-right" title="">
+                            <i class="glyph-icon icon-check"></i>
+                        </a>
+                    </li>
+                    <li class="border-orange">
+                        <input type="checkbox" name="todo-2" id="todo-2">
+                        <label for="todo-2">Update server to a newer version</label>
+                        <span class="bs-label bg-green" title="">2 Weeks</span>
+                        <a href="#" class="btn btn-xs btn-danger float-right" title="">
+                            <i class="glyph-icon icon-remove"></i>
+                        </a>
+                        <a href="#" class="btn btn-xs btn-success float-right" title="">
+                            <i class="glyph-icon icon-check"></i>
+                        </a>
+                    </li>
+                    <li class="border-blue">
+                        <input type="checkbox" name="todo-3" id="todo-3">
+                        <label for="todo-3">Add more awesome template features</label>
+                        <span class="bs-label bg-blue" title="">Tomorrow</span>
+                        <a href="#" class="btn btn-xs btn-danger float-right" title="">
+                            <i class="glyph-icon icon-remove"></i>
+                        </a>
+                        <a href="#" class="btn btn-xs btn-success float-right" title="">
+                            <i class="glyph-icon icon-check"></i>
+                        </a>
+                    </li>
+                    <li class="border-purple">
+                        <input type="checkbox" name="todo-4" id="todo-4">
+                        <label for="todo-4">Never forget to buy milk</label>
+                        <span class="bs-label bg-black" title="">Today</span>
+                        <a href="#" class="btn btn-xs btn-danger float-right" title="">
+                            <i class="glyph-icon icon-remove"></i>
+                        </a>
+                        <a href="#" class="btn btn-xs btn-success float-right" title="">
+                            <i class="glyph-icon icon-check"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+
+
+
+            </div>
+        </div>
+    </div>
 {{ include('footer.html.twig') }}

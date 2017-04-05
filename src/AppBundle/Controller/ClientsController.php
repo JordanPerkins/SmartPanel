@@ -105,8 +105,8 @@ class ClientsController extends Controller
               ->add('firstname', TextType::class, array('error_bubbling' => true))
               ->add('surname', TextType::class, array('error_bubbling' => true))
               ->add('email', EmailType::class, array('error_bubbling' => true))
-              ->add('isActive', CheckboxType::class, array('error_bubbling' => true))
-              ->add('isAdmin', CheckboxType::class, array('error_bubbling' => true))
+              ->add('isActive', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
+              ->add('isAdmin', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
               ->add('save', SubmitType::class, array('label' => 'Save'))
               ->getForm();
 
@@ -213,8 +213,8 @@ class ClientsController extends Controller
               ->add('surname', TextType::class, array('error_bubbling' => true))
               ->add('email', EmailType::class, array('error_bubbling' => true))
               ->add('password', PasswordType::class, array('error_bubbling' => true))
-              ->add('isActive', CheckboxType::class, array('error_bubbling' => true))
-              ->add('isAdmin', CheckboxType::class, array('error_bubbling' => true))
+              ->add('isActive', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
+              ->add('isAdmin', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
               ->add('save', SubmitType::class, array('label' => 'Save'))
               ->getForm();
 

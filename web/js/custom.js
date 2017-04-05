@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-$('.user').hide();
 
    $('#adminlink').click(function() {
      $('.admin').toggle();

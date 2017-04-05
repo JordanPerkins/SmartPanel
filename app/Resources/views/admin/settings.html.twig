@@ -1,92 +1,103 @@
-{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 6, 'link': settings.clientarea_link }) }}
-<div id="content">
-<div id="content-header">
-  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="tip-bottom">Admin</a> <a href="/admin/settings" class="tip-bottom">Settings</a> </div>
-  <h1>Settings</h1>
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 2, 'link': settings.clientarea_link }) }}
+<div id="page-content-wrapper">
+        <div id="page-content">
+
+                <div class="container">
+                <!-- jQueryUI Tabs -->
+
+                <!--<link rel="stylesheet" type="text/css" href="../../assets/widgets/tabs-ui/tabs.css">-->
+                <script type="text/javascript" src="../../assets/widgets/tabs-ui/tabs.js"></script>
+                <script type="text/javascript">
+                    /* jQuery UI Tabs */
+
+                    $(function() { "use strict";
+                        $(".tabs").tabs();
+                    });
+
+                    $(function() { "use strict";
+                        $(".tabs-hover").tabs({
+                            event: "mouseover"
+                        });
+                    });
+                </script>
+
+                <!-- Boostrap Tabs -->
+
+                <script type="text/javascript" src="../../assets/widgets/tabs/tabs.js"></script>
+
+                <!-- Tabdrop Responsive -->
+
+                <script type="text/javascript" src="../../assets/widgets/tabs/tabs-responsive.js"></script>
+                <script type="text/javascript">
+                    /* Responsive tabs */
+                    $(function() { "use strict";
+                        $('.nav-responsive').tabdrop();
+                    });
+                </script>
+
+
+
+<div id="page-title">
+<h2>Settings</h2>
+<p>Change SmartPanel settings</p>
 </div>
-<div class="container-fluid">
-  <hr>
-  {% if form_errors(form) %}
-  <div class="alert alert-error">
-  <button class="close" data-dismiss="alert">x</button>
-  <strong>Error!</strong> {{ form_errors(form) }} </div>
-  {{ include('notify.html.twig', { 'title': "Error", 'text': "The settings could not be updated.", image: "/img/cross.png" }) }}
-  {% elseif submitted %}
-  {{ include('notify.html.twig', { 'title': "Success", 'text': "The settings have been updated successfully.", image: "/img/tick.png" }) }}
+
+<div class="panel">
+<div class="panel-body">
+    <h3 class="title-hero">
+        Settings
+    </h3>
+    <div class="example-box-wrapper">
+    {% if form_errors(form) %}
+    <div class="alert alert-danger">
+   <div class="bg-red alert-icon">
+       <i class="glyph-icon icon-times"></i>
+   </div>
+      <div class="alert-content">
+      <h4 class="alert-title">Error</h4>
+      <p>{{ form_errors(form) }}</p>
+      </div>
+</div>
   {% endif %}
+  <div class="example-box-wrapper">
   {{ form_start(form) }}
-  <div class="widget-box">
-           <div class="widget-title">
-             <ul class="nav nav-tabs">
-               <li class="active"><a data-toggle="tab" href="#general">General</a></li>
-               <li><a data-toggle="tab" href="#security">Security</a></li>
-               <li><a data-toggle="tab" href="#logging">Logging</a></li>
-             </ul>
-           </div>
-           <div class="widget-content tab-content">
-             <div id="general" class="tab-pane active">
-             <div class="row-fluid">
-               <div class="span6">
-                 <div class="widget-box">
-                   <div class="widget-title"> <span class="icon"> <i class="icon-tag"></i> </span>
-                     <h5>Branding</h5>
-                   </div>
-                   <div class="widget-content"> Make branding customizations below.<hr>
-                   <label>Company name:</label> {{ form_widget(form.company_name) }}
-                   <label>Email from:</label> {{ form_widget(form.email_from) }}
-                   <label>Client Area Link:</label> {{ form_widget(form.clientarea_link) }}
-                   <label>Panel Location:</label> {{ form_widget(form.panel_location) }}
-                   <label>Welcome notification:</label> {{ form_widget(form.welcome_notification) }}
-                   </div>
-                 </div>
-               </div>
-               <div class="span6">
-                 <div class="widget-box">
-                   <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
-                     <h5>Half Width <code>class=Span6</code></h5>
-                   </div>
-                   <div class="widget-content"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </div>
-                 </div>
-               </div>
-             </div>
-               {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
-             </div>
-             <div id="security" class="tab-pane">
-             <div class="row-fluid">
-               <div class="span6">
-                 <div class="widget-box">
-                   <div class="widget-title"> <span class="icon"> <i class="icon-play-circle"></i> </span>
-                     <h5>User Action Rate Limit</h5>
-                   </div>
-                   <div class="widget-content"> Commands/Actions issued on virtual servers by users can be rate limited according to the following settings.<hr>
-                   <label>Commands:</label> {{ form_widget(form.ratelimit_limit) }}
-                   <label>Per (Seconds):</label>{{ form_widget(form.ratelimit_time) }}
-                   </div>
-                 </div>
-               </div>
-               <div class="span6">
-                 <div class="widget-box">
-                   <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
-                     <h5>Password Reset <code>class=Span6</code></h5>
-                   </div>
-                   <div class="widget-content">
-                   <label>Reset Limit (Hours):</label> {{ form_widget(form.reset_limit) }}
-                   </div>
-                 </div>
-               </div>
-             </div>
-             <button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button>
-             </div>
-             <div id="logging" class="tab-pane">
-               <p>full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end. </p>
-              <button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button>
-             </div>
-           </div>
-          {{ form_end(form) }}
-         </div>
+      <ul class="nav-responsive nav nav-tabs">
+          <li class="active"><a href="#tab1" data-toggle="tab">General</a></li>
+          <li><a href="#tab2" data-toggle="tab">Security</a></li>
+          <li><a href="#tab3" data-toggle="tab">Logging</a></li>
+      </ul>
+      <div class="tab-content">
+          <div class="tab-pane active" id="tab1">
+              <p>  <label>Company name:</label> {{ form_widget(form.company_name) }}<br>
+                   <label>Email from:</label> {{ form_widget(form.email_from) }}<br>
+                   <label>Client Area Link:</label> {{ form_widget(form.clientarea_link) }}<br>
+                   <label>Panel Location:</label> {{ form_widget(form.panel_location) }}<br>
+                   <label>Welcome notification:</label> {{ form_widget(form.welcome_notification) }}<br>
+                   </p>
+                   <p>{{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}</p>
+          </div>
+          <div class="tab-pane" id="tab2">
+              <p><label>Reset Limit (Hours):</label> {{ form_widget(form.reset_limit) }}<br>
+              <label>Commands:</label> {{ form_widget(form.ratelimit_limit) }}<br>
+                   <label>Per (Seconds):</label>{{ form_widget(form.ratelimit_time) }}</p>
+              <p><button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button></p>
+          </div>
+          <div class="tab-pane" id="tab3">
+              <p><label>Event Log Purge:</label> {{ form_widget(form.eventlog_purge) }}<br>.</p>
+              <p><button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button></p>
+          </div>
+      </div>
+      {{ form_end(form) }}
+
+
+</div>
+</div>
+                </div>
 
 
 
-
+        </div>
+    </div>
+</div>
 
 {{ include('footer.html.twig') }}

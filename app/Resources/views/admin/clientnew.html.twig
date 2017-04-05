@@ -1,80 +1,105 @@
-{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 8, 'link': settings.clientarea_link }) }}
-<div id="content">
-<div id="content-header">
-  <div id="breadcrumb"> <a href="/" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="tip-bottom">Admin</a> <a href="#" class="tip-bottom">Clients</a> <a href="" class="tip-bottom">New Client</a>  </div>
-  <h1>New Client</h1>
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 2, 'link': settings.clientarea_link }) }}
+<div id="page-content-wrapper">
+        <div id="page-content">
+
+                <div class="container">
+
+
+<!-- Parsley -->
+
+<script type="text/javascript" src="{{ asset('assets/widgets/parsley/parsley.js') }}"></script>
+
+<div id="page-title">
+<h2>New Client</h2>
+<p>Create a new client.</p>
 </div>
-<div class="container-fluid">
-  <hr>
-  {% if form_errors(form) %}
-  <div class="alert alert-error">
-  <button class="close" data-dismiss="alert">x</button>
-  <strong>Error!</strong> {{ form_errors(form) }} </div>
-  {{ include('notify.html.twig', { 'title': "Error", 'text': "Client could not be added.", image: "/img/cross.png" }) }}
-  {% elseif submitted %}
-  <div class="alert alert-success">
-  <button class="close" data-dismiss="alert">x</button>
-  <strong>Success!</strong> User was added </div>
-  {{ include('notify.html.twig', { 'title': "Success", 'text': "Client has been added successfully.", image: "/img/tick.png" }) }}
+
+<div class="panel">
+<div class="panel-body">
+    <h3 class="title-hero">
+        Settings
+    </h3>
+    <div class="example-box-wrapper">
+    {% if form_errors(form) %}
+    <div class="alert alert-danger">
+    <div class="bg-red alert-icon">
+        <i class="glyph-icon icon-times"></i>
+    </div>
+      <div class="alert-content">
+      <h4 class="alert-title">Error</h4>
+      <p>{{ form_errors(form) }}</p>
+</div>
+</div>
   {% endif %}
-  <div class="row-fluid">
-    <div class="span6">
-      <div class="widget-box">
-        <div class="widget-title"> <span class="icon"> <i class="icon-user"></i> </span>
-          <h5>New Client</h5>
-        </div>
-        <div class="widget-content nopadding">
-          	{{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-            <div class="control-group">
-              <label class="control-label">Username: </label>
-              <div class="controls">
-              {{ form_widget(form.username) }}
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label">First Name:</label>
-              <div class="controls">
-		            {{ form_widget(form.firstname) }}
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label">Last Name:</label>
-              <div class="controls">
-		            {{ form_widget(form.surname) }}
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label">Email Address:</label>
-              <div class="controls">
-		            {{ form_widget(form.email) }}
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label">Password:</label>
-              <div class="controls">
-		            {{ form_widget(form.password) }}
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label">User active:</label>
-              <div class="controls">
+    {{ form_start(form, {'attr': {'class': 'form-horizontal bordered-row', 'data-parsley-validate': ''}}) }}
+            <div class="row">
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Username</label>
+                    <div class="col-sm-6">
+                        {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">First Name</label>
+                        <div class="col-sm-6">
+                            {{ form_widget(form.firstname, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Surname</label>
+                        <div class="col-sm-6">
+                            {{ form_widget(form.surname, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Password</label>
+                        <div class="col-sm-6">
+                            {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Email</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.email, {'attr': {'data-parsley-validate': 'email', 'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    <label class="col-sm-3 control-label">Properties</label>
+    <div class="col-sm-6">
+        <div class="checkbox">
+            <label>
                 {{ form_widget(form.isActive) }}
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label">User is admin:</label>
-              <div class="controls">
-                {{ form_widget(form.isAdmin) }}
-              </div>
-            </div>
-            <div class="form-actions">
-		{{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
-            </div>
-            {{ form_end(form) }}
+                User is active
+            </label>
         </div>
-      </div>
-      </div>
-      </div>
-      </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.isAdmin) }}
+                User is admin
+            </label>
+        </div>
+    </div>
+</div>
+                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-default content-box text-center pad20A mrg25T">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary'}}) }}
+            {{ form_end(form) }}
+            </div>
+    </div>
+
+</div>
+</div>
+</div>
+
+
+        </div>
+    </div>
+</div>
+
+
 
 {{ include('footer.html.twig') }}
