@@ -7,6 +7,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ProxmoxVE\Proxmox;
 
 
 /**
@@ -35,7 +36,22 @@ class Node
     /**
      * @ORM\Column(type="string", length=64)
      */
+    private $identifier;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $realm;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
     private $username;
+
+    /**
+     * @ORM\Column(type="integer", length=64)
+     */
+    private $port;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -43,29 +59,30 @@ class Node
     private $password;
 
     // Function for sending commands to the node.
-    public function command($cmd, $type, $data) {
+    public function command($type, $cmd, $data = null) {
+      $credentials = [
+        'hostname' => $this->getIp(),
+        'username' => $this->getUsername(),
+        'password' => $this->getPassword(),
+        'realm' => $this->getRealm(),
+        'port' => $this->getPort(),
+        ];
+        $proxmox = new Proxmox($credentials);
 
-        $postfields = array();
-        $postfields["user"] = $this->getUsername();
-        $postfields["pass"] = $this->getPassword();
-        $postfields["cmd"] = $cmd;
-        $postfields["type"] = $type;
-        $postfields = array_merge($postfields, $data);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://".$this->getIp().":8471/command.php");
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postfields));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $response = curl_exec($ch);
-        if (curl_error($ch)) {
-          return curl_errno($ch);
+        if ($type == "get" || $type == "create" || $type == "set" || $type == "delete") {
+          if ($data == null) {
+            $result = $proxmox->$type($cmd);
+          } else {
+            $result = $proxmox->$type($cmd, $data);
+          }
+          if (isset($result['errors'])) {
+            return [false, null];
+          } else {
+            return [true, $result['data']];
+          }
+        } else {
+          return [false, null];
         }
-        curl_close($ch);
-        $response = json_decode($response, true);
-        return $response;
-
     }
 
     /**
@@ -172,5 +189,77 @@ class Node
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set realm
+     *
+     * @param string $realm
+     *
+     * @return Node
+     */
+    public function setRealm($realm)
+    {
+        $this->realm = $realm;
+
+        return $this;
+    }
+
+    /**
+     * Get realm
+     *
+     * @return string
+     */
+    public function getRealm()
+    {
+        return $this->realm;
+    }
+
+    /**
+     * Set port
+     *
+     * @param integer $port
+     *
+     * @return Node
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Get port
+     *
+     * @return integer
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * Set identifier
+     *
+     * @param string $identifier
+     *
+     * @return Node
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * Get identifier
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
     }
 }

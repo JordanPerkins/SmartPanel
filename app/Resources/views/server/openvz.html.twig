@@ -5,10 +5,10 @@
                 <div class="container">
 
 
-
+<script type="text/javascript" src="{{ asset('js/control.js') }}"></script>
 <!-- jQueryUI Accordion -->
-
-<script type="text/javascript" src="../../assets/widgets/accordion-ui/accordion.js"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/accordion-ui/accordion.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/jgrowl-notifications/jgrowl.js') }}"></script>
 <script type="text/javascript">
     /* jQuery UI Accordion */
 
@@ -29,8 +29,8 @@
 
 <!-- jQueryUI Tabs -->
 
-<!--<link rel="stylesheet" type="text/css" href="../../assets/widgets/tabs-ui/tabs.css">-->
-<script type="text/javascript" src="../../assets/widgets/tabs-ui/tabs.js"></script>
+<!--<link rel="stylesheet" type="text/css" href="{{ asset('assets/widgets/tabs-ui/tabs.css') }}">-->
+<script type="text/javascript" src="{{ asset('assets/widgets/tabs-ui/tabs.js') }}"></script>
 <script type="text/javascript">
     /* jQuery UI Tabs */
 
@@ -47,11 +47,11 @@
 
 <!-- Boostrap Tabs -->
 
-<script type="text/javascript" src="../../assets/widgets/tabs/tabs.js"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/tabs/tabs.js') }}"></script>
 
 <!-- Tabdrop Responsive -->
 
-<script type="text/javascript" src="../../assets/widgets/tabs/tabs-responsive.js"></script>
+<script type="text/javascript" src="{{ asset('assets/widgets/tabs/tabs-responsive.js') }}"></script>
 <script type="text/javascript">
     /* Responsive tabs */
     $(function() { "use strict";
@@ -61,132 +61,168 @@
 
 <div id="page-title">
 <h2>Manage Server</h2>
-<p>Manging OpenVZ server</p>
+<p>Manging OpenVZ server  <img src="{{ asset('assets/images/spinner/loader-dark.gif') }}"" id="spinner" width="20px" alt="" style="display: none;"></p>
 </div>
 
 <div class="panel">
 <div class="panel-body">
     <h3 class="title-hero">
-        Hostname Here
+        <span class="hostname"></span>
     </h3>
     <div class="example-box-wrapper">
+    {{ form_start(form, {'attr': {'id': 'actionform'}}) }}
+     {{ form_widget(form.action) }}
+     {{ form_widget(form.save, {'attr': {'style': 'display: none;'}}) }}
+     {{ form_widget(form.value) }}
+     {{ form_end(form) }}
     <div class="col-md-6">
     <table class="table table-striped">
-                        <thead>
-                          <tr>
-                          <td>Server Info</td>
-                          </tr>
-                        </thead>
 
                         <tbody>
                         <tr>
+                            <td><strong>Server Details/Resources</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td>Status</td>
-                            <td>Row 1</td>
+                            <td><span id="status"></span> <span id="uptime" class="bs-label label-blue-alt"></span></td>
                         </tr>
                         <tr>
                             <td>Type</td>
-                            <td>Row 1</td>
+                            <td>  {% if server.type == "openvz" %} <img src="{{ asset('img/vz.png') }}" alt="OpenVZ" height="25" width="25"> OpenVZ {% endif %}
+                              {% if server.type == "kvm" %} <img src="{{ asset('img/kvm.png') }}" alt="KVM" height="25" width="25"> KVM {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td>Main IP</td>
-                            <td>Row 1</td>
+                            <td><span id="ip"></span></td>
                         </tr>
                         <tr>
                             <td>OS</td>
-                            <td>Row 1</td>
+                            <td><span id="os"></span></td>
                         </tr>
                         <tr>
                             <td>Node</td>
-                            <td>Row 1</td>
+                            <td><span id="node"></span></td>
                         </tr>
                         </tbody>
                     </table>
     </div>
     <div class="col-md-6">
     <table class="table table-striped">
-    <thead>
-      <tr>
-      <td>Server Resources</td>
-      </tr>
-    </thead>
                         <tbody>
                         <tr>
-                            <td>Load Average</td>
-                            <td>Row 1</td>
+                            <td>Running Processes</td>
+                            <td><span id="processes"></span></td>
+                            <td style="width: 50%;"></td>
                         </tr>
                         <tr>
                             <td>RAM</td>
-                            <td>Row 1</td>
+                            <td><span id="mem"></span>MB/<span id="availablemem"></span>MB</td>
+                            <td><div class="progressbar" id="memprogress" data-value="11">
+                        <div class="progressbar-value bg-warning" id="memprogress_value">
+                            <div class="progress-overlay"></div>
+                            <div class="progress-label" id="memprogress1"></div>
+                        </div>
+                    </div></td>
                         </tr>
                         <tr>
                             <td>SWAP</td>
-                            <td>Row 1</td>
+                            <td><span id="swap"></span>MB/<span id="availableswap"></span>MB</td>
+                            <td><div class="progressbar" id="swapprogress" data-value="11">
+                        <div class="progressbar-value bg-purple" id="swapprogress_value">
+                            <div class="progress-overlay"></div>
+                            <div class="progress-label" id="swapprogress1"></div>
+                        </div>
+                    </div></td>
                         </tr>
                         <tr>
-                            <td>HDD</td>
-                            <td>Row 1</td>
+                            <td>CPU</td>
+                            <td><span id="cpu"></span>% of <span id="availablecpu"></span> CPU's</td>
+                            <td><div class="progressbar" id="cpuprogress" data-value="11">
+                        <div class="progressbar-value bg-info" id="cpuprogress_value">
+                            <div class="progress-overlay"></div>
+                            <div class="progress-label" id="cpuprogress1"></div>
+                        </div>
+                    </div></td>
+                        </tr>
+                        <tr>
+                          <td>HDD</td>
+                          <td><span id="disk"></span>GB/<span id="availabledisk"></span>GB</td>
+                          <td><div class="progressbar" id="diskprogress" data-value="11">
+                      <div class="progressbar-value bg-yellow" id="diskprogress_value">
+                          <div class="progress-overlay"></div>
+                          <div class="progress-label" id="diskprogress1"></div>
+                      </div>
+                  </div></td>
                         </tr>
                         <tr>
                             <td>Bandwidth</td>
+                            <td>Test</td>
                             <td>Row 1</td>
                         </tr>
                         </tbody>
                     </table>
     </div>
+</div>
+<div class="example-box-wrapper">
 
-     <div class="example-box-wrapper">
-
-         <div class="content-box tabs">
-             <h3 class="content-box-header bg-primary">
-                 <span>CONTROL</span>
-                 <ul>
-                     <li>
-                         <a href="#settings" title="Tab 1">
-                             Settings
-                         </a>
-                     </li>
-                     <li>
-                         <a href="#network" title="Tab 2">
-                             Network
-                         </a>
-                     </li>
-                     <li>
-                         <a href="#statistics" title="Tab 3">
-                             Statistics
-                         </a>
-                     </li>
-                 </ul>
-             </h3>
-             <div id="settings">
-             <div class="panel">
+    <div class="content-box tabs">
+        <h3 class="content-box-header bg-primary">
+            <span>CONTROL</span>
+            <ul>
+                <li>
+                    <a href="#settings" title="Tab 1">
+                        Settings
+                    </a>
+                </li>
+                <li>
+                    <a href="#network" title="Tab 2">
+                        IP Management
+                    </a>
+                </li>
+                <li>
+                    <a href="#statistics" title="Tab 3">
+                        Firewall
+                    </a>
+                </li>
+                <li>
+                    <a href="#statistics" title="Tab 3">
+                        Statistics
+                    </a>
+                </li>
+            </ul>
+        </h3>
+        <div id="settings">
+        <div class="panel">
 <div class="panel-body">
-    <h3 class="title-hero">
-        Power Control
-    </h3>
+<h3 class="title-hero">
+   Power Control
+</h3>
 
-    <div class="example-box-wrapper">
+<div class="example-box-wrapper">
 
-        <div class="content-box remove-border dashboard-buttons clearfix">
-        <a href="#" class="btn vertical-button remove-border btn-success" title="">
-            <span class="glyph-icon icon-separator-vertical">
-                <i class="glyph-icon icon-play"></i>
-            </span>
-            <span class="button-content">Boot</span>
-        </a>
-        <a href="#" class="btn vertical-button remove-border btn-danger" title="">
-              <span class="glyph-icon icon-separator-vertical">
-                  <i class="glyph-icon icon-stop"></i>
-              </span>
-              <span class="button-content">Shutdown</span>
-          </a>
-          <a href="#" class="btn vertical-button remove-border btn-warning" title="">
-              <span class="glyph-icon icon-separator-vertical">
-                  <i class="glyph-icon icon-rotate-left"></i>
-              </span>
-              <span class="button-content">Restart</span>
-          </a>
-        </div>
-    </div>
+   <div class="content-box remove-border dashboard-buttons clearfix">
+   <a data-toggle="modal" data-target="#boot" class="btn vertical-button remove-border btn-success" title="">
+       <span class="glyph-icon icon-separator-vertical">
+           <i class="glyph-icon icon-play"></i>
+       </span>
+       <span class="button-content">Boot</span>
+   </a>
+ <a data-toggle="modal" data-target="#shutdown" class="btn vertical-button remove-border btn-danger" title="">
+         <span class="glyph-icon icon-separator-vertical">
+             <i class="glyph-icon icon-stop"></i>
+         </span>
+         <span class="button-content">Shutdown</span>
+     </a>
+     <a data-toggle="modal" data-target="#restart" class="btn vertical-button remove-border btn-warning" title="">
+         <span class="glyph-icon icon-separator-vertical">
+             <i class="glyph-icon icon-rotate-left"></i>
+         </span>
+         <span class="button-content">Restart</span>
+     </a>
+   </div>
+</div>
 
 </div>
 </div>
@@ -201,15 +237,21 @@ Operations
 <div class="content-box remove-border dashboard-buttons clearfix">
 <a href="#" class="btn vertical-button remove-border btn-info" title="">
 <span class="glyph-icon icon-separator-vertical">
-   <i class="glyph-icon icon-tags"></i>
+<i class="glyph-icon icon-tags"></i>
 </span>
 <span class="button-content">Set Hostname</span>
 </a>
 <a href="#" class="btn vertical-button remove-border btn-purple" title="">
- <span class="glyph-icon icon-separator-vertical">
-     <i class="glyph-icon icon-download"></i>
- </span>
- <span class="button-content">Reinstall OS</span>
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-download"></i>
+</span>
+<span class="button-content">Reinstall OS</span>
+</a>
+<a href="#" class="btn vertical-button remove-border btn-azure" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-globe"></i>
+</span>
+<span class="button-content">DNS Resolver</span>
 </a>
 </div>
 </div>
@@ -227,29 +269,80 @@ Access
 <div class="content-box remove-border dashboard-buttons clearfix">
 <a href="#" class="btn vertical-button remove-border btn-success" title="">
 <span class="glyph-icon icon-separator-vertical">
-   <i class="glyph-icon icon-play"></i>
+<i class="glyph-icon icon-play"></i>
 </span>
 <span class="button-content">noVNC</span>
 </a>
 <a href="#" class="btn vertical-button remove-border btn-danger" title="">
- <span class="glyph-icon icon-separator-vertical">
-     <i class="glyph-icon icon-stop"></i>
- </span>
- <span class="button-content">Spice</span>
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-stop"></i>
+</span>
+<span class="button-content">Spice</span>
 </a>
 </div>
 </div>
-
+<div class="modal fade" id="boot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Power Control</h4>
+       </div>
+       <div class="modal-body">
+           <p>Are you sure you wish to boot this VM?</p>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="boot">Confirm</button>
+       </div>
+   </div>
 </div>
+</div>
+</div>
+<div class="modal fade" id="shutdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Power Control</h4>
+       </div>
+       <div class="modal-body">
+           <p>Are you sure you wish to shutdown this VM?</p>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="shutdown">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="restart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Power Control</h4>
+       </div>
+       <div class="modal-body">
+           <p>Are you sure you wish to restart this VM?</p>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="restart">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
+        </div>
+        <div id="network">
+            Tab 2 content goes here ...
+        </div>
+        <div id="statistics">
+            Tab 3 content goes here ...
+        </div>
+    </div>
 
-             </div>
-             <div id="network">
-                 Tab 2 content goes here ...
-             </div>
-             <div id="statistics">
-                 Tab 3 content goes here ...
-             </div>
-         </div>
 
         </div>
     </div>

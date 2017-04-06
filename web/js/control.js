@@ -2,12 +2,6 @@
 
 $(document).ready(function () {
    $('.action').click(function() {
-     $.gritter.add({
-       title:	'Action in progress',
-       text:	'Your action is in progress.',
-       image: 	'../img/spinner.gif',
-       sticky: true
-       });
      $('#form_action').val($(this).data('value'));
      if ($(this).data('value') == "mainip") {
        $('#form_value').val($(this).data('setting'));
@@ -17,6 +11,12 @@ $(document).ready(function () {
      console.log($('#form_value').val());
      $('.value').val('');
      $( "#actionform" ).trigger("submit");
+     $.jGrowl("The requested action is in progress.", {
+       sticky: false,
+       life: 5000,
+       position: 'top-right',
+       theme: 'bg-blue'
+     });
    });
 
     $('#actionform').on('submit', function(e) {
@@ -26,23 +26,20 @@ $(document).ready(function () {
             type: "POST",
             data: $(this).serialize(),
             success: function (data) {
-               $('.gritter-item-wrapper').remove();
                 if (data == 1) {
-                  $.gritter.add({
-                    title:	'Success',
-                    text:	'Your action was completed successfully.',
-                    image: 	'../img/tick.png',
-                    time: 8000,
-                    sticky: false
+                  $.jGrowl("The requested action was completed successfully.", {
+                    sticky: false,
+                    life: 10000,
+                    position: 'top-right',
+                    theme: 'bg-green'
                   });
                     status();
                 } else {
-                  $.gritter.add({
-                    title:	'Error',
-                    text:	'There was an error with your action.',
-                    image: 	'../img/cross.png',
-                    time: 8000,
-                    sticky: false
+                  $.jGrowl("There was an error completing the requested action.", {
+                    sticky: false,
+                    life: 10000,
+                    position: 'top-right',
+                    theme: 'bg-red'
                   });
                 }
             },
@@ -54,47 +51,42 @@ $(document).ready(function () {
 });
 
 function status() {
+    $("#spinner").show();
 			$(function() {$.getJSON(window.location.pathname + "/json",function(result){
-        if (result.data.status == "running") {
-          $("#power").html("Online");
-          $("#power").attr('class','label label-success');
-        } else if (result.data.status == "suspended") {
-          $("#power").html("Suspended");
-          $("#power").attr('class','label label-inverse');
+        if (result.status == "running") {
+          $("#status").html("Online");
+          $("#uptime").html("Running for " + result.uptime);
+          $("#status").attr('class','bs-label label-success');
         } else {
-          $("#power").html("Offline");
-          $("#power").attr('class','label label-important');
+          $("#status").html("Offline");
+          $("#status").attr('class','bs-label label-danger');
         }
-        if (result.data.tuntap == 1) {
-          $("#tunon").attr('disabled', true);
-          $("#tunoff").attr('disabled', false);
-        } else {
-          $("#tunoff").attr('disabled', true);
-          $("#tunon").attr('disabled', false);
-        }
-        if (result.data.fuse == 1) {
-          $("#fuseon").attr('disabled', true);
-          $("#fuseoff").attr('disabled', false);
-        } else {
-          $("#fuseoff").attr('disabled', true);
-          $("#fuseon").attr('disabled', false);
-        }
-	$("#loadavg").html(result.data.loadavg);
-	$("#ram").html(result.data.ram);
-	$("#vswap").html(result.data.swap);
-	$("#disk").html(result.data.disk);
-	$("#node").html(result.data.node);
-	$(".hostname").html(result.data.hostname);
-	$("#ip").html(result.data.ip);
-  $("#os").html(result.data.os);
-	$("#ram_bar").html(result.data.ram_percent + "%");
-	$("#ram_bar").width(result.data.ram_percent + "%");
-  $("#disk_bar").html(result.data.disk_percent + "%");
-	$("#disk_bar").width(result.data.disk_percent + "%");
-  $("#vswap_bar").html(result.data.swap_percent + "%");
-  $("#vswap_bar").width(result.data.swap_percent + "%");
-  $(".action[data-value='mainip']").show();
-  $(".action[data-setting='"+ result.data.ip + "']").hide();
+	$("#node").html(result.node);
+	$(".hostname").html(result.name);
+	$("#ip").html(result.ip);
+  $("#os").html(result.os);
+  $("#processes").html(result.nproc);
+  $("#mem").html(result.mem);
+  $("#availablemem").html(result.availablemem);
+  var width = Math.round($("#memprogress").width() * (result.ram_percent/100));
+  $("#memprogress_value").width(width);
+  $("#memprogress1").html(result.ram_percent+"%");
+  $("#swap").html(result.swap);
+  $("#availableswap").html(result.availableswap);
+  var width = Math.round($("#swapprogress").width() * (result.swap_percent/100));
+  $("#swapprogress_value").width(width);
+  $("#swapprogress1").html(result.swap_percent+"%");
+  $("#cpu").html(Math.round(result.cpu*100));
+  $("#availablecpu").html(result.cpus);
+  var width = Math.round($("#cpuprogress").width() * result.cpu);
+  $("#cpuprogress_value").width(width);
+  $("#cpuprogress1").html(Math.round(result.cpu*100)+"%");
+  $("#disk").html(result.disk);
+  $("#availabledisk").html(result.availabledisk);
+  var width = Math.round($("#diskprogress").width() * (result.disk_percent/100));
+  $("#diskprogress_value").width(width);
+  $("#diskprogress1").html(result.disk_percent+"%");
+  $("#spinner").hide();
 	});});
 	}
 	status();

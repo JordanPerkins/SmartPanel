@@ -7,15 +7,10 @@ namespace AppBundle\Form\Model;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Log;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class OpenVZAction
 {
-  /**
-    * @Assert\Choice(
-    *     choices = { "start", "restart", "stop", "hostname", "password", "tuntap_enable", "tuntap_disable", "fuse_enable", "fuse_disable", "reinstall", "mainip"},
-    *     message = "Invalid action."
-    * )
-    */
      protected $action;
 
      protected $value;
@@ -49,47 +44,32 @@ class OpenVZAction
 
      // Function for handling panel requests
      public function handle() {
-
-       $result = $this->getNode()->command($this->getAction(), $this->getServer()->getType(), [
-         'ctid' => $this->getServer()->getCtid(),
-         'value' => $this->getValue(),
-         ])["error"];
-         //Add to event log
-         if ($this->getAction() == "password") {
-           $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), null, $this->getServer()->getId(), $this->getUser()->getId(), 1-$result);
+        $status = $this->getNode()->command("get", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/current");
+       if ($this->getAction() == "boot") {
+         if ($status[1]["status"] == "stopped") {
+           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/start");
          } else {
-             $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), 1-$result);
+           $result = [false, null];
          }
-      if ($result == 0) {
-        // Update the server entity
-        if ($this->getAction() == "hostname") {
-          $this->getServer()->setHostname($this->getValue());
-        }
-        if ($this->getAction() == "mainip") {
-          $this->getServer()->setIp($this->getValue());
-        }
-        if ($this->getAction() == "reinstall") {
-          foreach ($this->getOs() as $os) {
-            if ($os->getFile() == $this->getValue()) {
-              $name = $os->getName();
-            }
-          }
-          $this->getServer()->setOs($name);
-        }
-        if ($this->getAction() == "tuntap_enable" || $this->getAction() == "tuntap_disable" || $this->getAction() == "fuse_enable" || $this->getAction() == "fuse_disable") {
-          $info = explode('_', $this->getAction());
-          $method = 'set'.ucfirst($info[0]);
-          if ($info[1] == "enable") {
-            $this->getServer()->$method(true);
-          } else {
-            $this->getServer()->$method(false);
-          }
-        }
-        return [$this->getServer(), $log];
-      } else {
-        return [null, $log];
-      }
-    }
+       }
+       if ($this->getAction() == "shutdown") {
+         if ($status[1]["status"] == "running") {
+           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/stop");
+         } else {
+           $result = [false, null];
+         }
+       }
+       if ($this->getAction() == "restart") {
+         if ($status[1]["status"] == "running") {
+           $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/stop");
+           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/start");
+         } else {
+           $result = [false, null];
+         }
+       }
+      $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
+      return [$result[0], $log];
+     }
 
     // Constructor
     public function __construct ($server, $node, $os, $user, $request) {

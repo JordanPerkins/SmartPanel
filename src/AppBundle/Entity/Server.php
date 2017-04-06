@@ -88,27 +88,35 @@ class Server extends Controller
     // Fetch server status
     public function getStatus($node)
     {
+      if ($this->getType() == "openvz") {
+        $type = "openvz";
+      } else if ($this->getType() == "kvm") {
+        $type = "qemu";
+      }
 
-      $status = $node->command("status", $this->getType(), [
-              'ctid' => $this->getCtid(),
-            ]);
-
-      if (isset($status["error"]) && $status["error"] == 0) {
-
-        $status["data"]["ram_percent"] = round($status["data"]["ram"]*100 / $this->getRam(), 0);
-        $status["data"]["disk_percent"] = round($status["data"]["disk"]*100 / $this->getDisk(), 0);
-        $status["data"]["swap_percent"] = round($status["data"]["swap"]*100 / $this->getSwap(), 0);
-        $status["data"]["ip"] = $this->getIp();
-        $status["data"]["node"] = $node->getName();
-        $status["data"]["hostname"] = $this->getHostname();
-        $status["data"]["tuntap"] = $this->getTuntap();
-        $status["data"]["fuse"] = $this->getFuse();
-        $status["data"]["os"] = $this->getOs();
-        return $status;
+      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current");
+      if ($result[0]) {
+        $result = $result[1];
+        $result["os"] = $this->getOs();
+        $result["node"] = $node->getName();
+        $result["mem"] = round($result["mem"]/(1024*1024), 0);
+        $result["swap"] = round($result["swap"]/(1024*1024), 0);
+        $result["disk"] = round($result["disk"]/(1024*1024*1024), 0);
+        $result["availablemem"] = $this->getRam();
+        $result["availableswap"] = $this->getSwap();
+        $result["availabledisk"] = $this->getDisk();
+        $result["ram_percent"] = round($result["mem"]*100 / $this->getRam(), 0);
+        $result["swap_percent"] = round($result["swap"]*100 / $this->getSwap(), 0);
+        $result["disk_percent"] = round($result["disk"]*100 / $this->getDisk(), 0);
+        $dtF = new \DateTime('@0');
+        $dtT = new \DateTime("@".$result["uptime"]);
+        $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
+        return $result;
       } else {
         return false;
+      }
+
     }
-  }
 
     /**
      * Get id

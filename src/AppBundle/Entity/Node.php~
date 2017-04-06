@@ -7,6 +7,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ProxmoxVE\Proxmox;
 
 
 /**
@@ -35,7 +36,22 @@ class Node
     /**
      * @ORM\Column(type="string", length=64)
      */
+    private $identifier;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $realm;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
     private $username;
+
+    /**
+     * @ORM\Column(type="integer", length=64)
+     */
+    private $port;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -43,41 +59,183 @@ class Node
     private $password;
 
     // Function for sending commands to the node.
-    public function command($cmd, $data) {
+    public function command($type, $cmd, $data = null) {
+      $credentials = [
+        'hostname' => $this->getIp(),
+        'username' => $this->getUsername(),
+        'password' => $this->getPassword(),
+        'realm' => $this->getRealm(),
+        'port' => $this->getPort(),
+        ];
+        $proxmox = new Proxmox($credentials);
 
-        $postfields = array();
-        $postfields["username"] = $this->getUsername();
-        $postfields["password"] = $this->getPassword();
-        if ($cmd) {
-          $postfields["cmd"] = $cmd;
-          $postfields = array_merge($postfields, $data);
+        if ($type == "get" || $type == "create" || $type == "set" || $type == "delete") {
+          if ($data == null) {
+            $result = $proxmox->$type($cmd);
+          } else {
+            $result = $proxmox->$type($cmd, $data);
+          }
+          if (isset($result['errors'])) {
+            return [false, null];
+          } else {
+            return [true, $result['data']];
+          }
+        } else {
+          return [false, null];
         }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://".$this->getIp().":8471/command.php");
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postfields));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $response = curl_exec($ch);
-        if (curl_error($ch)) {
-          return curl_errno($ch);
-        }
-        curl_close($ch);
-        $response = json_decode($response, true);
-        return $response;
-
     }
 
-    // Function to check if node is working
-    public function checkNode() {
-      $data = $this->command(false, NULL);
-      if ($data["error"] == 0) {
-        return true;
-      } else {
-        return false;
-      }
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
+    /**
+     * Set ip
+     *
+     * @param string $ip
+     *
+     * @return Node
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
 
+        return $this;
+    }
+
+    /**
+     * Get ip
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Node
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return Node
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return Node
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set realm
+     *
+     * @param string $realm
+     *
+     * @return Node
+     */
+    public function setRealm($realm)
+    {
+        $this->realm = $realm;
+
+        return $this;
+    }
+
+    /**
+     * Get realm
+     *
+     * @return string
+     */
+    public function getRealm()
+    {
+        return $this->realm;
+    }
+
+    /**
+     * Set port
+     *
+     * @param integer $port
+     *
+     * @return Node
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Get port
+     *
+     * @return integer
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
 }
