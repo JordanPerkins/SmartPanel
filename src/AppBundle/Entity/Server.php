@@ -95,19 +95,23 @@ class Server extends Controller
       }
 
       $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current");
-      if ($result[0]) {
+      $result1 = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/config");
+      if ($result[0] && $result[1]) {
         $result = $result[1];
         $result["os"] = $this->getOs();
+        $result["tuntap"] = $this->getTuntap();
         $result["node"] = $node->getName();
         $result["mem"] = round($result["mem"]/(1024*1024), 0);
         $result["swap"] = round($result["swap"]/(1024*1024), 0);
-        $result["disk"] = round($result["disk"]/(1024*1024*1024), 0);
+        $result["disk"] = round($result["disk"]/(1024*1024*1024), 1);
+        $result["cpu"] = round($result["cpu"]*100, 1);
         $result["availablemem"] = $this->getRam();
         $result["availableswap"] = $this->getSwap();
         $result["availabledisk"] = $this->getDisk();
         $result["ram_percent"] = round($result["mem"]*100 / $this->getRam(), 0);
         $result["swap_percent"] = round($result["swap"]*100 / $this->getSwap(), 0);
         $result["disk_percent"] = round($result["disk"]*100 / $this->getDisk(), 0);
+        $result["nameserver"] = $result1[1]["nameserver"];
         $dtF = new \DateTime('@0');
         $dtT = new \DateTime("@".$result["uptime"]);
         $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
@@ -116,6 +120,18 @@ class Server extends Controller
         return false;
       }
 
+    }
+
+    // Fetch graph
+    public function getGraph($node, $type, $period)
+    {
+      if ($this->getType() == "openvz") {
+        $vmtype = "openvz";
+      } else if ($this->getType() == "kvm") {
+        $vmtype = "qemu";
+      }
+      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$vmtype."/".$this->getCtid()."/rrd", ['ds' => $type, 'timeframe' => $period], true);
+      return $result;
     }
 
     /**

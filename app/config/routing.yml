@@ -64,3 +64,7 @@ client_edit:
 client_password:
     path: /admin/clients/password/{cid}
     defaults:  { _controller: AppBundle:Clients:password }
+
+graph:
+    path: /servers/{sid}/graph
+    defaults:  { _controller: AppBundle:Server:graph }

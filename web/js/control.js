@@ -48,6 +48,14 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#tuntapbutton').on('switchChange.bootstrapSwitch', function(event, state) {
+      if (state == true) {
+          $('#tuntapval').val('on');
+      } else {
+          $('#tuntapval').val('off');
+      }
+    });
 });
 
 function status() {
@@ -65,6 +73,7 @@ function status() {
 	$(".hostname").html(result.name);
 	$("#ip").html(result.ip);
   $("#os").html(result.os);
+  $("#nameserver").val(result.nameserver);
   $("#processes").html(result.nproc);
   $("#mem").html(result.mem);
   $("#availablemem").html(result.availablemem);
@@ -76,17 +85,18 @@ function status() {
   var width = Math.round($("#swapprogress").width() * (result.swap_percent/100));
   $("#swapprogress_value").width(width);
   $("#swapprogress1").html(result.swap_percent+"%");
-  $("#cpu").html(Math.round(result.cpu*100));
+  $("#cpu").html(result.cpu);
   $("#availablecpu").html(result.cpus);
-  var width = Math.round($("#cpuprogress").width() * result.cpu);
+  var width = Math.round($("#cpuprogress").width() * (result.cpu/100));
   $("#cpuprogress_value").width(width);
-  $("#cpuprogress1").html(Math.round(result.cpu*100)+"%");
+  $("#cpuprogress1").html(result.cpu+"%");
   $("#disk").html(result.disk);
   $("#availabledisk").html(result.availabledisk);
   var width = Math.round($("#diskprogress").width() * (result.disk_percent/100));
   $("#diskprogress_value").width(width);
   $("#diskprogress1").html(result.disk_percent+"%");
   $("#spinner").hide();
+  $('#tuntapbutton').bootstrapSwitch('state', result.tuntap);
 	});});
 	}
 	status();

@@ -8,6 +8,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ProxmoxVE\Proxmox;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 
 /**
@@ -59,7 +60,7 @@ class Node
     private $password;
 
     // Function for sending commands to the node.
-    public function command($type, $cmd, $data = null) {
+    public function command($type, $cmd, $data = null, $image = false) {
       $credentials = [
         'hostname' => $this->getIp(),
         'username' => $this->getUsername(),
@@ -73,12 +74,19 @@ class Node
           if ($data == null) {
             $result = $proxmox->$type($cmd);
           } else {
+            if ($image == true) {
+              $proxmox->setResponseType('png');
+            }
             $result = $proxmox->$type($cmd, $data);
           }
           if (isset($result['errors'])) {
             return [false, null];
           } else {
-            return [true, $result['data']];
+            if ($image == true) {
+              return $result;
+            } else {
+              return [true, $result['data']];
+            }
           }
         } else {
           return [false, null];

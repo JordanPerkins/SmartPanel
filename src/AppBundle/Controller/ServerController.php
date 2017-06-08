@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Server;
 use AppBundle\Form\Model\OpenVZAction;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ServerController extends Controller
 {
@@ -144,6 +145,44 @@ class ServerController extends Controller
       $response->setData($data);
 
       return $response;
+
+    }
+
+    public function graphAction($sid, UserInterface $user, Request $request) {
+
+      // Get the specific server using the entity repository.
+      $server = $this->getDoctrine()
+        ->getRepository('AppBundle:Server')
+        ->findByID($sid);
+
+      // Server does not exist
+      if (!$server) {
+          throw $this->createNotFoundException('No server found');
+      // Server does not belong to the user
+      } elseif($user->getId() != $server->getUID()) {
+          throw $this->createNotFoundException('Server does not belong to the user');
+      }
+
+      $node = $this->getDoctrine()
+        ->getRepository('AppBundle:Node')
+        ->findByID($server->getNid());
+
+      $type = $request->query->get('type');
+      $period = $request->query->get('period');
+
+      if ($type != "cpu" && $type != "netin" && $type != "netout" && $type != "mem" && $type != "disk") {
+        return new Response(0);
+      }
+      if ($period != "hour" && $period != "day" && $period != "week" && $period != "month" && $period != "year") {
+        return new Response(0);
+      }
+
+      $data = $server->getGraph($node, $type, $period);
+
+      $headers = array(
+          'Content-Type'     => 'image/png',
+        );
+      return new Response($data, 200, $headers);
 
     }
 

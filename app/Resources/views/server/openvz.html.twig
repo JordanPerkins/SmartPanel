@@ -4,6 +4,7 @@
 
                 <div class="container">
 
+        <script type="text/javascript" src="{{ asset('assets/widgets/input-switch/inputswitch.js') }}"></script>
 
 <script type="text/javascript" src="{{ asset('js/control.js') }}"></script>
 <!-- jQueryUI Accordion -->
@@ -114,7 +115,7 @@
                         <tr>
                             <td>Running Processes</td>
                             <td><span id="processes"></span></td>
-                            <td style="width: 50%;"></td>
+                            <td style="width: 47%;"></td>
                         </tr>
                         <tr>
                             <td>RAM</td>
@@ -235,7 +236,7 @@ Operations
 <div class="example-box-wrapper">
 
 <div class="content-box remove-border dashboard-buttons clearfix">
-<a href="#" class="btn vertical-button remove-border btn-info" title="">
+<a data-toggle="modal" data-target="#hostname" class="btn vertical-button remove-border btn-info" title="">
 <span class="glyph-icon icon-separator-vertical">
 <i class="glyph-icon icon-tags"></i>
 </span>
@@ -247,11 +248,23 @@ Operations
 </span>
 <span class="button-content">Reinstall OS</span>
 </a>
-<a href="#" class="btn vertical-button remove-border btn-azure" title="">
+<a data-toggle="modal" data-target="#dns" class="btn vertical-button remove-border btn-azure" title="">
 <span class="glyph-icon icon-separator-vertical">
 <i class="glyph-icon icon-globe"></i>
 </span>
 <span class="button-content">DNS Resolver</span>
+</a>
+<a data-toggle="modal" data-target="#tuntap" class="btn vertical-button remove-border btn-yellow" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-cubes"></i>
+</span>
+<span class="button-content">TUN/TAP</span>
+</a>
+<a data-toggle="modal" data-target="#password" class="btn vertical-button remove-border btn-info" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-key"></i>
+</span>
+<span class="button-content">Root Pass</span>
 </a>
 </div>
 </div>
@@ -281,6 +294,8 @@ Access
 </a>
 </div>
 </div>
+</div>
+</div>
 <div class="modal fade" id="boot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-dialog">
    <div class="modal-content">
@@ -296,7 +311,6 @@ Access
            <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="boot">Confirm</button>
        </div>
    </div>
-</div>
 </div>
 </div>
 <div class="modal fade" id="shutdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -316,7 +330,6 @@ Access
    </div>
 </div>
 </div>
-</div>
 <div class="modal fade" id="restart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-dialog">
    <div class="modal-content">
@@ -334,12 +347,166 @@ Access
    </div>
 </div>
 </div>
+<div class="modal fade" id="hostname" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Set Hostname</h4>
+       </div>
+       <div class="modal-body">
+       <div class="form-group">
+       <label class="col-sm-3 control-label">New Hostname</label>
+       <div class="col-sm-6">
+       <input type="text" data-value="hostname" required="required" class="value form-control" />
+       </div>
+       </div>
+       <br>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="hostname">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
+<div class="modal fade" id="password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Set Root Password</h4>
+       </div>
+       <div class="modal-body">
+       <div class="form-group">
+       <label class="col-sm-3 control-label">New Password</label>
+       <div class="col-sm-6">
+       <input type="password" data-value="password" required="required" class="value form-control" />
+       </div>
+       </div>
+       <br>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="password">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
+<div class="modal fade" id="dns" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Resolvers</h4>
+       </div>
+       <div class="modal-body">
+       <p>Leave a space between each resolver you wish to use (e.g. '8.8.8.8 8.8.4.4')</p><br>
+       <div class="form-group">
+       <label class="col-sm-3 control-label">Resolvers</label>
+       <div class="col-sm-6">
+       <input type="text" data-value="nameserver" id="nameserver" required="required" class="value form-control" />
+       </div>
+       </div>
+       <br>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="nameserver">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
+<div class="modal fade" id="tuntap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Toggle Tuntap</h4>
+       </div>
+       <div class="modal-body">
+       <div class="form-group">
+       <label class="col-sm-3 control-label">TUN/TAP</label>
+       <div class="col-sm-6">
+       <input type="hidden" id="tuntapval" class="value" data-value="tuntap" value="on">
+       <input type="checkbox" id="tuntapbutton" data-on-color="warning" name="tuntap" class="input-switch" checked data-size="medium" data-value="tuntap" data-on-text="On" data-off-text="Off" >
+       </div>
+       </div>
+       <br>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="tuntap">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
         </div>
         <div id="network">
             Tab 2 content goes here ...
         </div>
         <div id="statistics">
-            Tab 3 content goes here ...
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Select Period</label>
+          <div class="col-sm-6">
+          <select class="form-control">
+            <option>Hourly</option>
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Yearly</option>
+          </select>
+          </div>
+          </div>
+          <br><br>
+                <div class="panel">
+        <div class="panel-body">
+        <h3 class="title-hero">
+           CPU
+        </h3>
+
+        <div class="example-box-wrapper">
+        <img src="/servers/{{ server.id }}/graph?type=cpu&period=hour">
+        </div>
+        </div>
+        </div>
+        <div class="panel">
+        <div class="panel-body">
+        <h3 class="title-hero">
+        Memory
+        </h3>
+
+        <div class="example-box-wrapper">
+        <img src="/servers/{{ server.id }}/graph?type=mem&period=hour">
+        </div>
+        </div>
+        </div>
+
+          <div class="panel">
+    <div class="panel-body">
+    <h3 class="title-hero">
+     Network
+    </h3>
+
+    <div class="example-box-wrapper">
+    <img src="/servers/{{ server.id }}/graph?type=netin&period=hour">
+    <img src="/servers/{{ server.id }}/graph?type=netout&period=hour">
+    </div>
+
+    </div>
+    </div>
+      <div class="panel">
+    <div class="panel-body">
+    <h3 class="title-hero">
+    Disk
+    </h3>
+
+    <div class="example-box-wrapper">
+    <img src="/servers/{{ server.id }}/graph?type=disk&period=hour">
+    </div>
+
+    </div>
+    </div>
         </div>
     </div>
 

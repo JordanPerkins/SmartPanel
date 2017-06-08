@@ -33,10 +33,21 @@ class OpenVZAction
       {
         if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "'") !== false || strpos($this->getValue(), '"') !== false || strpos($this->getValue(), '\\') !== false || strpos($this->getValue(), '/') !== false) {
           return false;
-        } else if ($this->getAction() == "hostname") {
+        }
+        if ($this->getAction() == "hostname") {
           return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $this->getValue()) //valid chars check
            && preg_match("/^.{1,253}$/", $this->getValue()) //overall length check
            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $this->getValue())); //length of each label
+        }
+        if ($this->getAction() == "nameserver") {
+          $values = explode(' ', $this->getValue());
+          $return = true;
+          foreach ($values as $value) {
+            if (filter_var($value, FILTER_VALIDATE_IP) === false) {
+              $return = false;
+            }
+          }
+          return $return;
         }
         return true;
       }
@@ -65,6 +76,26 @@ class OpenVZAction
            $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/start");
          } else {
            $result = [false, null];
+         }
+       }
+       if ($this->getAction() == "hostname") {
+           $result = $this->getNode()->command("set", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/config", ['hostname' => $this->getValue()]);
+           $this->getServer()->setHostname($this->getValue());
+       }
+       if ($this->getAction() == "nameserver") {
+           $result = $this->getNode()->command("set", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/config", ['nameserver' => $this->getValue()]);
+       }
+       if ($this->getAction() == "password") {
+           $result = $this->getNode()->command("set", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/rootpass", ['password' => $this->getValue()]);
+           $this->setValue('');
+       }
+       if ($this->getAction() == "tuntap") {
+         if ($this->getValue() == "on") {
+           $this->getServer()->setTuntap(true);
+           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/tuntap");
+         } else {
+           $this->getServer()->setTuntap(false);
+           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/tuntapoff");
          }
        }
       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
