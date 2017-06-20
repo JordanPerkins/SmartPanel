@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Server;
-use AppBundle\Form\Model\OpenVZAction;
+use AppBundle\Form\Model\LXCAction;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -69,9 +69,9 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
 
-      if ($server->getType() == "openvz") {
-        $action = new OpenVZAction($server, $node, $template, $user, $request);
-        $page = 'server/openvz.html.twig';
+      if ($server->getType() == "lxc") {
+        $action = new LXCAction($server, $node, $template, $user, $request);
+        $page = 'server/lxc.html.twig';
       }
 
         $form = $this->createFormBuilder($action)

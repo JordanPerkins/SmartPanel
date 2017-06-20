@@ -62,7 +62,7 @@
 
 <div id="page-title">
 <h2>Manage Server</h2>
-<p>Manging OpenVZ server  <img src="{{ asset('assets/images/spinner/loader-dark.gif') }}"" id="spinner" width="20px" alt="" style="display: none;"></p>
+<p>Manging LXC server  <img src="{{ asset('assets/images/spinner/loader-dark.gif') }}"" id="spinner" width="20px" alt="" style="display: none;"></p>
 </div>
 
 <div class="panel">
@@ -81,16 +81,12 @@
 
                         <tbody>
                         <tr>
-                            <td><strong>Server Details/Resources</strong></td>
-                            <td></td>
-                        </tr>
-                        <tr>
                             <td>Status</td>
                             <td><span id="status"></span> <span id="uptime" class="bs-label label-blue-alt"></span></td>
                         </tr>
                         <tr>
                             <td>Type</td>
-                            <td>  {% if server.type == "openvz" %} <img src="{{ asset('img/vz.png') }}" alt="OpenVZ" height="25" width="25"> OpenVZ {% endif %}
+                            <td>  {% if server.type == "lxc" %} <img src="{{ asset('img/lxc.png') }}" alt="LXC" height="25" width="25"> LXC {% endif %}
                               {% if server.type == "kvm" %} <img src="{{ asset('img/kvm.png') }}" alt="KVM" height="25" width="25"> KVM {% endif %}
                             </td>
                         </tr>
@@ -113,14 +109,9 @@
     <table class="table table-striped">
                         <tbody>
                         <tr>
-                            <td>Running Processes</td>
-                            <td><span id="processes"></span></td>
-                            <td style="width: 47%;"></td>
-                        </tr>
-                        <tr>
                             <td>RAM</td>
                             <td><span id="mem"></span>MB/<span id="availablemem"></span>MB</td>
-                            <td><div class="progressbar" id="memprogress" data-value="11">
+                            <td style="width: 47%;"><div class="progressbar" id="memprogress" data-value="11">
                         <div class="progressbar-value bg-warning" id="memprogress_value">
                             <div class="progress-overlay"></div>
                             <div class="progress-label" id="memprogress1"></div>
@@ -402,6 +393,7 @@ Access
        </div>
        <div class="modal-body">
        <p>Leave a space between each resolver you wish to use (e.g. '8.8.8.8 8.8.4.4')</p><br>
+       <p><strong>WARNING:</strong> This will reboot your container!</p><br>
        <div class="form-group">
        <label class="col-sm-3 control-label">Resolvers</label>
        <div class="col-sm-6">

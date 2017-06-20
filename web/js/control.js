@@ -74,7 +74,6 @@ function status() {
 	$("#ip").html(result.ip);
   $("#os").html(result.os);
   $("#nameserver").val(result.nameserver);
-  $("#processes").html(result.nproc);
   $("#mem").html(result.mem);
   $("#availablemem").html(result.availablemem);
   var width = Math.round($("#memprogress").width() * (result.ram_percent/100));

@@ -41,7 +41,7 @@ class Server extends Controller
 
     /**
      * @ORM\Column(type="string", length=20)
-     * @Assert\Choice({"openvz", "kvm"})
+     * @Assert\Choice({"lxc", "kvm"})
      */
     private $type;
     /**
@@ -88,8 +88,8 @@ class Server extends Controller
     // Fetch server status
     public function getStatus($node)
     {
-      if ($this->getType() == "openvz") {
-        $type = "openvz";
+      if ($this->getType() == "lxc") {
+        $type = "lxc";
       } else if ($this->getType() == "kvm") {
         $type = "qemu";
       }
@@ -112,6 +112,7 @@ class Server extends Controller
         $result["swap_percent"] = round($result["swap"]*100 / $this->getSwap(), 0);
         $result["disk_percent"] = round($result["disk"]*100 / $this->getDisk(), 0);
         $result["nameserver"] = $result1[1]["nameserver"];
+        $result["ip"] = $this->getIp();
         $dtF = new \DateTime('@0');
         $dtT = new \DateTime("@".$result["uptime"]);
         $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
@@ -125,8 +126,8 @@ class Server extends Controller
     // Fetch graph
     public function getGraph($node, $type, $period)
     {
-      if ($this->getType() == "openvz") {
-        $vmtype = "openvz";
+      if ($this->getType() == "lxc") {
+        $vmtype = "lxc";
       } else if ($this->getType() == "kvm") {
         $vmtype = "qemu";
       }

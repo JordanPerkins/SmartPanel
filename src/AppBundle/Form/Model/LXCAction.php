@@ -1,5 +1,5 @@
 <?php
-/* This class is form control for allowing server actions on OpenVZ servers.
+/* This class is form control for allowing server actions on LXC servers.
  * Created by Jordan Perkins
 */
 namespace AppBundle\Form\Model;
@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Log;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class OpenVZAction
+class LXCAction
 {
      protected $action;
 
@@ -55,47 +55,62 @@ class OpenVZAction
 
      // Function for handling panel requests
      public function handle() {
-        $status = $this->getNode()->command("get", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/current");
+       $string = "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid();
+       $status = $this->getNode()->command("get", $string."/status/current");
        if ($this->getAction() == "boot") {
          if ($status[1]["status"] == "stopped") {
-           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/start");
+           $result = $this->getNode()->command("create", $string."/status/start");
          } else {
            $result = [false, null];
          }
        }
        if ($this->getAction() == "shutdown") {
          if ($status[1]["status"] == "running") {
-           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/stop");
+           $result = $this->getNode()->command("create", $string."/status/stop");
          } else {
            $result = [false, null];
          }
        }
        if ($this->getAction() == "restart") {
          if ($status[1]["status"] == "running") {
-           $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/stop");
-           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/status/start");
+           $this->getNode()->command("create", $string."/status/stop");
+           $result = $this->getNode()->command("create", $string."/status/start");
          } else {
            $result = [false, null];
          }
        }
        if ($this->getAction() == "hostname") {
-           $result = $this->getNode()->command("set", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/config", ['hostname' => $this->getValue()]);
+           $result = $this->getNode()->command("set", $string."/config", ['hostname' => $this->getValue()]);
            $this->getServer()->setHostname($this->getValue());
        }
        if ($this->getAction() == "nameserver") {
-           $result = $this->getNode()->command("set", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/config", ['nameserver' => $this->getValue()]);
+         if ($status[1]["status"] == "running") {
+           $this->getNode()->command("create", $string."/status/stop");
+           $boot = true;
+         }
+         $result = $this->getNode()->command("set", $string."/config", ['nameserver' => $this->getValue()]);
+         if (isset($boot)) {
+           $this->getNode()->command("create", $string."/status/start");
+         }
        }
        if ($this->getAction() == "password") {
-           $result = $this->getNode()->command("set", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/rootpass", ['password' => $this->getValue()]);
-           $this->setValue('');
+         if ($status[1]["status"] == "stopped") {
+           $this->getNode()->command("create", $string."/status/start");
+           $shutdown = true;
+         }
+         $result = $this->getNode()->command("set", $string."/rootpass", ['password' => $this->getValue()]);
+         $this->setValue('');
+         if (isset($shutdown)) {
+           $this->getNode()->command("create", $string."/status/stop");
+         }
        }
        if ($this->getAction() == "tuntap") {
          if ($this->getValue() == "on") {
            $this->getServer()->setTuntap(true);
-           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/tuntap");
+           $result = $this->getNode()->command("create", $string."/tuntap");
          } else {
            $this->getServer()->setTuntap(false);
-           $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid()."/tuntapoff");
+           $result = $this->getNode()->command("create", $string."/tuntapoff");
          }
        }
       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
