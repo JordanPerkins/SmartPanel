@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ProxmoxVE\Proxmox;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use AppBundle\Form\Model\Crypt;
 
 
 /**
@@ -60,11 +61,12 @@ class Node
     private $password;
 
     // Function for sending commands to the node.
-    public function command($type, $cmd, $data = null, $image = false) {
+    public function command($type, $cmd, $hash, $data = null, $image = false) {
+      $crypt = new Crypt($hash);
       $credentials = [
         'hostname' => $this->getIp(),
         'username' => $this->getUsername(),
-        'password' => $this->getPassword(),
+        'password' => $crypt->decrypt($this->getPassword()),
         'realm' => $this->getRealm(),
         'port' => $this->getPort(),
         ];

@@ -25,6 +25,8 @@ class LXCAction
 
      protected $request;
 
+     protected $hash;
+
      /**
       * @Assert\IsTrue(message = "Validation fail.")
       */
@@ -56,61 +58,61 @@ class LXCAction
      // Function for handling panel requests
      public function handle() {
        $string = "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType()."/".$this->getServer()->getCtid();
-       $status = $this->getNode()->command("get", $string."/status/current");
+       $status = $this->getNode()->command("get", $string."/status/current", $this->getHash());
        if ($this->getAction() == "boot") {
          if ($status[1]["status"] == "stopped") {
-           $result = $this->getNode()->command("create", $string."/status/start");
+           $result = $this->getNode()->command("create", $string."/status/start", $this->getHash());
          } else {
            $result = [false, null];
          }
        }
        if ($this->getAction() == "shutdown") {
          if ($status[1]["status"] == "running") {
-           $result = $this->getNode()->command("create", $string."/status/stop");
+           $result = $this->getNode()->command("create", $string."/status/stop", $this->getHash());
          } else {
            $result = [false, null];
          }
        }
        if ($this->getAction() == "restart") {
          if ($status[1]["status"] == "running") {
-           $this->getNode()->command("create", $string."/status/stop");
-           $result = $this->getNode()->command("create", $string."/status/start");
+           $this->getNode()->command("create", $string."/status/stop", $this->getHash());
+           $result = $this->getNode()->command("create", $string."/status/start", $this->getHash());
          } else {
            $result = [false, null];
          }
        }
        if ($this->getAction() == "hostname") {
-           $result = $this->getNode()->command("set", $string."/config", ['hostname' => $this->getValue()]);
+           $result = $this->getNode()->command("set", $string."/config", $this->getHash(), ['hostname' => $this->getValue()]);
            $this->getServer()->setHostname($this->getValue());
        }
        if ($this->getAction() == "nameserver") {
          if ($status[1]["status"] == "running") {
-           $this->getNode()->command("create", $string."/status/stop");
+           $this->getNode()->command("create", $string."/status/stop", $this->getHash());
            $boot = true;
          }
-         $result = $this->getNode()->command("set", $string."/config", ['nameserver' => $this->getValue()]);
+         $result = $this->getNode()->command("set", $string."/config", $this->getHash(), ['nameserver' => $this->getValue()]);
          if (isset($boot)) {
-           $this->getNode()->command("create", $string."/status/start");
+           $this->getNode()->command("create", $string."/status/start", $this->getHash());
          }
        }
        if ($this->getAction() == "password") {
          if ($status[1]["status"] == "stopped") {
-           $this->getNode()->command("create", $string."/status/start");
+           $this->getNode()->command("create", $string."/status/start", $this->getHash());
            $shutdown = true;
          }
-         $result = $this->getNode()->command("set", $string."/rootpass", ['password' => $this->getValue()]);
+         $result = $this->getNode()->command("set", $string."/rootpass", $this->getHash(), ['password' => $this->getValue()]);
          $this->setValue('');
          if (isset($shutdown)) {
-           $this->getNode()->command("create", $string."/status/stop");
+           $this->getNode()->command("create", $string."/status/stop", $this->getHash());
          }
        }
        if ($this->getAction() == "tuntap") {
          if ($this->getValue() == "on") {
            $this->getServer()->setTuntap(true);
-           $result = $this->getNode()->command("create", $string."/tuntap");
+           $result = $this->getNode()->command("create", $string."/tuntap", $this->getHash());
          } else {
            $this->getServer()->setTuntap(false);
-           $result = $this->getNode()->command("create", $string."/tuntapoff");
+           $result = $this->getNode()->command("create", $string."/tuntapoff", $this->getHash());
          }
        }
       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
@@ -118,12 +120,13 @@ class LXCAction
      }
 
     // Constructor
-    public function __construct ($server, $node, $os, $user, $request) {
+    public function __construct ($server, $node, $os, $user, $request, $hash) {
       $this->server = $server;
       $this->node = $node;
       $this->os = $os;
       $this->user = $user;
       $this->request = $request;
+      $this->hash = $hash;
     }
 
      // Getter / Setter Methods
@@ -209,5 +212,17 @@ class LXCAction
      public function getRequest()
      {
          return $this->request;
+     }
+
+     public function setHash($hash)
+     {
+         $this->hash = $hash;
+
+         return $this;
+     }
+
+     public function getHash()
+     {
+         return $this->hash;
      }
 }

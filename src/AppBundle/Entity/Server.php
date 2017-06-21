@@ -86,7 +86,7 @@ class Server extends Controller
     private $swap;
 
     // Fetch server status
-    public function getStatus($node)
+    public function getStatus($node, $hash)
     {
       if ($this->getType() == "lxc") {
         $type = "lxc";
@@ -94,8 +94,8 @@ class Server extends Controller
         $type = "qemu";
       }
 
-      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current");
-      $result1 = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/config");
+      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current", $hash);
+      $result1 = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/config", $hash);
       if ($result[0] && $result[1]) {
         $result = $result[1];
         $result["os"] = $this->getOs();
@@ -124,14 +124,14 @@ class Server extends Controller
     }
 
     // Fetch graph
-    public function getGraph($node, $type, $period)
+    public function getGraph($node, $type, $period, $hash)
     {
       if ($this->getType() == "lxc") {
         $vmtype = "lxc";
       } else if ($this->getType() == "kvm") {
         $vmtype = "qemu";
       }
-      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$vmtype."/".$this->getCtid()."/rrd", ['ds' => $type, 'timeframe' => $period], true);
+      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$vmtype."/".$this->getCtid()."/rrd", $hash, ['ds' => $type, 'timeframe' => $period], true);
       return $result;
     }
 

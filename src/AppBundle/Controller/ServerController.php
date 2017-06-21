@@ -69,8 +69,10 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
 
+      $hash = $this->getParameter('secret_hash');
+
       if ($server->getType() == "lxc") {
-        $action = new LXCAction($server, $node, $template, $user, $request);
+        $action = new LXCAction($server, $node, $template, $user, $request, $hash);
         $page = 'server/lxc.html.twig';
       }
 
@@ -139,7 +141,9 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
 
-      $data = $server->getStatus($node);
+      $hash = $this->getParameter('secret_hash');
+
+      $data = $server->getStatus($node, $hash);
 
       $response = new JsonResponse();
       $response->setData($data);
@@ -177,7 +181,9 @@ class ServerController extends Controller
         return new Response(0);
       }
 
-      $data = $server->getGraph($node, $type, $period);
+      $hash = $this->getParameter('secret_hash');
+
+      $data = $server->getGraph($node, $type, $period, $hash);
 
       $headers = array(
           'Content-Type'     => 'image/png',
