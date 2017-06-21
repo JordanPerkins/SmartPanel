@@ -83,11 +83,13 @@ function status() {
 			$(function() {$.getJSON(window.location.pathname + "/json",function(result){
         if (result.status == "running") {
           $("#status").html("Online");
+          $("#uptime").show();
           $("#uptime").html("Running for " + result.uptime);
           $("#status").attr('class','bs-label label-success');
         } else {
           $("#status").html("Offline");
           $("#status").attr('class','bs-label label-danger');
+          $("#uptime").hide();
         }
 	$("#node").html(result.node);
 	$(".hostname").html(result.name);
@@ -109,7 +111,11 @@ function status() {
   var width = Math.round($("#cpuprogress").width() * (result.cpu/100));
   $("#cpuprogress_value").width(width);
   $("#cpuprogress1").html(result.cpu+"%");
-  $("#disk").html(result.disk);
+  if (result.status == "stopped") {
+    $("#disk").html('??');
+  } else {
+    $("#disk").html(result.disk);
+  }
   $("#availabledisk").html(result.availabledisk);
   var width = Math.round($("#diskprogress").width() * (result.disk_percent/100));
   $("#diskprogress_value").width(width);
