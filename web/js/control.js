@@ -58,6 +58,26 @@ $(document).ready(function () {
     });
 });
 
+function graph() {
+  $(".graphpanel").hide();
+  $("#graphspinner").show();
+  if ($("#graphselect").val() != "null") {
+    $("#cpugraph").attr("src" , window.location.pathname + "/graph?type=cpu&period="+$("#graphselect").val());
+    $("#memgraph").attr("src" , window.location.pathname + "/graph?type=mem&period="+$("#graphselect").val());
+    $("#netingraph").attr("src" , window.location.pathname + "/graph?type=netin&period="+$("#graphselect").val());
+    $("#netoutgraph").attr("src" , window.location.pathname + "/graph?type=netout&period="+$("#graphselect").val());
+    $("#diskgraph").load(function() {
+      $("#graphspinner").hide();
+      $(".graphpanel").show();
+    }).attr("src" , window.location.pathname + "/graph?type=disk&period="+$("#graphselect").val());
+
+  }
+}
+
+
+$(document).on('change','#graphselect',graph);
+
+
 function status() {
     $("#spinner").show();
 			$(function() {$.getJSON(window.location.pathname + "/json",function(result){

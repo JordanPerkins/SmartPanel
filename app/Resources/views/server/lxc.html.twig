@@ -441,60 +441,62 @@ Access
         <div class="form-group">
           <label class="col-sm-3 control-label">Select Period</label>
           <div class="col-sm-6">
-          <select class="form-control">
-            <option>Hourly</option>
-            <option>Daily</option>
-            <option>Weekly</option>
-            <option>Monthly</option>
-            <option>Yearly</option>
+          <select class="form-control" id="graphselect">
+            <option value="null" selected>-- Select Period --</option>
+            <option value="hour">Hourly</option>
+            <option value="day">Daily</option>
+            <option value="week">Weekly</option>
+            <option value="month">Monthly</option>
+            <option value="year">Yearly</option>
           </select>
           </div>
           </div>
           <br><br>
-                <div class="panel">
+            <p style="text-align:center"><img src="{{ asset('assets/images/spinner/loader-dark.gif') }}"" id="graphspinner" width="110px" alt="" style="display: none;"></p>
+                <div class="panel graphpanel" style="display: none;">
         <div class="panel-body">
         <h3 class="title-hero">
            CPU
         </h3>
 
         <div class="example-box-wrapper">
-        <img src="/servers/{{ server.id }}/graph?type=cpu&period=hour">
+        <img id="cpugraph" src="">
         </div>
         </div>
         </div>
-        <div class="panel">
+        <div class="panel graphpanel" style="display: none;">
         <div class="panel-body">
         <h3 class="title-hero">
         Memory
         </h3>
 
         <div class="example-box-wrapper">
-        <img src="/servers/{{ server.id }}/graph?type=mem&period=hour">
+        <img id="memgraph" src="">
         </div>
         </div>
         </div>
 
-          <div class="panel">
+          <div class="panel graphpanel" style="display: none;">
     <div class="panel-body">
     <h3 class="title-hero">
      Network
     </h3>
 
     <div class="example-box-wrapper">
-    <img src="/servers/{{ server.id }}/graph?type=netin&period=hour">
-    <img src="/servers/{{ server.id }}/graph?type=netout&period=hour">
+    <img id="netingraph" src="">
+    <img id="netoutgraph" src="">
     </div>
 
     </div>
     </div>
-      <div class="panel">
+      <div class="panel graphpanel" style="display: none;">
     <div class="panel-body">
     <h3 class="title-hero">
     Disk
     </h3>
 
     <div class="example-box-wrapper">
-    <img src="/servers/{{ server.id }}/graph?type=disk&period=hour">
+    <img id="diskgraph" src="">
     </div>
 
     </div>
