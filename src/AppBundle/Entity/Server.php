@@ -49,6 +49,10 @@ class Server extends Controller
      */
     private $ctid;
     /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $nameserver;
+    /**
      * @ORM\Column(type="string", length=64)
      */
     private $uuid;
@@ -95,7 +99,6 @@ class Server extends Controller
       }
 
       $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current", $hash);
-      $result1 = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/config", $hash);
       if ($result[0] && $result[1]) {
         $result = $result[1];
         $result["os"] = $this->getOs();
@@ -111,8 +114,8 @@ class Server extends Controller
         $result["ram_percent"] = round($result["mem"]*100 / $this->getRam(), 0);
         $result["swap_percent"] = round($result["swap"]*100 / $this->getSwap(), 0);
         $result["disk_percent"] = round($result["disk"]*100 / $this->getDisk(), 0);
-        $result["nameserver"] = $result1[1]["nameserver"];
         $result["ip"] = $this->getIp();
+        $result["nameserver"] = $this->getNameserver();
         $dtF = new \DateTime('@0');
         $dtT = new \DateTime("@".$result["uptime"]);
         $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
@@ -480,5 +483,29 @@ class Server extends Controller
     public function getSwap()
     {
         return $this->swap;
+    }
+
+    /**
+     * Set nameserver
+     *
+     * @param string $nameserver
+     *
+     * @return Server
+     */
+    public function setNameserver($nameserver)
+    {
+        $this->nameserver = $nameserver;
+
+        return $this;
+    }
+
+    /**
+     * Get nameserver
+     *
+     * @return string
+     */
+    public function getNameserver()
+    {
+        return $this->nameserver;
     }
 }

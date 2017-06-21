@@ -174,7 +174,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#statistics" title="Tab 3">
+                    <a href="#firewall" title="Tab 3">
                         Firewall
                     </a>
                 </li>
@@ -231,9 +231,9 @@ Operations
 <span class="glyph-icon icon-separator-vertical">
 <i class="glyph-icon icon-tags"></i>
 </span>
-<span class="button-content">Set Hostname</span>
+<span class="button-content">Hostname</span>
 </a>
-<a href="#" class="btn vertical-button remove-border btn-purple" title="">
+<a data-toggle="modal" data-target="#reinstall" class="btn vertical-button remove-border btn-purple" title="">
 <span class="glyph-icon icon-separator-vertical">
 <i class="glyph-icon icon-download"></i>
 </span>
@@ -409,6 +409,34 @@ Access
    </div>
 </div>
 </div>
+<div class="modal fade" id="reinstall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Reinstall OS</h4>
+       </div>
+       <div class="modal-body">
+       <p><strong>WARNING:</strong> All existing data will be lost</p><br>
+       <div class="form-group">
+       <label class="col-sm-3 control-label">New OS</label>
+       <div class="col-sm-6">
+       <select class="form-control" data-value="reinstall">
+        {% for template in templates %}
+         <option value="{{ template.file }}">{{ template.name }}</option>
+        {% endfor %}
+       </select>
+       </div>
+       </div>
+       <br>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="reinstall">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
 <div class="modal fade" id="tuntap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-dialog">
    <div class="modal-content">
@@ -435,7 +463,42 @@ Access
 </div>
         </div>
         <div id="network">
-            Tab 2 content goes here ...
+        <div class="panel">
+<div class="panel-body">
+    <h3 class="title-hero">
+        IPv4 Addresses
+    </h3>
+    <div class="example-box-wrapper">
+        <div class="remove-columns">
+            <table class="table table-bordered table-striped table-condensed cf">
+                <thead class="cf">
+                <tr>
+                    <th>IP</th>
+                    <th>Gateway</th>
+                    <th>Netmask</th>
+                    <th>Interface</th>
+                    <th>Reverse DNS</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ip in ipv4 %}
+                <tr>
+                    <td data-title="IP">{{ ip.ip }}</td>
+                    <td data-title="Gateway">1-</td>
+                    <td data-title="Netmask">-</td>
+                    <td data-title="Interface">{{ ip.interface }}</td>
+                    <td data-title="Reverse DNS">{{ ip.rdns }} &nbsp;&nbsp;&nbsp;<a class="btn btn-border btn-alt border-blue-alt btn-link font-blue-alt" href="#" title=""><span>Change</span></a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+        </div>
+        <div id="firewall">
+            Tab 3 content goes here ...
         </div>
         <div id="statistics">
         <div class="form-group">

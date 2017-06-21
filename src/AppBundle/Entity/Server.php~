@@ -41,13 +41,17 @@ class Server extends Controller
 
     /**
      * @ORM\Column(type="string", length=20)
-     * @Assert\Choice({"openvz", "kvm"})
+     * @Assert\Choice({"lxc", "kvm"})
      */
     private $type;
     /**
      * @ORM\Column(type="string", length=20)
      */
     private $ctid;
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $nameserver;
     /**
      * @ORM\Column(type="string", length=64)
      */
@@ -86,28 +90,53 @@ class Server extends Controller
     private $swap;
 
     // Fetch server status
-    public function getStatus($node)
+    public function getStatus($node, $hash)
     {
+      if ($this->getType() == "lxc") {
+        $type = "lxc";
+      } else if ($this->getType() == "kvm") {
+        $type = "qemu";
+      }
 
-      $status = $node->command("status", $this->getType(), [
-              'ctid' => $this->getCtid(),
-            ]);
-
-      if (isset($status["error"]) && $status["error"] == 0) {
-
-        $status["data"]["ram_percent"] = round($status["data"]["ram"]*100 / $this->getRam(), 0);
-        $status["data"]["disk_percent"] = round($status["data"]["disk"]*100 / $this->getDisk(), 0);
-        $status["data"]["ip"] = $this->getIp();
-        $status["data"]["node"] = $node->getName();
-        $status["data"]["hostname"] = $this->getHostname();
-        $status["data"]["tuntap"] = $this->getTuntap();
-        $status["data"]["fuse"] = $this->getFuse();
-        $status["data"]["os"] = $this->getOs();
-        return $status;
+      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current", $hash);
+      if ($result[0] && $result[1]) {
+        $result = $result[1];
+        $result["os"] = $this->getOs();
+        $result["tuntap"] = $this->getTuntap();
+        $result["node"] = $node->getName();
+        $result["mem"] = round($result["mem"]/(1024*1024), 0);
+        $result["swap"] = round($result["swap"]/(1024*1024), 0);
+        $result["disk"] = round($result["disk"]/(1024*1024*1024), 1);
+        $result["cpu"] = round($result["cpu"]*100, 1);
+        $result["availablemem"] = $this->getRam();
+        $result["availableswap"] = $this->getSwap();
+        $result["availabledisk"] = $this->getDisk();
+        $result["ram_percent"] = round($result["mem"]*100 / $this->getRam(), 0);
+        $result["swap_percent"] = round($result["swap"]*100 / $this->getSwap(), 0);
+        $result["disk_percent"] = round($result["disk"]*100 / $this->getDisk(), 0);
+        $result["ip"] = $this->getIp();
+        $result["nameserver"] = $this->getNameserver();
+        $dtF = new \DateTime('@0');
+        $dtT = new \DateTime("@".$result["uptime"]);
+        $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
+        return $result;
       } else {
         return false;
+      }
+
     }
-  }
+
+    // Fetch graph
+    public function getGraph($node, $type, $period, $hash)
+    {
+      if ($this->getType() == "lxc") {
+        $vmtype = "lxc";
+      } else if ($this->getType() == "kvm") {
+        $vmtype = "qemu";
+      }
+      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$vmtype."/".$this->getCtid()."/rrd", $hash, ['ds' => $type, 'timeframe' => $period], true);
+      return $result;
+    }
 
     /**
      * Get id
@@ -430,5 +459,29 @@ class Server extends Controller
     public function getOs()
     {
         return $this->os;
+    }
+
+    /**
+     * Set swap
+     *
+     * @param integer $swap
+     *
+     * @return Server
+     */
+    public function setSwap($swap)
+    {
+        $this->swap = $swap;
+
+        return $this;
+    }
+
+    /**
+     * Get swap
+     *
+     * @return integer
+     */
+    public function getSwap()
+    {
+        return $this->swap;
     }
 }

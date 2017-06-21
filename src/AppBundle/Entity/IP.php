@@ -27,6 +27,16 @@ class IP
     private $ip;
 
     /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $interface;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $rdns;
+
+    /**
      * @ORM\Column(type="integer", length=1)
      */
     private $version;
@@ -148,5 +158,53 @@ class IP
     public function getSid()
     {
         return $this->sid;
+    }
+
+    /**
+     * Set interface
+     *
+     * @param string $interface
+     *
+     * @return IP
+     */
+    public function setInterface($interface)
+    {
+        $this->interface = $interface;
+
+        return $this;
+    }
+
+    /**
+     * Get interface
+     *
+     * @return string
+     */
+    public function getInterface()
+    {
+        return $this->interface;
+    }
+
+    /**
+     * Set rdns
+     *
+     * @param string $rdns
+     *
+     * @return IP
+     */
+    public function setRdns($rdns)
+    {
+        $this->rdns = $rdns;
+
+        return $this;
+    }
+
+    /**
+     * Get rdns
+     *
+     * @return string
+     */
+    public function getRdns()
+    {
+        return $this->rdns;
     }
 }
