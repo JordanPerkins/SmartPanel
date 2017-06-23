@@ -37,6 +37,12 @@ class Template
      */
     private $type;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     * @Assert\Choice({"amd64", "i386"})
+     */
+    private $arch;
+
 
 
     /**
@@ -119,5 +125,29 @@ class Template
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set arch
+     *
+     * @param string $arch
+     *
+     * @return Template
+     */
+    public function setArch($arch)
+    {
+        $this->arch = $arch;
+
+        return $this;
+    }
+
+    /**
+     * Get arch
+     *
+     * @return string
+     */
+    public function getArch()
+    {
+        return $this->arch;
     }
 }

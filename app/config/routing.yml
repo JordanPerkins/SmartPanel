@@ -68,3 +68,11 @@ client_password:
 graph:
     path: /servers/{sid}/graph
     defaults:  { _controller: AppBundle:Server:graph }
+
+novnc:
+    path: /novnc/{sid}
+    defaults:  { _controller: AppBundle:Novnc:view }
+
+novnc_request:
+    path: /novnc/{sid}/request
+    defaults:  { _controller: AppBundle:Novnc:request }

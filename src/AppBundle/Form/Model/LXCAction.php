@@ -36,21 +36,6 @@ class LXCAction
         if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "'") !== false || strpos($this->getValue(), '"') !== false || strpos($this->getValue(), '\\') !== false || strpos($this->getValue(), '/') !== false) {
           return false;
         }
-        if ($this->getAction() == "hostname") {
-          return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $this->getValue()) //valid chars check
-           && preg_match("/^.{1,253}$/", $this->getValue()) //overall length check
-           && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $this->getValue())); //length of each label
-        }
-        if ($this->getAction() == "nameserver") {
-          $values = explode(' ', $this->getValue());
-          $return = true;
-          foreach ($values as $value) {
-            if (filter_var($value, FILTER_VALIDATE_IP) === false) {
-              $return = false;
-            }
-          }
-          return $return;
-        }
         return true;
       }
 
@@ -60,26 +45,19 @@ class LXCAction
        $status = $this->getNode()->command("get", $this->getPath()."/status/current", $this->getHash());
        switch ($this->getAction()) {
          case "boot":
-          $result = $this->boot($status);
-          break;
+          $result = $this->boot($status); break;
         case "shutdown":
-          $result = $this->shutdown($status);
-          break;
+          $result = $this->shutdown($status); break;
         case "restart":
-          $result = $this->restart($status);
-          break;
+          $result = $this->restart($status); break;
         case "hostname":
-          $result = $this->hostname($status);
-          break;
+          $result = $this->hostname($status); break;
         case "nameserver":
-          $result = $this->nameserver($status);
-          break;
+          $result = $this->nameserver($status); break;
         case "password":
-          $result = $this->password($status);
-          break;
+          $result = $this->password($status); break;
         case "tuntap":
-          $result = $this->tuntap($status);
-          break;
+          $result = $this->tuntap($status); break;
       }
       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
       return [$result[0], $log];
@@ -116,20 +94,28 @@ class LXCAction
      }
 
      private function hostname($status) {
-       $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['hostname' => $this->getValue()]);
-       $this->getServer()->setHostname($this->getValue());
+       if ($this->isValidHostname($this->getValue())) {
+         $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['hostname' => $this->getValue()]);
+         $this->getServer()->setHostname($this->getValue());
+       } else {
+         $result = [false, null];
+       }
        return $result;
      }
 
      private function nameserver($status) {
-       if ($status[1]["status"] == "running") {
-         $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
-         $boot = true;
-       }
-       $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['nameserver' => $this->getValue()]);
-       $this->getServer()->setNameserver($this->getValue());
-       if (isset($boot)) {
-         $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+       if ($this->isValidNameserver($this->getValue())) {
+         if ($status[1]["status"] == "running") {
+           $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+           $boot = true;
+         }
+         $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['nameserver' => $this->getValue()]);
+         $this->getServer()->setNameserver($this->getValue());
+         if (isset($boot)) {
+           $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+         }
+       } else {
+         $result = [false, null];
        }
        return $result;
      }
@@ -166,6 +152,23 @@ class LXCAction
       $this->user = $user;
       $this->request = $request;
       $this->hash = $hash;
+    }
+
+    public function isValidHostname($hostname) {
+      return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $hostname) //valid chars check
+       && preg_match("/^.{1,253}$/", $hostname) //overall length check
+       && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $hostname)); //length of each label
+    }
+
+    public function isValidNameserver($nameservers) {
+      $values = explode(' ', $nameservers);
+      $return = true;
+      foreach ($values as $value) {
+        if (filter_var($value, FILTER_VALIDATE_IP) === false) {
+          $return = false;
+        }
+      }
+      return $return;
     }
 
      // Getter / Setter Methods
