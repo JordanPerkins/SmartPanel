@@ -12,8 +12,7 @@ $(document).ready(function () {
      $('.value').val('');
      $( "#actionform" ).trigger("submit");
      $.jGrowl("The requested action is in progress.", {
-       sticky: false,
-       life: 5000,
+       sticky: true,
        position: 'top-right',
        theme: 'bg-blue'
      });
@@ -27,6 +26,7 @@ $(document).ready(function () {
             data: $(this).serialize(),
             success: function (data) {
                 if (data == 1) {
+                  $(".jGrowl-notification:last-child").remove();
                   $.jGrowl("The requested action was completed successfully.", {
                     sticky: false,
                     life: 10000,
@@ -35,6 +35,7 @@ $(document).ready(function () {
                   });
                     status();
                 } else {
+                  $(".jGrowl-notification:last-child").remove();
                   $.jGrowl("There was an error completing the requested action.", {
                     sticky: false,
                     life: 10000,

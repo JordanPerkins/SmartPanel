@@ -63,7 +63,7 @@ class LXCAction
          case "reinstall":
            $result = $this->reinstall($status); break;
       }
-      $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
+      $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
       return [$result[0], $log];
      }
 
@@ -73,7 +73,7 @@ class LXCAction
        if ($status[1]["status"] == "stopped") {
          $result = $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
        } else {
-         $result = [false, null];
+         $result = [false, "Container already booted"];
        }
        return $result;
      }
@@ -82,7 +82,7 @@ class LXCAction
        if ($status[1]["status"] == "running") {
          $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
        } else {
-         $result = [false, null];
+         $result = [false, "Container already stopped"];
        }
        return $result;
      }
@@ -92,7 +92,7 @@ class LXCAction
          $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
          $result = $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
        } else {
-         $result = [false, null];
+         $result = [false, "Container not running"];
        }
        return $result;
      }
@@ -102,7 +102,7 @@ class LXCAction
          $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['hostname' => $this->getValue()]);
          $this->getServer()->setHostname($this->getValue());
        } else {
-         $result = [false, null];
+         $result = [false, "Hostname is invalid"];
        }
        return $result;
      }
@@ -110,7 +110,10 @@ class LXCAction
      private function nameserver($status) {
        if ($this->isValidNameserver($this->getValue())) {
          if ($status[1]["status"] == "running") {
-           $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+           $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+           if (!$result[0]) {
+             return $result;
+           }
            $boot = true;
          }
          $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['nameserver' => $this->getValue()]);
@@ -119,23 +122,31 @@ class LXCAction
            $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
          }
        } else {
-         $result = [false, null];
+         $result = [false, "Nameservers are invalid"];
        }
        return $result;
      }
 
      private function password($status) {
-       if ($status[1]["status"] == "stopped") {
-         $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
-         $shutdown = true;
-       }
-       $result = $this->getNode()->command("set", $this->getPath()."/rootpass", $this->getHash(), ['password' => $this->getValue()]);
-       $crypt = new Crypt($this->getHash());
-       $rootpass = $crypt->encrypt($this->getValue());
-       $this->getServer()->setRootpass($rootpass);
+       $password = $this->getValue();
        $this->setValue('');
-       if (isset($shutdown)) {
-         $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+       if (strlen($password) >= 5) {
+         if ($status[1]["status"] == "stopped") {
+           $result = $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+           if (!$result[0]) {
+             return $result;
+           }
+           $shutdown = true;
+         }
+         $result = $this->getNode()->command("set", $this->getPath()."/rootpass", $this->getHash(), ['password' => $password]);
+         $crypt = new Crypt($this->getHash());
+         $rootpass = $crypt->encrypt($password);
+         $this->getServer()->setRootpass($rootpass);
+         if (isset($shutdown)) {
+           $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+         }
+       } else {
+         $result = [false, "Password is too short"];
        }
        return $result;
      }
@@ -157,7 +168,9 @@ class LXCAction
        if ($this->isValidOS($this->getValue())) {
          if ($status[1]["status"] == "running") {
            $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
-           $boot = true;
+           if (!$result[0]) {
+             return $result;
+           }
            sleep(3);
          }
          $crypt = new Crypt($this->getHash());
@@ -182,21 +195,22 @@ class LXCAction
            'tty' => $server->getTty(),
            'unprivileged' => (int)$server->getUnprivileged(),
          ];
-         foreach ($config[1] as $key => $value) {
-           if (strpos($key, 'net') === 0) {
-             $newdata[$key] = $value;
+         if (isset($config[1])) {
+           foreach ($config[1] as $key => $value) {
+             if (strpos($key, 'net') === 0) {
+               $newdata[$key] = $value;
+             }
            }
          }
          $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType(), $this->getHash(), $newdata);
+         if (!$result[0]) {
+           return $result;
+         }
          sleep(3);
          $result = $this->getNode()->command("set", $this->getPath()."/resize", $this->getHash(), ['disk' => 'rootfs', 'size' => $server->getDisk().'G']);
          $this->setOSName($this->getValue());
-         sleep(3);
-         if ($boot) {
-           $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
-         }
        } else {
-         $result = [false, null];
+         $result = [false, "OS is invalid"];
        }
        return $result;
      }

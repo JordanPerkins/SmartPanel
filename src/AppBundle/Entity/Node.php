@@ -91,7 +91,7 @@ class Node
             }
           }
         } else {
-          return [false, null];
+          return [false, "Command unknown"];
         }
     }
 

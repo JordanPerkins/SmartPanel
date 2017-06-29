@@ -40,6 +40,11 @@ class Log extends Controller
     /**
      * @ORM\Column(type="string", length=64)
      */
+    private $error;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
     private $value;
 
     /**
@@ -52,15 +57,12 @@ class Log extends Controller
 
      private $uid;
      /**
-      * @ORM\Column(type="integer", length=20)
+      * @ORM\Column(type="boolean")
       */
 
      private $result;
-      /**
-       * @ORM\Column(type="boolean")
-       */
 
-     public function __construct ($action, $datetime, $ip, $value, $service, $uid, $result) {
+     public function __construct ($action, $datetime, $ip, $value, $service, $uid, $result, $error) {
        $this->action = $action;
        $this->datetime = $datetime;
        $this->ip = $ip;
@@ -72,6 +74,11 @@ class Log extends Controller
        $this->service = $service;
        $this->uid = $uid;
        $this->result = $result;
+       if (!$result) {
+         $this->error = $error;
+       } else {
+         $this->error = "none";
+       }
      }
 
 
@@ -251,5 +258,29 @@ class Log extends Controller
     public function getResult()
     {
         return $this->result;
+    }
+
+    /**
+     * Set error
+     *
+     * @param string $error
+     *
+     * @return Log
+     */
+    public function setError($error)
+    {
+        $this->error = $error;
+
+        return $this;
+    }
+
+    /**
+     * Get error
+     *
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->error;
     }
 }
