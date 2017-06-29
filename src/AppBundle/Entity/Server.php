@@ -35,6 +35,11 @@ class Server extends Controller
     private $nid;
 
     /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $cpu;
+
+    /**
      * @ORM\Column(type="string", length=64)
      */
     private $hostname;
@@ -79,15 +84,40 @@ class Server extends Controller
     /**
      * @ORM\Column(type="boolean")
      */
-    private $fuse;
+    private $console;
     /**
      * @ORM\Column(type="string", length=64)
      */
     private $os;
     /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $rootpass;
+    /**
      * @ORM\Column(type="integer", length=20)
      */
     private $swap;
+    /**
+     * @ORM\Column(type="string", length=64)
+     * @Assert\Choice({"shell", "console", "tty"})
+     */
+    private $cmode;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $cpulimit;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $cpuunits;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $tty;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $unprivileged;
 
     // Fetch server status
     public function getStatus($node, $hash)
@@ -507,5 +537,221 @@ class Server extends Controller
     public function getNameserver()
     {
         return $this->nameserver;
+    }
+
+    /**
+     * Set rootpass
+     *
+     * @param string $rootpass
+     *
+     * @return Server
+     */
+    public function setRootpass($rootpass)
+    {
+        $this->rootpass = $rootpass;
+
+        return $this;
+    }
+
+    /**
+     * Get rootpass
+     *
+     * @return string
+     */
+    public function getRootpass()
+    {
+        return $this->rootpass;
+    }
+
+    /**
+     * Set console
+     *
+     * @param boolean $console
+     *
+     * @return Server
+     */
+    public function setConsole($console)
+    {
+        $this->console = $console;
+
+        return $this;
+    }
+
+    /**
+     * Get console
+     *
+     * @return boolean
+     */
+    public function getConsole()
+    {
+        return $this->console;
+    }
+
+    /**
+     * Set cmode
+     *
+     * @param string $cmode
+     *
+     * @return Server
+     */
+    public function setCmode($cmode)
+    {
+        $this->cmode = $cmode;
+
+        return $this;
+    }
+
+    /**
+     * Get cmode
+     *
+     * @return string
+     */
+    public function getCmode()
+    {
+        return $this->cmode;
+    }
+
+    /**
+     * Set cpulimit
+     *
+     * @param integer $cpulimit
+     *
+     * @return Server
+     */
+    public function setCpulimit($cpulimit)
+    {
+        $this->cpulimit = $cpulimit;
+
+        return $this;
+    }
+
+    /**
+     * Get cpulimit
+     *
+     * @return integer
+     */
+    public function getCpulimit()
+    {
+        return $this->cpulimit;
+    }
+
+    /**
+     * Set cpuunits
+     *
+     * @param integer $cpuunits
+     *
+     * @return Server
+     */
+    public function setCpuunits($cpuunits)
+    {
+        $this->cpuunits = $cpuunits;
+
+        return $this;
+    }
+
+    /**
+     * Get cpuunits
+     *
+     * @return integer
+     */
+    public function getCpuunits()
+    {
+        return $this->cpuunits;
+    }
+
+    /**
+     * Set tty
+     *
+     * @param integer $tty
+     *
+     * @return Server
+     */
+    public function setTty($tty)
+    {
+        $this->tty = $tty;
+
+        return $this;
+    }
+
+    /**
+     * Get tty
+     *
+     * @return integer
+     */
+    public function getTty()
+    {
+        return $this->tty;
+    }
+
+    /**
+     * Set unpriviliged
+     *
+     * @param boolean $unpriviliged
+     *
+     * @return Server
+     */
+    public function setUnpriviliged($unpriviliged)
+    {
+        $this->unpriviliged = $unpriviliged;
+
+        return $this;
+    }
+
+    /**
+     * Get unpriviliged
+     *
+     * @return boolean
+     */
+    public function getUnpriviliged()
+    {
+        return $this->unpriviliged;
+    }
+
+    /**
+     * Set unprivileged
+     *
+     * @param boolean $unprivileged
+     *
+     * @return Server
+     */
+    public function setUnprivileged($unprivileged)
+    {
+        $this->unprivileged = $unprivileged;
+
+        return $this;
+    }
+
+    /**
+     * Get unprivileged
+     *
+     * @return boolean
+     */
+    public function getUnprivileged()
+    {
+        return $this->unprivileged;
+    }
+
+    /**
+     * Set cpu
+     *
+     * @param integer $cpu
+     *
+     * @return Server
+     */
+    public function setCpu($cpu)
+    {
+        $this->cpu = $cpu;
+
+        return $this;
+    }
+
+    /**
+     * Get cpu
+     *
+     * @return integer
+     */
+    public function getCpu()
+    {
+        return $this->cpu;
     }
 }

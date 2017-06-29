@@ -8,6 +8,8 @@ use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Log;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Form\Model\Crypt;
 
 class LXCAction
 {
@@ -45,19 +47,21 @@ class LXCAction
        $status = $this->getNode()->command("get", $this->getPath()."/status/current", $this->getHash());
        switch ($this->getAction()) {
          case "boot":
-          $result = $this->boot($status); break;
-        case "shutdown":
-          $result = $this->shutdown($status); break;
-        case "restart":
-          $result = $this->restart($status); break;
-        case "hostname":
-          $result = $this->hostname($status); break;
-        case "nameserver":
-          $result = $this->nameserver($status); break;
-        case "password":
-          $result = $this->password($status); break;
-        case "tuntap":
-          $result = $this->tuntap($status); break;
+           $result = $this->boot($status); break;
+         case "shutdown":
+           $result = $this->shutdown($status); break;
+         case "restart":
+           $result = $this->restart($status); break;
+         case "hostname":
+           $result = $this->hostname($status); break;
+         case "nameserver":
+           $result = $this->nameserver($status); break;
+         case "password":
+           $result = $this->password($status); break;
+         case "tuntap":
+           $result = $this->tuntap($status); break;
+         case "reinstall":
+           $result = $this->reinstall($status); break;
       }
       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), (int)$result[0]);
       return [$result[0], $log];
@@ -126,6 +130,9 @@ class LXCAction
          $shutdown = true;
        }
        $result = $this->getNode()->command("set", $this->getPath()."/rootpass", $this->getHash(), ['password' => $this->getValue()]);
+       $crypt = new Crypt($this->getHash());
+       $rootpass = $crypt->encrypt($this->getValue());
+       $this->getServer()->setRootpass($rootpass);
        $this->setValue('');
        if (isset($shutdown)) {
          $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
@@ -144,14 +151,64 @@ class LXCAction
        return $result;
      }
 
+     private function reinstall($status) {
+       $config = $this->getNode()->command("get", $this->getPath()."/config", $this->getHash());
+       $server = $this->getServer();
+       if ($this->isValidOS($this->getValue())) {
+         if ($status[1]["status"] == "running") {
+           $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+           $boot = true;
+           sleep(3);
+         }
+         $crypt = new Crypt($this->getHash());
+         $rootpass = $crypt->decrypt($server->getRootpass());
+         $this->getNode()->command("delete", $this->getPath(), $this->getHash());
+         $newdata = [
+           'vmid' => $server->getCtid(),
+           'ostemplate' => 'local:vztmpl/'.$this->getValue().'.tar.gz',
+           'cmode' => $server->getCmode(),
+           'console' => (int)$server->getConsole(),
+           'cores' => $server->getCpu(),
+           'cpulimit' => $server->getCpulimit(),
+           'cpuunits' => $server->getCpuunits(),
+           'hostname' => $server->getHostname(),
+           'memory' => $server->getRam(),
+           'nameserver' => $server->getNameserver(),
+           'onboot' => 1,
+           'password' => $rootpass,
+           'searchdomain' => 'budgetnode',
+           'storage' => 'local-lvm',
+           'swap' => $server->getSwap(),
+           'tty' => $server->getTty(),
+           'unprivileged' => (int)$server->getUnprivileged(),
+         ];
+         foreach ($config[1] as $key => $value) {
+           if (strpos($key, 'net') === 0) {
+             $newdata[$key] = $value;
+           }
+         }
+         $result = $this->getNode()->command("create", "/nodes/".$this->getNode()->getIdentifier()."/".$this->getServer()->getType(), $this->getHash(), $newdata);
+         sleep(3);
+         $result = $this->getNode()->command("set", $this->getPath()."/resize", $this->getHash(), ['disk' => 'rootfs', 'size' => $server->getDisk().'G']);
+         $this->setOSName($this->getValue());
+         sleep(3);
+         if ($boot) {
+           $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+         }
+       } else {
+         $result = [false, null];
+       }
+       return $result;
+     }
+
     // Constructor
     public function __construct ($server, $node, $os, $user, $request, $hash) {
       $this->server = $server;
       $this->node = $node;
       $this->os = $os;
-      $this->user = $user;
       $this->request = $request;
       $this->hash = $hash;
+      $this->user = $user;
     }
 
     public function isValidHostname($hostname) {
@@ -169,6 +226,24 @@ class LXCAction
         }
       }
       return $return;
+    }
+
+    public function isValidOS($newos) {
+      $valid = false;
+      foreach ($this->getOs() as $os) {
+        if ($os->getFile() == $newos) {
+          $valid = true;
+        }
+      }
+      return $valid;
+    }
+
+    public function setOSName($newos) {
+      foreach ($this->getOs() as $os) {
+        if ($os->getFile() == $newos) {
+          $this->getServer()->setOs($os->getName());
+        }
+      }
     }
 
      // Getter / Setter Methods

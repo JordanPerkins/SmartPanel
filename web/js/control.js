@@ -41,6 +41,7 @@ $(document).ready(function () {
                     position: 'top-right',
                     theme: 'bg-red'
                   });
+                  console.log(data);
                 }
             },
             error: function (jXHR, textStatus, errorThrown) {

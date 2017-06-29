@@ -100,7 +100,7 @@ class ServerController extends Controller
               $em->flush();
               return new Response(1);
             } else {
-              return new Response(0);
+              return new Response(var_dump($result[1]));
           }
         } else {
           return new Response(0);

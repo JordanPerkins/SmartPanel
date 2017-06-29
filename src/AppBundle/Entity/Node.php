@@ -82,7 +82,7 @@ class Node
             $result = $proxmox->$type($cmd, $data);
           }
           if (isset($result['errors'])) {
-            return [false, null];
+            return [false, $result['errors']];
           } else {
             if ($image == true) {
               return $result;
