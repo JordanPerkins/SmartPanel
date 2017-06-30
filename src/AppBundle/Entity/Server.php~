@@ -118,6 +118,18 @@ class Server extends Controller
      * @ORM\Column(type="boolean")
      */
     private $unprivileged;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $onboot;
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $storage;
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $search;
 
     // Fetch server status
     public function getStatus($node, $hash)
@@ -729,5 +741,29 @@ class Server extends Controller
     public function getUnprivileged()
     {
         return $this->unprivileged;
+    }
+
+    /**
+     * Set cpu
+     *
+     * @param integer $cpu
+     *
+     * @return Server
+     */
+    public function setCpu($cpu)
+    {
+        $this->cpu = $cpu;
+
+        return $this;
+    }
+
+    /**
+     * Get cpu
+     *
+     * @return integer
+     */
+    public function getCpu()
+    {
+        return $this->cpu;
     }
 }

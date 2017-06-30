@@ -164,22 +164,27 @@
             <span>CONTROL</span>
             <ul>
                 <li>
-                    <a href="#settings" title="Tab 1">
+                    <a href="#settings" title="Settings">
                         Settings
                     </a>
                 </li>
                 <li>
-                    <a href="#network" title="Tab 2">
+                    <a href="#network" title="IP">
                         IP Management
                     </a>
                 </li>
                 <li>
-                    <a href="#firewall" title="Tab 3">
+                    <a href="#firewall" title="Firewall">
                         Firewall
                     </a>
                 </li>
                 <li>
-                    <a href="#statistics" title="Tab 3">
+                    <a href="#snapshots" title="Snapshots">
+                        Snapshots
+                    </a>
+                </li>
+                <li>
+                    <a href="#statistics" title="Statistics">
                         Statistics
                     </a>
                 </li>
@@ -245,12 +250,6 @@ Operations
 </span>
 <span class="button-content">DNS Resolver</span>
 </a>
-<a data-toggle="modal" data-target="#tuntap" class="btn vertical-button remove-border btn-yellow" title="">
-<span class="glyph-icon icon-separator-vertical">
-<i class="glyph-icon icon-cubes"></i>
-</span>
-<span class="button-content">TUN/TAP</span>
-</a>
 <a data-toggle="modal" data-target="#password" class="btn vertical-button remove-border btn-info" title="">
 <span class="glyph-icon icon-separator-vertical">
 <i class="glyph-icon icon-key"></i>
@@ -307,6 +306,8 @@ Access
        </div>
        <div class="modal-body">
            <p>Are you sure you wish to shutdown this VM?</p>
+           <input type="hidden" id="shutdownval" class="value" data-value="shutdown" value="off">
+           Forceful Shutdown:  <input type="checkbox" id="shutdownbutton" data-on-color="warning" name="shutdown" class="input-switch" checked data-size="medium" data-on-text="Yes" data-off-text="No" >
        </div>
        <div class="modal-footer">
            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -427,30 +428,6 @@ Access
        <div class="modal-footer">
            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
            <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="reinstall">Confirm</button>
-       </div>
-   </div>
-</div>
-</div>
-<div class="modal fade" id="tuntap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-   <div class="modal-content">
-       <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-           <h4 class="modal-title">Toggle Tuntap</h4>
-       </div>
-       <div class="modal-body">
-       <div class="form-group">
-       <label class="col-sm-3 control-label">TUN/TAP</label>
-       <div class="col-sm-6">
-       <input type="hidden" id="tuntapval" class="value" data-value="tuntap" value="on">
-       <input type="checkbox" id="tuntapbutton" data-on-color="warning" name="tuntap" class="input-switch" checked data-size="medium" data-value="tuntap" data-on-text="On" data-off-text="Off" >
-       </div>
-       </div>
-       <br>
-       </div>
-       <div class="modal-footer">
-           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="tuntap">Confirm</button>
        </div>
    </div>
 </div>

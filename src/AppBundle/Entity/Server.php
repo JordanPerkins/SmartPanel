@@ -118,6 +118,18 @@ class Server extends Controller
      * @ORM\Column(type="boolean")
      */
     private $unprivileged;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $onboot;
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $storage;
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $search;
 
     // Fetch server status
     public function getStatus($node, $hash)
@@ -753,5 +765,77 @@ class Server extends Controller
     public function getCpu()
     {
         return $this->cpu;
+    }
+
+    /**
+     * Set onboot
+     *
+     * @param boolean $onboot
+     *
+     * @return Server
+     */
+    public function setOnboot($onboot)
+    {
+        $this->onboot = $onboot;
+
+        return $this;
+    }
+
+    /**
+     * Get onboot
+     *
+     * @return boolean
+     */
+    public function getOnboot()
+    {
+        return $this->onboot;
+    }
+
+    /**
+     * Set storage
+     *
+     * @param string $storage
+     *
+     * @return Server
+     */
+    public function setStorage($storage)
+    {
+        $this->storage = $storage;
+
+        return $this;
+    }
+
+    /**
+     * Get storage
+     *
+     * @return string
+     */
+    public function getStorage()
+    {
+        return $this->storage;
+    }
+
+    /**
+     * Set search
+     *
+     * @param string $search
+     *
+     * @return Server
+     */
+    public function setSearch($search)
+    {
+        $this->search = $search;
+
+        return $this;
+    }
+
+    /**
+     * Get search
+     *
+     * @return string
+     */
+    public function getSearch()
+    {
+        return $this->search;
     }
 }

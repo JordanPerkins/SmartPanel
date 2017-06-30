@@ -58,53 +58,52 @@ class LXCAction
            $result = $this->nameserver($status); break;
          case "password":
            $result = $this->password($status); break;
-         case "tuntap":
-           $result = $this->tuntap($status); break;
          case "reinstall":
            $result = $this->reinstall($status); break;
       }
       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
-      return [$result[0], $log];
+      return [$result[0], $log, $result[1]];
      }
 
      // All of the action code is below.
 
      private function boot($status) {
        if ($status[1]["status"] == "stopped") {
-         $result = $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+         return $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
        } else {
-         $result = [false, "Container already booted"];
+         return [false, "Container already booted"];
        }
-       return $result;
      }
 
      private function shutdown($status) {
        if ($status[1]["status"] == "running") {
-         $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+         if ($this->getValue() == "on") {
+           return $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+         } else {
+           return $this->getNode()->command("create", $this->getPath()."/status/shutdown", $this->getHash());
+         }
        } else {
-         $result = [false, "Container already stopped"];
+         return [false, "Container already stopped"];
        }
-       return $result;
      }
 
      private function restart($status) {
        if ($status[1]["status"] == "running") {
          $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
-         $result = $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+         return $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
        } else {
-         $result = [false, "Container not running"];
+         return [false, "Container not running"];
        }
-       return $result;
      }
 
      private function hostname($status) {
        if ($this->isValidHostname($this->getValue())) {
          $result = $this->getNode()->command("set", $this->getPath()."/config", $this->getHash(), ['hostname' => $this->getValue()]);
          $this->getServer()->setHostname($this->getValue());
+         return $result;
        } else {
-         $result = [false, "Hostname is invalid"];
+         return [false, "Hostname is invalid"];
        }
-       return $result;
      }
 
      private function nameserver($status) {
@@ -121,10 +120,10 @@ class LXCAction
          if (isset($boot)) {
            $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
          }
+         return $result;
        } else {
-         $result = [false, "Nameservers are invalid"];
+         return [false, "Nameservers are invalid"];
        }
-       return $result;
      }
 
      private function password($status) {
@@ -145,27 +144,17 @@ class LXCAction
          if (isset($shutdown)) {
            $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
          }
+         return $result;
        } else {
-         $result = [false, "Password is too short"];
+         return [false, "Password is too short"];
        }
-       return $result;
-     }
-
-     private function tuntap($status) {
-       if ($this->getValue() == "on") {
-         $this->getServer()->setTuntap(true);
-         $result = $this->getNode()->command("create", $this->getPath()."/tuntap", $this->getHash());
-       } else {
-         $this->getServer()->setTuntap(false);
-         $result = $this->getNode()->command("create", $this->getPath()."/tuntapoff", $this->getHash());
-       }
-       return $result;
      }
 
      private function reinstall($status) {
+       $os = $this->fetchOS($this->getValue());
        $config = $this->getNode()->command("get", $this->getPath()."/config", $this->getHash());
        $server = $this->getServer();
-       if ($this->isValidOS($this->getValue())) {
+       if ($os != null) {
          if ($status[1]["status"] == "running") {
            $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
            if (!$result[0]) {
@@ -178,7 +167,7 @@ class LXCAction
          $this->getNode()->command("delete", $this->getPath(), $this->getHash());
          $newdata = [
            'vmid' => $server->getCtid(),
-           'ostemplate' => 'local:vztmpl/'.$this->getValue().'.tar.gz',
+           'ostemplate' => $os->getStorage().':vztmpl/'.$os->getFile().'.'.$os->getExtension(),
            'cmode' => $server->getCmode(),
            'console' => (int)$server->getConsole(),
            'cores' => $server->getCpu(),
@@ -187,10 +176,10 @@ class LXCAction
            'hostname' => $server->getHostname(),
            'memory' => $server->getRam(),
            'nameserver' => $server->getNameserver(),
-           'onboot' => 1,
+           'onboot' => (int)$server->getOnboot(),
            'password' => $rootpass,
-           'searchdomain' => 'budgetnode',
-           'storage' => 'local-lvm',
+           'searchdomain' => $server->getSearch(),
+           'storage' => $server->getStorage(),
            'swap' => $server->getSwap(),
            'tty' => $server->getTty(),
            'unprivileged' => (int)$server->getUnprivileged(),
@@ -208,11 +197,11 @@ class LXCAction
          }
          sleep(3);
          $result = $this->getNode()->command("set", $this->getPath()."/resize", $this->getHash(), ['disk' => 'rootfs', 'size' => $server->getDisk().'G']);
-         $this->setOSName($this->getValue());
+         $server->setOs($os->getName());
+         return $result;
        } else {
-         $result = [false, "OS is invalid"];
+         return [false, "OS is invalid"];
        }
-       return $result;
      }
 
     // Constructor
@@ -242,22 +231,13 @@ class LXCAction
       return $return;
     }
 
-    public function isValidOS($newos) {
-      $valid = false;
+    public function fetchOS($newos) {
       foreach ($this->getOs() as $os) {
         if ($os->getFile() == $newos) {
-          $valid = true;
+          return $os;
         }
       }
-      return $valid;
-    }
-
-    public function setOSName($newos) {
-      foreach ($this->getOs() as $os) {
-        if ($os->getFile() == $newos) {
-          $this->getServer()->setOs($os->getName());
-        }
-      }
+      return null;
     }
 
      // Getter / Setter Methods

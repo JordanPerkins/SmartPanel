@@ -90,7 +90,7 @@ class ServerController extends Controller
             // Update action entity
             $action = $form->getData();
             $result = $action->handle();
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($result[1]);
             $em->flush();
@@ -101,10 +101,14 @@ class ServerController extends Controller
               $em->flush();
               return new Response(1);
             } else {
-              return new Response(0);
+              if (is_array($result[2])) {
+                return new Response(0);
+              } else {
+                return new Response($result[2]);
+              }
           }
         } else {
-          return new Response(0);
+          return new Response("Rate limit exceeded");
         }
 
        } else {

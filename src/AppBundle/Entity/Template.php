@@ -43,6 +43,18 @@ class Template
      */
     private $arch;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     * @Assert\Choice({"tar.gz", "tar.xz"})
+     */
+    private $extension;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     * @Assert\Choice({"local"})
+     */
+    private $storage;
+
 
 
     /**
@@ -149,5 +161,53 @@ class Template
     public function getArch()
     {
         return $this->arch;
+    }
+
+    /**
+     * Set extension
+     *
+     * @param string $extension
+     *
+     * @return Template
+     */
+    public function setExtension($extension)
+    {
+        $this->extension = $extension;
+
+        return $this;
+    }
+
+    /**
+     * Get extension
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * Set storage
+     *
+     * @param string $storage
+     *
+     * @return Template
+     */
+    public function setStorage($storage)
+    {
+        $this->storage = $storage;
+
+        return $this;
+    }
+
+    /**
+     * Get storage
+     *
+     * @return string
+     */
+    public function getStorage()
+    {
+        return $this->storage;
     }
 }

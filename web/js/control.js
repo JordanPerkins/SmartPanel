@@ -35,14 +35,17 @@ $(document).ready(function () {
                   });
                     status();
                 } else {
+                  console.log(data);
                   $(".jGrowl-notification:last-child").remove();
-                  $.jGrowl("There was an error completing the requested action.", {
+                  if (data == 0) {
+                    data = "";
+                  }
+                  $.jGrowl("There was an error completing the requested action.<br>"+ data, {
                     sticky: false,
                     life: 10000,
                     position: 'top-right',
                     theme: 'bg-red'
                   });
-                  console.log(data);
                 }
             },
             error: function (jXHR, textStatus, errorThrown) {
@@ -51,11 +54,13 @@ $(document).ready(function () {
         });
     });
 
-    $('#tuntapbutton').on('switchChange.bootstrapSwitch', function(event, state) {
+    $('#shutdownbutton').bootstrapSwitch('state', false);
+
+    $('#shutdownbutton').on('switchChange.bootstrapSwitch', function(event, state) {
       if (state == true) {
-          $('#tuntapval').val('on');
+          $('#shutdownval').val('on');
       } else {
-          $('#tuntapval').val('off');
+          $('#shutdownval').val('off');
       }
     });
 });
@@ -123,7 +128,6 @@ function status() {
   $("#diskprogress_value").width(width);
   $("#diskprogress1").html(result.disk_percent+"%");
   $("#spinner").hide();
-  $('#tuntapbutton').bootstrapSwitch('state', result.tuntap);
 	});});
 	}
 	status();
