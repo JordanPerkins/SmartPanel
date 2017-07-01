@@ -451,16 +451,7 @@ Access
                     <th>Reverse DNS</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% for ip in ipv4 %}
-                <tr>
-                    <td data-title="IP">{{ ip.ip }}</td>
-                    <td data-title="Gateway">1-</td>
-                    <td data-title="Netmask">-</td>
-                    <td data-title="Interface">{{ ip.interface }}</td>
-                    <td data-title="Reverse DNS">{{ ip.rdns }} &nbsp;&nbsp;&nbsp;<a class="btn btn-border btn-alt border-blue-alt btn-link font-blue-alt" href="#" title=""><span>Change</span></a></td>
-                </tr>
-                {% endfor %}
+                <tbody id="ipv4">
                 </tbody>
             </table>
         </div>

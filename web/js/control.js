@@ -35,7 +35,6 @@ $(document).ready(function () {
                   });
                     status();
                 } else {
-                  console.log(data);
                   $(".jGrowl-notification:last-child").remove();
                   if (data == 0) {
                     data = "";
@@ -87,12 +86,16 @@ $(document).on('change','#graphselect',graph);
 
 function status() {
     $("#spinner").show();
-			$(function() {$.getJSON(window.location.pathname + "/json",function(result){
+			$(function() {$.getJSON(window.location.pathname + "/json?type=status",function(result){
         if (result.status == "running") {
           $("#status").html("Online");
           $("#uptime").show();
           $("#uptime").html("Running for " + result.uptime);
           $("#status").attr('class','bs-label label-success');
+        } else if (result.status = "suspended") {
+          $("#status").html("Suspended");
+          $("#status").attr('class','bs-label label-black');
+          $("#uptime").hide();
         } else {
           $("#status").html("Offline");
           $("#status").attr('class','bs-label label-danger');
@@ -130,5 +133,15 @@ function status() {
   $("#spinner").hide();
 	});});
 	}
+
+  function ip() {
+    $(function() {$.getJSON(window.location.pathname + "/json?type=ip",function(result){
+      for (var i = 0; i<result.length; i++) {
+        var ip = result[i];
+        $('#ipv4').append('<tr><td data-title="IP">' + ip.ip + '</td><td data-title="Gateway">' + ip.gateway + '</td><td data-title="Netmask">' + ip.netmask + '</td><td data-title="Interface">' + ip.interface + '</td><td data-title="Reverse DNS">' + ip.rdns + ' &nbsp;&nbsp;&nbsp;<a class="btn btn-border btn-alt border-blue-alt btn-link font-blue-alt" href="#" title=""><span>Change</span></a></td></tr>');
+      }
+    });});
+  }
+  ip();
 	status();
 	setInterval(status, 60000);

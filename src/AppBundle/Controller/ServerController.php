@@ -61,10 +61,6 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Template')
         ->findByType($server->getType());
 
-      $ipv4 = $this->getDoctrine()
-          ->getRepository('AppBundle:IP')
-          ->findBySID($server->getId(), 4);
-
       $node = $this->getDoctrine()
         ->getRepository('AppBundle:Node')
         ->findByID($server->getNid());
@@ -108,7 +104,7 @@ class ServerController extends Controller
               }
           }
         } else {
-          return new Response("Rate limit exceeded");
+          return new Response("Rate limit exceeded or server suspended");
         }
 
        } else {
@@ -119,7 +115,6 @@ class ServerController extends Controller
             'server' => $server,
             'form' => $form->createView(),
             'templates' => $template,
-            'ipv4' => $ipv4,
             'settings' => $settings,
         ]);
 
@@ -127,7 +122,7 @@ class ServerController extends Controller
 
     }
 
-    public function jsonAction($sid, UserInterface $user) {
+    public function jsonAction($sid, UserInterface $user, Request $request) {
 
       // Get the specific server using the entity repository.
       $server = $this->getDoctrine()
@@ -142,13 +137,38 @@ class ServerController extends Controller
           throw $this->createNotFoundException('Server does not belong to the user');
       }
 
-      $node = $this->getDoctrine()
-        ->getRepository('AppBundle:Node')
-        ->findByID($server->getNid());
+      $type = $request->query->get('type');
 
-      $hash = $this->getParameter('secret_hash');
+      if ($type == "ip") {
 
-      $data = $server->getStatus($node, $hash);
+      $ipv4 = $this->getDoctrine()
+            ->getRepository('AppBundle:IP')
+            ->findBySID($server->getId(), 4);
+
+      $data = array();
+      foreach ($ipv4 as $ip) {
+        $block = $this->getDoctrine()->getRepository('AppBundle:IPBlock')->findByID($ip->getBlock());
+        $ip_data = [
+          'ip' => $ip->getIp(),
+          'interface' => $ip->getInterface(),
+          'rdns' => $ip->getRdns(),
+          'gateway' => $block->getGateway(),
+          'netmask' => $block->getNetmask(),
+        ];
+        $data[] = $ip_data;
+      }
+
+      } elseif ($type == "status") {
+
+        $node = $this->getDoctrine()
+          ->getRepository('AppBundle:Node')
+          ->findByID($server->getNid());
+
+        $hash = $this->getParameter('secret_hash');
+
+        $data = $server->getStatus($node, $hash);
+
+      }
 
       $response = new JsonResponse();
       $response->setData($data);

@@ -80,7 +80,7 @@ class Server extends Controller
     /**
      * @ORM\Column(type="boolean")
      */
-    private $tuntap;
+    private $suspended;
     /**
      * @ORM\Column(type="boolean")
      */
@@ -144,7 +144,9 @@ class Server extends Controller
       if ($result[0] && $result[1]) {
         $result = $result[1];
         $result["os"] = $this->getOs();
-        $result["tuntap"] = $this->getTuntap();
+        if ($this->getSuspended()) {
+          $result["status"] = "suspended";
+        }
         $result["node"] = $node->getName();
         $result["mem"] = round($result["mem"]/(1024*1024), 0);
         $result["swap"] = round($result["swap"]/(1024*1024), 0);
@@ -837,5 +839,29 @@ class Server extends Controller
     public function getSearch()
     {
         return $this->search;
+    }
+
+    /**
+     * Set suspended
+     *
+     * @param boolean $suspended
+     *
+     * @return Server
+     */
+    public function setSuspended($suspended)
+    {
+        $this->suspended = $suspended;
+
+        return $this;
+    }
+
+    /**
+     * Get suspended
+     *
+     * @return boolean
+     */
+    public function getSuspended()
+    {
+        return $this->suspended;
     }
 }
