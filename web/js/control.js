@@ -92,7 +92,7 @@ function status() {
           $("#uptime").show();
           $("#uptime").html("Running for " + result.uptime);
           $("#status").attr('class','bs-label label-success');
-        } else if (result.status = "suspended") {
+        } else if (result.status == "suspended") {
           $("#status").html("Suspended");
           $("#status").attr('class','bs-label label-black');
           $("#uptime").hide();
