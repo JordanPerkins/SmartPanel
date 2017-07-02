@@ -76,3 +76,7 @@ novnc:
 novnc_request:
     path: /novnc/{sid}/request
     defaults:  { _controller: AppBundle:Novnc:request }
+
+plans:
+    path: /admin/plans/new/{type}
+    defaults:  { _controller: AppBundle:Plans:new }

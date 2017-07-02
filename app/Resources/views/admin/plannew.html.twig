@@ -1,0 +1,160 @@
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 2, 'link': settings.clientarea_link }) }}
+<div id="page-content-wrapper">
+        <div id="page-content">
+
+                <div class="container">
+
+
+<!-- Parsley -->
+
+<script type="text/javascript" src="{{ asset('assets/widgets/parsley/parsley.js') }}"></script>
+
+<div id="page-title">
+<h2>New Plan</h2>
+<p>Create a new plan.</p>
+</div>
+
+<div class="panel">
+<div class="panel-body">
+    <h3 class="title-hero">
+        Settings
+    </h3>
+    <div class="example-box-wrapper">
+    {% if form_errors(form) %}
+    <div class="alert alert-danger">
+    <div class="bg-red alert-icon">
+        <i class="glyph-icon icon-times"></i>
+    </div>
+      <div class="alert-content">
+      <h4 class="alert-title">Error</h4>
+      <p>{{ form_errors(form) }}</p>
+</div>
+</div>
+  {% endif %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal bordered-row', 'data-parsley-validate': ''}}) }}
+            <div class="row">
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Name</label>
+                    <div class="col-sm-6">
+                        {{ form_widget(form.type) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Disk (GB)</label>
+                        <div class="col-sm-6">
+                            {{ form_widget(form.disk, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">RAM (MB)</label>
+                        <div class="col-sm-6">
+                            {{ form_widget(form.ram, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">SWAP (MB)</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.swap, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Console Mode</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.cmode, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">CPU Cores</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.cpu, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">CPU Limit</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.cpulimit, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">CPU Units</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.cpuunits, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">No. of IPv4 Addresses</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.ipv4, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">No. of IPv6 subnets</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.ipv6, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">TTY Number</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.tty, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Storage</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.storage, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Search Domain</label>
+                        <div class="col-sm-6">
+                        {{ form_widget(form.searchdomain, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    <label class="col-sm-3 control-label">Properties</label>
+    <div class="col-sm-6">
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.console) }}
+                Assign /dev/console
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.unprivileged) }}
+                Unprivileged Container
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.onboot) }}
+                Start on system boot
+            </label>
+        </div>
+    </div>
+</div>
+                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-default content-box text-center pad20A mrg25T">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary'}}) }}
+            {{ form_end(form) }}
+            </div>
+    </div>
+
+</div>
+</div>
+</div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+{{ include('footer.html.twig') }}
