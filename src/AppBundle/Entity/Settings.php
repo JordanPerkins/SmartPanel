@@ -31,6 +31,11 @@ class Settings
      */
     private $value;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $numerical;
+
 
     /**
      * Get id
@@ -88,5 +93,29 @@ class Settings
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Set numerical
+     *
+     * @param boolean $numerical
+     *
+     * @return Settings
+     */
+    public function setNumerical($numerical)
+    {
+        $this->numerical = $numerical;
+
+        return $this;
+    }
+
+    /**
+     * Get numerical
+     *
+     * @return boolean
+     */
+    public function getNumerical()
+    {
+        return $this->numerical;
     }
 }

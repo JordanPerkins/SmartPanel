@@ -11,8 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -86,7 +85,11 @@ class SettingsController extends Controller
 
       $settings = array();
       foreach ($this->getDoctrine()->getRepository('AppBundle:Settings')->findAll() as $setting) {
-        $form->add($setting->getSetting(), TextType::class, array('data' => $setting->getValue()));
+        if ($setting->getNumerical()) {
+          $form->add($setting->getSetting(), IntegerType::class, array('data' => $setting->getValue(), 'error_bubbling' => true));
+        } else {
+          $form->add($setting->getSetting(), TextType::class, array('data' => $setting->getValue(), 'error_bubbling' => true));
+        }
         $settings[$setting->getSetting()] = $setting->getValue();
       }
 

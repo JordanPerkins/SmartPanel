@@ -7,6 +7,7 @@
 
                 <!--<link rel="stylesheet" type="text/css" href="../../assets/widgets/tabs-ui/tabs.css">-->
                 <script type="text/javascript" src="../../assets/widgets/tabs-ui/tabs.js"></script>
+                <script type="text/javascript" src="{{ asset('assets/widgets/parsley/parsley.js') }}"></script>
                 <script type="text/javascript">
                     /* jQuery UI Tabs */
 
@@ -60,7 +61,7 @@
 </div>
   {% endif %}
   <div class="example-box-wrapper">
-  {{ form_start(form) }}
+  {{ form_start(form, {'attr': {'class': 'form-horizontal bordered-row', 'data-parsley-validate': ''}}) }}
       <ul class="nav-responsive nav nav-tabs">
           <li class="active"><a href="#tab1" data-toggle="tab">General</a></li>
           <li><a href="#tab2" data-toggle="tab">Security</a></li>
@@ -68,22 +69,22 @@
       </ul>
       <div class="tab-content">
           <div class="tab-pane active" id="tab1">
-              <p>  <label>Company name:</label> {{ form_widget(form.company_name) }}<br>
-                   <label>Email from:</label> {{ form_widget(form.email_from) }}<br>
-                   <label>Client Area Link:</label> {{ form_widget(form.clientarea_link) }}<br>
-                   <label>Panel Location:</label> {{ form_widget(form.panel_location) }}<br>
-                   <label>Welcome notification:</label> {{ form_widget(form.welcome_notification) }}<br>
+              <p>  <label>Company name:</label> {{ form_widget(form.company_name, {'attr': {'class': 'form-control'}}) }}<br>
+                   <label>Email from:</label> {{ form_widget(form.email_from, {'attr': {'class': 'form-control', 'data-parsley-type': 'email'}}) }}<br>
+                   <label>Client Area Link:</label> {{ form_widget(form.clientarea_link, {'attr': {'class': 'form-control'}}) }}<br>
+                   <label>Panel Location:</label> {{ form_widget(form.panel_location, {'attr': {'class': 'form-control'}}) }}<br>
+                   <label>Welcome notification:</label> {{ form_widget(form.welcome_notification, {'attr': {'class': 'form-control'}}) }}<br>
                    </p>
                    <p>{{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}</p>
           </div>
           <div class="tab-pane" id="tab2">
-              <p><label>Reset Limit (Hours):</label> {{ form_widget(form.reset_limit) }}<br>
-              <label>Commands:</label> {{ form_widget(form.ratelimit_limit) }}<br>
-                   <label>Per (Seconds):</label>{{ form_widget(form.ratelimit_time) }}</p>
+              <p><label>Reset Limit (Hours):</label> {{ form_widget(form.reset_limit, {'attr': {'class': 'form-control', 'data-parsley-type': 'digits'}}) }}<br>
+              <label>Commands:</label> {{ form_widget(form.ratelimit_limit, {'attr': {'class': 'form-control', 'data-parsley-type': 'digits'}}) }}<br>
+                   <label>Per (Seconds):</label>{{ form_widget(form.ratelimit_time, {'attr': {'class': 'form-control', 'data-parsley-type': 'digits'}}) }}</p><br>
               <p><button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button></p>
           </div>
           <div class="tab-pane" id="tab3">
-              <p><label>Event Log Purge:</label> {{ form_widget(form.eventlog_purge) }}<br>.</p>
+              <p><label>Event Log Purge:</label> {{ form_widget(form.eventlog_purge, {'attr': {'class': 'form-control', 'data-parsley-type': 'digits'}}) }}<br>.</p>
               <p><button type="submit" id="form_save" name="form[save]" class="btn btn-success">Save</button></p>
           </div>
       </div>

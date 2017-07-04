@@ -10,8 +10,8 @@
 <script type="text/javascript" src="{{ asset('assets/widgets/parsley/parsley.js') }}"></script>
 
 <div id="page-title">
-<h2>New Plan</h2>
-<p>Create a new plan.</p>
+<h2>Edit Plan</h2>
+<p>Edit existing plan</p>
 </div>
 
 <div class="panel">
@@ -37,7 +37,6 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Name</label>
                     <div class="col-sm-6">
-                        {{ form_widget(form.type) }}
                         {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>

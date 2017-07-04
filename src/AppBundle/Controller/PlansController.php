@@ -134,4 +134,75 @@ class PlansController extends Controller
                             ]);
     }
 
+
+        public function editAction($pid, UserInterface $user, Request $request)
+        {
+
+            // User is not admin, redirect to dashboard.
+            if (!$user->getIsAdmin()) {
+              return new RedirectResponse('/');
+            }
+
+            $settings = $this->get('app.settings')->get();
+
+            // Fetch the user
+            $plan = $this->getDoctrine()
+              ->getRepository('AppBundle:Plan')
+              ->findByID($pid);
+
+            if (!$plan) {
+              $form->get('name')->addError(new FormError("Plan was not found."));
+            } else {
+
+              if ($plan->getType() == "lxc") {
+                // Render the form to be used.
+                $form = $this->createFormBuilder($plan)
+                ->add('name', TextType::class, array('error_bubbling' => true))
+                ->add('disk', TextType::class, array('error_bubbling' => true))
+                ->add('ram', TextType::class, array('error_bubbling' => true))
+                ->add('swap', TextType::class, array('error_bubbling' => true))
+                ->add('console', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
+                ->add('cmode', ChoiceType::class, array('error_bubbling' => true, 'choices'  => array('/dev/tty' => 'tty', '/dev/console' => 'console', 'shell mode' => 'shell')))
+                ->add('cpu', TextType::class, array('error_bubbling' => true))
+                ->add('cpulimit', TextType::class, array('error_bubbling' => true))
+                ->add('cpuunits', TextType::class, array('error_bubbling' => true))
+                ->add('ipv4', TextType::class, array('error_bubbling' => true))
+                ->add('ipv6', TextType::class, array('error_bubbling' => true))
+                ->add('tty', TextType::class, array('error_bubbling' => true))
+                ->add('unprivileged', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
+                ->add('onboot', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
+                ->add('storage', TextType::class, array('error_bubbling' => true))
+                ->add('searchdomain', TextType::class, array('error_bubbling' => true))
+                ->add('save', SubmitType::class, array('label' => 'Save'))
+                    ->add('save', SubmitType::class, array('label' => 'Save'))
+                    ->getForm();
+              }
+
+              $form->handleRequest($request);
+
+              // Check for submissions
+              if ($form->isSubmitted() && $form->isValid() && $user->getIsAdmin()) {
+
+                // Get the information and persist it to the DB.
+                $plan = $form->getData();
+
+                // Write to database
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($plan);
+                $em->flush();
+
+              }
+
+            }
+
+            return $this->render('admin/planedit.html.twig', [
+                                'page_title' => 'Edit Plan',
+                                'form' => $form->createView(),
+                                'submitted' => $form->isSubmitted(),
+                                'settings' => $settings,
+                                'plan' => $plan,
+                                ]);
+
+        }
+
 }

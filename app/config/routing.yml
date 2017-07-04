@@ -84,3 +84,7 @@ plans:
 plans_list:
     path: /admin/plans
     defaults:  { _controller: AppBundle:Plans:list }
+
+plans_edit:
+    path: /admin/plans/{pid}
+    defaults:  { _controller: AppBundle:Plans:edit }
