@@ -30,12 +30,14 @@ class NovncController extends Controller
         ->getRepository('AppBundle:Server')
         ->findByID($sid);
 
+      $settings = $this->get('app.settings')->get();
+
       // Server does not exist
       if (!$server) {
-          throw $this->createNotFoundException('No server found');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
       } elseif($user->getId() != $server->getUID()) {
-          throw $this->createNotFoundException('Server does not belong to the user');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to the user', 'settings' => $settings]);
       }
 
       $node = $this->getDoctrine()

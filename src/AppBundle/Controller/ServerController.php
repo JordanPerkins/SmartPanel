@@ -51,10 +51,10 @@ class ServerController extends Controller
 
       // Server does not exist
       if (!$server) {
-          throw $this->createNotFoundException('No server found');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
       } elseif($user->getId() != $server->getUID()) {
-          throw $this->createNotFoundException('Server does not belong to the user');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to you', 'settings' => $settings]);
       }
 
       $template = $this->getDoctrine()
@@ -134,12 +134,14 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Server')
         ->findByID($sid);
 
+      $settings = $this->get('app.settings')->get();
+
       // Server does not exist
       if (!$server) {
-          throw $this->createNotFoundException('No server found');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
       } elseif($user->getId() != $server->getUID()) {
-          throw $this->createNotFoundException('Server does not belong to the user');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to you', 'settings' => $settings]);
       }
 
       $type = $request->query->get('type');
@@ -189,12 +191,14 @@ class ServerController extends Controller
         ->getRepository('AppBundle:Server')
         ->findByID($sid);
 
+      $settings = $this->get('app.settings')->get();
+
       // Server does not exist
       if (!$server) {
-          throw $this->createNotFoundException('No server found');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
       } elseif($user->getId() != $server->getUID()) {
-          throw $this->createNotFoundException('Server does not belong to the user');
+          return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to you', 'settings' => $settings]);
       }
 
       $node = $this->getDoctrine()
@@ -238,7 +242,7 @@ class ServerController extends Controller
 
       // No logs found
       if (!$logs) {
-        throw $this->createNotFoundException('No active servers');
+        return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Event Log is empty', 'settings' => $settings]);
       }
 
       // Render page returning logs

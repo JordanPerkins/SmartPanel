@@ -1,0 +1,29 @@
+{{ include('header.html.twig', { 'page_title': page_title, 'page_id': 3, 'link': settings.clientarea_link }) }}
+        <div id="page-content-wrapper">
+            <div id="page-content">
+
+                    <div class="container">
+
+
+
+<div class="example-box-wrapper">
+<div class="alert alert-danger">
+<div class="bg-red alert-icon">
+    <i class="glyph-icon icon-times"></i>
+</div>
+  <div class="alert-content">
+  <h4 class="alert-title">Error</h4>
+  <p>{{ error }}</p>
+</div>
+</div>
+</div>
+
+
+
+                    </div>
+
+
+
+            </div>
+
+    {{ include('footer.html.twig') }}
