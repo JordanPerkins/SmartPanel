@@ -222,7 +222,12 @@ class ServerController extends Controller
 
       $hash = $this->getParameter('secret_hash');
 
-      $data = $server->getGraph($node, $type, $period, $hash);
+      try {
+        $data = $server->getGraph($node, $type, $period, $hash);
+      } catch (\Exception $e) {
+        return new Response(0);
+      }
+
 
       $headers = array(
           'Content-Type'     => 'image/png',
