@@ -44,7 +44,13 @@ class LXCAction
 
      // Function for handling panel requests
      public function handle() {
-       $status = $this->getNode()->command("get", $this->getPath()."/status/current", $this->getHash());
+       try {
+         $status = $this->getNode()->command("get", $this->getPath()."/status/current", $this->getHash());
+       } catch (\Exception $e) {
+         $error = "Host node is down";
+         $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), false, json_encode($error));
+         return [false, $log, $error]; 
+       }
        switch ($this->getAction()) {
          case "boot":
            $result = $this->boot($status); break;

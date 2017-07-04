@@ -173,7 +173,12 @@ class ServerController extends Controller
 
         $hash = $this->getParameter('secret_hash');
 
-        $data = $server->getStatus($node, $hash);
+        try {
+          $data = $server->getStatus($node, $hash);
+        } catch (\Exception $e) {
+          $data = 0;
+        }
+
 
       }
 

@@ -87,50 +87,57 @@ $(document).on('change','#graphselect',graph);
 function status() {
     $("#spinner").show();
 			$(function() {$.getJSON(window.location.pathname + "/json?type=status",function(result){
-        if (result.status == "running") {
-          $("#status").html("Online");
-          $("#uptime").show();
-          $("#uptime").html("Running for " + result.uptime);
-          $("#status").attr('class','bs-label label-success');
-        } else if (result.status == "suspended") {
-          $("#status").html("Suspended");
-          $("#status").attr('class','bs-label label-black');
-          $("#uptime").hide();
+        if (result == 0) {
+          $("#controlpanel").hide();
+          $("#downerror").show();
         } else {
-          $("#status").html("Offline");
-          $("#status").attr('class','bs-label label-danger');
-          $("#uptime").hide();
-        }
-	$("#node").html(result.node);
-	$(".hostname").html(result.name);
-	$("#ip").html(result.ip);
-  $("#os").html(result.os);
-  $("#nameserver").val(result.nameserver);
-  $("#mem").html(result.mem);
-  $("#availablemem").html(result.availablemem);
-  var width = Math.round($("#memprogress").width() * (result.ram_percent/100));
-  $("#memprogress_value").width(width);
-  $("#memprogress1").html(result.ram_percent+"%");
-  $("#swap").html(result.swap);
-  $("#availableswap").html(result.availableswap);
-  var width = Math.round($("#swapprogress").width() * (result.swap_percent/100));
-  $("#swapprogress_value").width(width);
-  $("#swapprogress1").html(result.swap_percent+"%");
-  $("#cpu").html(result.cpu);
-  $("#availablecpu").html(result.cpus);
-  var width = Math.round($("#cpuprogress").width() * (result.cpu/100));
-  $("#cpuprogress_value").width(width);
-  $("#cpuprogress1").html(result.cpu+"%");
-  if (result.status == "stopped") {
-    $("#disk").html('??');
-  } else {
-    $("#disk").html(result.disk);
-  }
-  $("#availabledisk").html(result.availabledisk);
-  var width = Math.round($("#diskprogress").width() * (result.disk_percent/100));
-  $("#diskprogress_value").width(width);
-  $("#diskprogress1").html(result.disk_percent+"%");
-  $("#spinner").hide();
+          $("#controlpanel").show();
+          $("#downerror").hide();
+          if (result.status == "running") {
+            $("#status").html("Online");
+            $("#uptime").show();
+            $("#uptime").html("Running for " + result.uptime);
+            $("#status").attr('class','bs-label label-success');
+          } else if (result.status == "suspended") {
+            $("#status").html("Suspended");
+            $("#status").attr('class','bs-label label-black');
+            $("#uptime").hide();
+          } else {
+            $("#status").html("Offline");
+            $("#status").attr('class','bs-label label-danger');
+            $("#uptime").hide();
+          }
+        	$("#node").html(result.node);
+        	$(".hostname").html(result.name);
+        	$("#ip").html(result.ip);
+          $("#os").html(result.os);
+          $("#nameserver").val(result.nameserver);
+          $("#mem").html(result.mem);
+          $("#availablemem").html(result.availablemem);
+          var width = Math.round($("#memprogress").width() * (result.ram_percent/100));
+          $("#memprogress_value").width(width);
+          $("#memprogress1").html(result.ram_percent+"%");
+          $("#swap").html(result.swap);
+          $("#availableswap").html(result.availableswap);
+          var width = Math.round($("#swapprogress").width() * (result.swap_percent/100));
+          $("#swapprogress_value").width(width);
+          $("#swapprogress1").html(result.swap_percent+"%");
+          $("#cpu").html(result.cpu);
+          $("#availablecpu").html(result.cpus);
+          var width = Math.round($("#cpuprogress").width() * (result.cpu/100));
+          $("#cpuprogress_value").width(width);
+          $("#cpuprogress1").html(result.cpu+"%");
+          if (result.status == "stopped") {
+            $("#disk").html('??');
+          } else {
+            $("#disk").html(result.disk);
+          }
+          $("#availabledisk").html(result.availabledisk);
+          var width = Math.round($("#diskprogress").width() * (result.disk_percent/100));
+          $("#diskprogress_value").width(width);
+          $("#diskprogress1").html(result.disk_percent+"%");
+      }
+      $("#spinner").hide();
 	});});
 	}
 
