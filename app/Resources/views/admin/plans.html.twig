@@ -62,8 +62,8 @@
 
 
 <div id="page-title">
-    <h2>List Clients</h2>
-    <p>All client accounts can be seen here.</p>
+    <h2>List Plans</h2>
+    <p>Manage plans.</p>
 
 </div>
 
@@ -88,10 +88,11 @@
 <thead>
 <tr>
 <th>ID</th>
-<th>Username</th>
-<th>Status</th>
 <th>Name</th>
-<th>Email</th>
+<th>Type</th>
+<th>RAM</th>
+<th>Disk</th>
+<th>Cores</th>
 <th></th>
 </tr>
 </thead>
@@ -99,27 +100,26 @@
 <tfoot>
 <tr>
 <th>ID</th>
-<th>Username</th>
-<th>Status</th>
 <th>Name</th>
-<th>Email</th>
+<th>Type</th>
+<th>RAM (MB)</th>
+<th>Disk</th>
+<th>Cores</th>
 <th></th>
 </tr>
 </tfoot>
 
 <tbody>
-{% for client in clients %}
+{% for plan in plans %}
 <tr>
-  <td>{{ client.id }} {% if client.isAdmin == true %} (Admin) {%endif%}</td>
-  <td>{{ client.username }}</td>
-  <td>{% if client.isActive == true %} <span class="label label-success">Active</span>
-  {% else %}
-  <span class="label label-important">Inactive</span>
-  {% endif %}
-  </td>
-  <td>{{ client.firstname }} {{ client.surname }}</td>
-  <td>{{ client.email }}</td>
-  <td><a href="clients/{{ client.id }}" class="btn btn-primary"><i class="glyph-icon icon-pencil"></i> Edit</a> <button class="btn btn-primary delete" data-toggle="modal" data-target="#delete" data-value="{{ client.id }}"><i class="glyph-icon icon-trash"></i> Delete</button></td>
+  <td>{{ plan.id }}</td>
+  <td>{{ plan.name }}</td>
+  <td>{% if plan.type == "lxc" %} <img src="{{ asset('img/lxc.png') }}" alt="LXC" height="25" width="25"> LXC {% endif %}
+    {% if plan.type == "kvm" %} <img src="{{ asset('img/kvm.png') }}" alt="KVM" height="25" width="25"> KVM {% endif %}</td>
+  <td>{{ plan.ram }}</td>
+  <td>{{ plan.disk }}</td>
+  <td>{{ plan.cpu }}</td>
+  <td><a href="plans/{{ plan.id }}" class="btn btn-primary"><i class="glyph-icon icon-pencil"></i> Edit</a> <button class="btn btn-primary delete" data-toggle="modal" data-target="#delete" data-value="{{ plan.id }}"><i class="glyph-icon icon-trash"></i> Delete</button></td>
 </tr>
 {% endfor %}
 </tbody>

@@ -80,3 +80,7 @@ novnc_request:
 plans:
     path: /admin/plans/new/{type}
     defaults:  { _controller: AppBundle:Plans:new }
+
+plans_list:
+    path: /admin/plans
+    defaults:  { _controller: AppBundle:Plans:list }

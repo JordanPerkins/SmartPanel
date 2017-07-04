@@ -82,7 +82,15 @@ class ServerController extends Controller
 
         // Check for submission and validate it using Validator.
         if ($form->isSubmitted()) {
-          if ($form->isValid() && $this->getDoctrine()->getRepository('AppBundle:Log')->checkRateLimit($user->getId(), $settings["ratelimit_limit"], $settings["ratelimit_time"])) {
+          if (!$form->isValid()) {
+            return new Response("Data contains illegal characters");
+          }
+          if (!$this->getDoctrine()->getRepository('AppBundle:Log')->checkRateLimit($user->getId(), $settings["ratelimit_limit"], $settings["ratelimit_time"])) {
+            return new Response("Rate limit exceeded");
+          }
+          if ($server->getSuspended()) {
+            return new Response("Server is suspended");
+          }
             // Update action entity
             $action = $form->getData();
             $result = $action->handle();
@@ -103,9 +111,6 @@ class ServerController extends Controller
                 return new Response($result[2]);
               }
           }
-        } else {
-          return new Response("Rate limit exceeded or server suspended");
-        }
 
        } else {
 

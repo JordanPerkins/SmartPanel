@@ -35,9 +35,6 @@ class LXCAction
       // Function that is validated to ensure that value data is clean.
       public function isValid()
       {
-        if ($this->getServer()->getSuspended()) {
-          return false;
-        }
         if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "'") !== false || strpos($this->getValue(), '"') !== false || strpos($this->getValue(), '\\') !== false || strpos($this->getValue(), '/') !== false) {
           return false;
         }

@@ -21,61 +21,6 @@ use AppBundle\Entity\Plan;
 
 class PlansController extends Controller
 {
-    // Applies to the /admin/clients route.
-    public function listAction(UserInterface $user, Request $request)
-    {
-
-      // User is not admin, redirect to dashboard.
-      if (!$user->getIsAdmin()) {
-        return new RedirectResponse('/');
-      }
-
-      $settings = $this->get('app.settings')->get();
-
-        // Render the form to be used. Takes input of id only.
-        $form = $this->createFormBuilder()
-            ->add('id', HiddenType::class, array('error_bubbling' => true))
-            ->add('save', SubmitType::class, array('label' => 'Reset'))
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        // Check for submissions
-        if ($form->isSubmitted() && $form->isValid() && $user->getIsAdmin()) {
-
-          // Get information on the user with the id submitted.
-          $usr = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->findByID($form->get('id')->getData());
-
-          // User does not exist
-          if (!$usr) {
-            $form->get('id')->addError(new FormError("User was not found."));
-          } else if ($this->getDoctrine()->getRepository('AppBundle:Server')->countByID($usr->getId()) > 0) {
-            $form->get('id')->addError(new FormError("This client has active servers."));
-          } else {
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->remove($usr);
-            $em->flush();
-          }
-
-        }
-
-        // Fetch all users.
-        $users = $this->getDoctrine()
-          ->getRepository('AppBundle:User')
-          ->findAll();
-
-      // Render the page, passing on the user list for displaying.
-      return $this->render('admin/clients.html.twig', [
-                            'page_title' => 'List Clients',
-                            'clients' => $users,
-                            'settings' => $settings,
-                            'form' => $form->createView(),
-                            'submitted' => $form->isSubmitted(),
-                            ]);
-    }
-
     public function newAction(UserInterface $user, Request $request, $type)
     {
 
@@ -134,6 +79,59 @@ class PlansController extends Controller
                             'settings' => $settings,
                             ]);
 
+    }
+
+    // Applies to the /admin/plans route.
+    public function listAction(UserInterface $user, Request $request)
+    {
+
+      // User is not admin, redirect to dashboard.
+      if (!$user->getIsAdmin()) {
+        return new RedirectResponse('/');
+      }
+
+      $settings = $this->get('app.settings')->get();
+
+        // Render the form to be used. Takes input of id only.
+        $form = $this->createFormBuilder()
+            ->add('id', HiddenType::class, array('error_bubbling' => true))
+            ->add('save', SubmitType::class, array('label' => 'Reset'))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        // Check for submissions
+        if ($form->isSubmitted() && $form->isValid() && $user->getIsAdmin()) {
+
+          // Get information on the user with the id submitted.
+          $plan = $this->getDoctrine()
+            ->getRepository('AppBundle:Plan')
+            ->findByID($form->get('id')->getData());
+
+          // User does not exist
+          if (!$plan) {
+            $form->get('id')->addError(new FormError("Plan was not found."));
+          } else {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($plan);
+            $em->flush();
+          }
+
+        }
+
+        // Fetch all users.
+        $plans = $this->getDoctrine()
+          ->getRepository('AppBundle:Plan')
+          ->findAll();
+
+      // Render the page, passing on the user list for displaying.
+      return $this->render('admin/plans.html.twig', [
+                            'page_title' => 'List Plans',
+                            'plans' => $plans,
+                            'settings' => $settings,
+                            'form' => $form->createView(),
+                            'submitted' => $form->isSubmitted(),
+                            ]);
     }
 
 }
