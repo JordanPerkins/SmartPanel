@@ -35,10 +35,6 @@ class LXCAction
       // Function that is validated to ensure that value data is clean.
       public function isValid()
       {
-        $actions = array("boot", "shutdown", "restart", "hostname", "nameserver", "password", "reinstall", "status", "graph", "resize");
-        if (!in_array($this->getAction(), $actions)) {
-          return false;
-        }
         if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "'") !== false || strpos($this->getValue(), '"') !== false || strpos($this->getValue(), '\\') !== false || strpos($this->getValue(), '/') !== false) {
           return false;
         }
@@ -55,7 +51,13 @@ class LXCAction
          $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), false, json_encode($error));
          return [[false, $error], $log];
        }
+
        $action = $this->getAction();
+       $actions = array("boot", "shutdown", "restart", "hostname", "nameserver", "password", "reinstall", "status", "graph", "resize");
+       if (!in_array($this->getAction(), $actions)) {
+         return [[false, "Action is invalid"], null];
+       }
+
        $result = $this->$action($status);
        $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
        return [$result, $log];

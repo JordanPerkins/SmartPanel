@@ -86,8 +86,8 @@ $(document).on('change','#graphselect',graph);
 
 function status() {
       $("#spinner").show();
-      console.log($("#controlpanel").is(':visible'));
 			$(function() {$.getJSON(window.location.pathname + "/json?type=status",function(result){
+        $("#mainspinner").hide();
         if (result == false) {
           $("#controlpanel").hide();
           $("#downerror").show();

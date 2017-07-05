@@ -96,11 +96,13 @@ class ServerController extends Controller
             $result = $action->handle();
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($result[1]);
-            $em->flush();
+
+            if ($result[1] != null) {
+              $em->persist($result[1]);
+              $em->flush();
+            }
 
             if ($result[0][0]) {
-              $em = $this->getDoctrine()->getManager();
               $em->persist($server);
               $em->flush();
               return new Response(1);
