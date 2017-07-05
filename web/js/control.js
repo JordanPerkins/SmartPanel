@@ -1,6 +1,8 @@
 
 
 $(document).ready(function () {
+  status();
+  ip();
    $('.action').click(function() {
      $('#form_action').val($(this).data('value'));
      if ($(this).data('value') == "mainip") {
@@ -150,6 +152,4 @@ function status() {
       }
     });});
   }
-  ip();
-	status();
 	setInterval(status, 60000);
