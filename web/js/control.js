@@ -88,7 +88,7 @@ function status() {
       $("#spinner").show();
       console.log($("#controlpanel").is(':visible'));
 			$(function() {$.getJSON(window.location.pathname + "/json?type=status",function(result){
-        if (result == 0) {
+        if (result == false) {
           $("#controlpanel").hide();
           $("#downerror").show();
         } else {

@@ -88,3 +88,7 @@ plans_list:
 plans_edit:
     path: /admin/plans/{pid}
     defaults:  { _controller: AppBundle:Plans:edit }
+
+servers_list:
+    path: /admin/servers
+    defaults:  { _controller: AppBundle:Server:listAll }

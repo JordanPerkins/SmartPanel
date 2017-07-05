@@ -35,6 +35,10 @@ class LXCAction
       // Function that is validated to ensure that value data is clean.
       public function isValid()
       {
+        $actions = array("boot", "shutdown", "restart", "hostname", "nameserver", "password", "reinstall", "status", "graph", "resize");
+        if (!in_array($this->getAction(), $actions)) {
+          return false;
+        }
         if (strpos($this->getValue(), '&') !== false || strpos($this->getValue(), "'") !== false || strpos($this->getValue(), '"') !== false || strpos($this->getValue(), '\\') !== false || strpos($this->getValue(), '/') !== false) {
           return false;
         }
@@ -49,26 +53,12 @@ class LXCAction
        } catch (\Exception $e) {
          $error = "Host node is down";
          $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), false, json_encode($error));
-         return [false, $log, $error]; 
+         return [[false, $error], $log];
        }
-       switch ($this->getAction()) {
-         case "boot":
-           $result = $this->boot($status); break;
-         case "shutdown":
-           $result = $this->shutdown($status); break;
-         case "restart":
-           $result = $this->restart($status); break;
-         case "hostname":
-           $result = $this->hostname($status); break;
-         case "nameserver":
-           $result = $this->nameserver($status); break;
-         case "password":
-           $result = $this->password($status); break;
-         case "reinstall":
-           $result = $this->reinstall($status); break;
-      }
-      $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
-      return [$result[0], $log, $result[1]];
+       $action = $this->getAction();
+       $result = $this->$action($status);
+       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
+       return [$result, $log];
      }
 
      // All of the action code is below.
@@ -210,14 +200,86 @@ class LXCAction
        }
      }
 
+     public function status($status)
+     {
+       $result = $status;
+       if ($result[0] && $result[1]) {
+         $result = $result[1];
+         $result[0] = true;
+         $result[1] = null;
+         $result["os"] = $this->getServer()->getOs();
+         if ($this->getServer()->getSuspended()) {
+           $result["status"] = "suspended";
+         }
+         $result["node"] = $this->getNode()->getName();
+         $result["mem"] = round($result["mem"]/(1024*1024), 0);
+         $result["swap"] = round($result["swap"]/(1024*1024), 0);
+         $result["disk"] = round($result["disk"]/(1024*1024*1024), 1);
+         $result["cpu"] = round($result["cpu"]*100, 1);
+         $result["availablemem"] = $this->getServer()->getRam();
+         $result["availableswap"] = $this->getServer()->getSwap();
+         $result["availabledisk"] = $this->getServer()->getDisk();
+         $result["ram_percent"] = round($result["mem"]*100 / $this->getServer()->getRam(), 0);
+         $result["swap_percent"] = round($result["swap"]*100 / $this->getServer()->getSwap(), 0);
+         $result["disk_percent"] = round($result["disk"]*100 / $this->getServer()->getDisk(), 0);
+         $result["ip"] = $this->getServer()->getIp();
+         $result["nameserver"] = $this->getServer()->getNameserver();
+         $dtF = new \DateTime('@0');
+         $dtT = new \DateTime("@".$result["uptime"]);
+         $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
+         return $result;
+       } else {
+         return [false, "Could not fetch status"];
+       }
+     }
+
+     public function graph($status)
+     {
+       $type = $this->getValue()[0];
+       $period = $this->getValue()[1];
+       $result = $this->getNode()->command("get", $this->getPath()."/rrd", $this->getHash(), ['ds' => $type, 'timeframe' => $period], true);
+       return $result;
+     }
+
+     public function resize($status)
+     {
+       if (!$this->getUser()->getIsAdmin()) {
+         return [false, "Permission Denied"];
+       }
+
+       if ($status[1]["status"] == "running") {
+         $result = $this->getNode()->command("create", $this->getPath()."/status/stop", $this->getHash());
+         if (!$result[0]) {
+           return $result;
+         }
+         $boot = true;
+      }
+       $result = $this->getNode()->command("set", $this->getPath()."/resize", $this->getHash(), ['disk' => 'rootfs', 'size' => $this->getServer()->getDisk().'G']);
+       if (isset($boot)) {
+         sleep(3);
+         $this->getNode()->command("create", $this->getPath()."/status/start", $this->getHash());
+       }
+       if (!$result[0] && isset($result[1]["_root"])) {
+         return [false, "Disk is already correct size"];
+       }
+       return $result;
+     }
+
+
     // Constructor
-    public function __construct ($server, $node, $os, $user, $request, $hash) {
-      $this->server = $server;
-      $this->node = $node;
-      $this->os = $os;
-      $this->request = $request;
+    public function __construct ($params, $hash, $action = null, $value = null) {
+      $this->server = $params[0];
+      $this->node = $params[1];
+      $this->os = $params[2];
+      $this->request = $params[4];
       $this->hash = $hash;
-      $this->user = $user;
+      $this->user = $params[3];
+      if ($action != null) {
+        $this->action = $action;
+      }
+      if ($value != null) {
+        $this->value = $value;
+      }
     }
 
     public function isValidHostname($hostname) {

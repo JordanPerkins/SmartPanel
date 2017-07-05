@@ -42,4 +42,12 @@ class ServerRepository extends EntityRepository
     return $results->getSingleScalarResult();
   }
 
+  // Fetch all
+  public function findAll()
+  {
+    $results = $this->createQueryBuilder('u')
+        ->getQuery();
+    return $results->getResult();
+  }
+
 }

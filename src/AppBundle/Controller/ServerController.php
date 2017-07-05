@@ -68,7 +68,7 @@ class ServerController extends Controller
       $hash = $this->getParameter('secret_hash');
 
       if ($server->getType() == "lxc") {
-        $action = new LXCAction($server, $node, $template, $user, $request, $hash);
+        $action = new LXCAction([$server, $node, $template, $user, $request], $hash);
         $page = 'server/lxc.html.twig';
       }
 
@@ -99,16 +99,16 @@ class ServerController extends Controller
             $em->persist($result[1]);
             $em->flush();
 
-            if ($result[0]) {
+            if ($result[0][0]) {
               $em = $this->getDoctrine()->getManager();
               $em->persist($server);
               $em->flush();
               return new Response(1);
             } else {
-              if (is_array($result[2])) {
+              if (is_array($result[0][1])) {
                 return new Response(0);
               } else {
-                return new Response($result[2]);
+                return new Response($result[0][1]);
               }
           }
 
@@ -173,12 +173,13 @@ class ServerController extends Controller
 
         $hash = $this->getParameter('secret_hash');
 
-        try {
-          $data = $server->getStatus($node, $hash);
-        } catch (\Exception $e) {
-          $data = 0;
+        if ($server->getType() == "lxc") {
+          $action = new LXCAction([$server, $node, null, $user, $request], $hash, "status");
+          $data = $action->handle()[0];
+          if ($data[0] == false) {
+            $data = false;
+          }
         }
-
 
       }
 
@@ -222,16 +223,15 @@ class ServerController extends Controller
 
       $hash = $this->getParameter('secret_hash');
 
-      try {
-        $data = $server->getGraph($node, $type, $period, $hash);
-      } catch (\Exception $e) {
-        return new Response(0);
+      if ($server->getType() == "lxc") {
+        $action = new LXCAction([$server, $node, null, $user, $request], $hash, "graph", [$type, $period]);
+        $data = $action->handle()[0];
       }
-
 
       $headers = array(
           'Content-Type'     => 'image/png',
         );
+
       return new Response($data, 200, $headers);
 
     }
@@ -263,6 +263,29 @@ class ServerController extends Controller
                             'settings' => $settings,
                           ]);
 
+  }
+
+  // Used on route /admin/servers to display all servers
+  public function listAllAction(UserInterface $user)
+  {
+
+    if (!$user->getIsAdmin()) {
+      return new RedirectResponse('/');
+    }
+
+    $settings = $this->get('app.settings')->get();
+
+    // Get servers using the entity repository using the active user's ID
+    $servers = $this->getDoctrine()
+      ->getRepository('AppBundle:Server')
+      ->findAll();
+
+    // Render page returning server list as the servers variable
+    return $this->render('server/listall.html.twig', [
+                          'page_title' => 'Virtual Servers',
+                          'settings' => $settings,
+                          'servers' => $servers
+                        ]);
   }
 
 }
