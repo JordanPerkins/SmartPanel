@@ -92,3 +92,7 @@ plans_edit:
 servers_list:
     path: /admin/servers
     defaults:  { _controller: AppBundle:Server:listAll }
+
+view_log:
+    path: /admin/logs/{type}
+    defaults:  { _controller: AppBundle:Log:view }

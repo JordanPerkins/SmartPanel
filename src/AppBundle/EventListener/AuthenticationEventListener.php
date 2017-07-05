@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
-use AppBundle\Entity\Log;
+use AppBundle\Entity\AuthenticationLog;
 
 class AuthenticationEventListener implements AuthenticationSuccessHandlerInterface
 {
@@ -28,7 +28,7 @@ class AuthenticationEventListener implements AuthenticationSuccessHandlerInterfa
     {
       $user = $token->getUser();
       if ($user->getIsActive()) {
-        $log = new Log("login", new \DateTime("now"), $request->getClientIp(), null, 0, $user->getId(), true, null);
+        $log = new AuthenticationLog($user->getId(), new \DateTime("now"), $request->getClientIp(), true);
         $this->em->persist($log);
         $this->em->flush();
         $response = new Response();

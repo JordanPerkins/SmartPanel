@@ -1,0 +1,45 @@
+<?php
+/* Log entity created by Jordan Perkins
+ * This is used to log user actions
+*/
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+
+/**
+ * @ORM\Table(name="app_authlogs")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthLogRepository")
+ */
+class AuthenticationLog extends Controller
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="integer", length=64)
+     */
+    private $uid;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $datetime;
+
+    /**
+     * @ORM\Column(type="integer", length=64)
+     */
+    private $ip;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $success;
+
+}

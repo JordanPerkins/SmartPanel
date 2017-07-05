@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Reset;
-use AppBundle\Entity\Log;
+use AppBundle\Entity\AuthenticationLog;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -30,7 +30,7 @@ class SecurityController extends Controller
          $user = $this->getDoctrine()
            ->getRepository('AppBundle:User')
            ->findByUsername($lastUsername);
-         $log = new Log("login", new \DateTime("now"), $request->getClientIp(), null, 0, $user->getId(), false);
+         $log = new AuthenticationLog($user->getId(), new \DateTime("now"), $request->getClientIp(), false);
          $em = $this->getDoctrine()->getManager();
          $em->persist($log);
          $em->flush();
