@@ -201,6 +201,13 @@
                         Statistics
                     </a>
                 </li>
+                {% if app.user.isAdmin == true %}
+                <li>
+                    <a href="#admin" title="Admin">
+                        Admin
+                    </a>
+                </li>
+                {%endif%}
             </ul>
         </h3>
         <div id="settings">
@@ -475,6 +482,80 @@ Access
         <div id="firewall">
             Tab 3 content goes here ...
         </div>
+        {% if app.user.isAdmin == true %}
+        <div id="admin">
+        <div class="panel">
+<div class="panel-body">
+<h3 class="title-hero">
+   Operations
+</h3>
+
+<div class="example-box-wrapper">
+
+   <div class="content-box remove-border dashboard-buttons clearfix">
+   <a data-toggle="modal" data-target="#boot" class="btn vertical-button remove-border btn-success" title="">
+       <span class="glyph-icon icon-separator-vertical">
+           <i class="glyph-icon icon-cubes"></i>
+       </span>
+       <span class="button-content">Resources</span>
+   </a>
+ <a data-toggle="modal" data-target="#shutdown" class="btn vertical-button remove-border btn-yellow" title="">
+         <span class="glyph-icon icon-separator-vertical">
+             <i class="glyph-icon icon-hdd-o"></i>
+         </span>
+         <span class="button-content">Resize Disk</span>
+     </a>
+     <a data-toggle="modal" data-target="#restart" class="btn vertical-button remove-border btn-warning" title="">
+         <span class="glyph-icon icon-separator-vertical">
+             <i class="glyph-icon icon-arrow-right"></i>
+         </span>
+         <span class="button-content">Migrate</span>
+     </a>
+     <a data-toggle="modal" data-target="#restart" class="btn vertical-button remove-border btn-danger" title="">
+         <span class="glyph-icon icon-separator-vertical">
+             <i class="glyph-icon icon-remove"></i>
+         </span>
+         <span class="button-content">Terminate</span>
+     </a>
+   </div>
+</div>
+
+</div>
+</div>
+<div class="panel">
+<div class="panel-body">
+<h3 class="title-hero">
+IP Management
+</h3>
+
+<div class="example-box-wrapper">
+
+<div class="content-box remove-border dashboard-buttons clearfix">
+<a data-toggle="modal" data-target="#hostname" class="btn vertical-button remove-border btn-info" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-globe"></i>
+</span>
+<span class="button-content">Manage IPv4</span>
+</a>
+<a data-toggle="modal" data-target="#reinstall" class="btn vertical-button remove-border btn-purple" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-random"></i>
+</span>
+<span class="button-content">Manage IPv6</span>
+</a>
+<a data-toggle="modal" data-target="#dns" class="btn vertical-button remove-border btn-azure" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-exchange"></i>
+</span>
+<span class="button-content">Reset B/w</span>
+</a>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+{%endif%}
         <div id="statistics">
         <div class="form-group">
           <label class="col-sm-3 control-label">Select Period</label>

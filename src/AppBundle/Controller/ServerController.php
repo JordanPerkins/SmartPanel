@@ -53,7 +53,7 @@ class ServerController extends Controller
       if (!$server) {
           return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
-      } elseif($user->getId() != $server->getUID()) {
+    } elseif(!$user->getIsAdmin() && $user->getId() != $server->getUID()) {
           return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to you', 'settings' => $settings]);
       }
 
@@ -140,7 +140,7 @@ class ServerController extends Controller
       if (!$server) {
           return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
-      } elseif($user->getId() != $server->getUID()) {
+    } elseif(!$user->getIsAdmin() &&  $user->getId() != $server->getUID()) {
           return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to you', 'settings' => $settings]);
       }
 
@@ -202,7 +202,7 @@ class ServerController extends Controller
       if (!$server) {
           return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server not found', 'settings' => $settings]);
       // Server does not belong to the user
-      } elseif($user->getId() != $server->getUID()) {
+    } elseif(!$user->getIsAdmin() && $user->getId() != $server->getUID()) {
           return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Server does not belong to you', 'settings' => $settings]);
       }
 
