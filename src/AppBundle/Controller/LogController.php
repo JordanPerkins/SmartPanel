@@ -30,7 +30,7 @@ class LogController extends Controller
         ->findAll();
 
       // Render the page, passing on the user list for displaying.
-      return $this->render('admin/log.html.twig', [
+      return $this->render('admin/authlog.html.twig', [
                             'page_title' => 'Authentication Log',
                             'logs' => $logs,
                             'settings' => $settings,

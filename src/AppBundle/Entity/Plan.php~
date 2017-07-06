@@ -79,6 +79,16 @@ class Plan
     private $tty;
 
     /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $bandwidth;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $nameserver;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $unprivileged;
@@ -475,5 +485,53 @@ class Plan
     public function getSearchdomain()
     {
         return $this->searchdomain;
+    }
+
+    /**
+     * Set ipv4
+     *
+     * @param integer $ipv4
+     *
+     * @return Plan
+     */
+    public function setIpv4($ipv4)
+    {
+        $this->ipv4 = $ipv4;
+
+        return $this;
+    }
+
+    /**
+     * Get ipv4
+     *
+     * @return integer
+     */
+    public function getIpv4()
+    {
+        return $this->ipv4;
+    }
+
+    /**
+     * Set ipv6
+     *
+     * @param integer $ipv6
+     *
+     * @return Plan
+     */
+    public function setIpv6($ipv6)
+    {
+        $this->ipv6 = $ipv6;
+
+        return $this;
+    }
+
+    /**
+     * Get ipv6
+     *
+     * @return integer
+     */
+    public function getIpv6()
+    {
+        return $this->ipv6;
     }
 }

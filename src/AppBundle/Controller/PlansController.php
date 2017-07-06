@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\FormError;
@@ -39,17 +40,19 @@ class PlansController extends Controller
           $form = $this->createFormBuilder($plan)
               ->add('name', TextType::class, array('error_bubbling' => true))
               ->add('type', HiddenType::class, array('error_bubbling' => true, 'data'  => 'lxc'))
-              ->add('disk', TextType::class, array('error_bubbling' => true))
-              ->add('ram', TextType::class, array('error_bubbling' => true))
-              ->add('swap', TextType::class, array('error_bubbling' => true))
+              ->add('disk', IntegerType::class, array('error_bubbling' => true))
+              ->add('ram', IntegerType::class, array('error_bubbling' => true))
+              ->add('swap', IntegerType::class, array('error_bubbling' => true))
               ->add('console', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
               ->add('cmode', ChoiceType::class, array('error_bubbling' => true, 'choices'  => array('/dev/tty' => 'tty', '/dev/console' => 'console', 'shell mode' => 'shell')))
-              ->add('cpu', TextType::class, array('error_bubbling' => true))
-              ->add('cpulimit', TextType::class, array('error_bubbling' => true))
-              ->add('cpuunits', TextType::class, array('error_bubbling' => true))
-              ->add('ipv4', TextType::class, array('error_bubbling' => true))
-              ->add('ipv6', TextType::class, array('error_bubbling' => true))
-              ->add('tty', TextType::class, array('error_bubbling' => true))
+              ->add('cpu', IntegerType::class, array('error_bubbling' => true))
+              ->add('cpulimit', IntegerType::class, array('error_bubbling' => true))
+              ->add('cpuunits', IntegerType::class, array('error_bubbling' => true))
+              ->add('ipv4', IntegerType::class, array('error_bubbling' => true))
+              ->add('ipv6', IntegerType::class, array('error_bubbling' => true))
+              ->add('tty', IntegerType::class, array('error_bubbling' => true))
+              ->add('bandwidth', IntegerType::class, array('error_bubbling' => true))
+              ->add('nameserver', TextType::class, array('error_bubbling' => true))
               ->add('unprivileged', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
               ->add('onboot', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
               ->add('storage', TextType::class, array('error_bubbling' => true))
@@ -169,6 +172,8 @@ class PlansController extends Controller
                 ->add('ipv4', TextType::class, array('error_bubbling' => true))
                 ->add('ipv6', TextType::class, array('error_bubbling' => true))
                 ->add('tty', TextType::class, array('error_bubbling' => true))
+                ->add('bandwidth', IntegerType::class, array('error_bubbling' => true))
+                ->add('nameserver', TextType::class, array('error_bubbling' => true))
                 ->add('unprivileged', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
                 ->add('onboot', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
                 ->add('storage', TextType::class, array('error_bubbling' => true))

@@ -84,6 +84,7 @@ function graph() {
 
 
 $(document).on('change','#graphselect',graph);
+$(document).on('click','#refresh',status);
 
 
 function status() {
@@ -93,9 +94,13 @@ function status() {
         if (result == false) {
           $("#controlpanel").hide();
           $("#downerror").show();
+        } else if (result == "vm-missing") {
+          $("#controlpanel").hide();
+          $("#missingerror").show();
         } else {
           $("#controlpanel").show();
           $("#downerror").hide();
+          $("#missingerror").hide();
           if (result.status == "running") {
             $("#status").html("Online");
             $("#uptime").show();

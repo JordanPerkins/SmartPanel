@@ -78,11 +78,58 @@
 </div>
 </div>
 </div>
+<div id="missingerror" style="display: none;">
+<div class="example-box-wrapper">
+<div class="alert alert-danger">
+<div class="bg-red alert-icon">
+    <i class="glyph-icon icon-times"></i>
+</div>
+  <div class="alert-content">
+  <h4 class="alert-title">Error</h4>
+  <p>The VM does not exist on the host node. Please click the button below to rebuild it.</p>
+</div>
+</div>
+</div>
+<a data-toggle="modal" data-target="#reinstall" class="btn vertical-button remove-border btn-purple" title="">
+<span class="glyph-icon icon-separator-vertical">
+<i class="glyph-icon icon-download"></i>
+</span>
+<span class="button-content">Reinstall OS</span>
+</a>
+</div>
+<div class="modal fade" id="reinstall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+   <div class="modal-content">
+       <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">Reinstall OS</h4>
+       </div>
+       <div class="modal-body">
+       <p><strong>WARNING:</strong> All existing data will be lost</p><br>
+       <div class="form-group">
+       <label class="col-sm-3 control-label">New OS</label>
+       <div class="col-sm-6">
+       <select class="value form-control" data-value="reinstall">
+        {% for template in templates %}
+         <option value="{{ template.file }}">{{ template.name }}</option>
+        {% endfor %}
+       </select>
+       </div>
+       </div>
+       <br>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="reinstall">Confirm</button>
+       </div>
+   </div>
+</div>
+</div>
 <p style="text-align:center"><img src="{{ asset('assets/images/spinner/loader-dark.gif') }}"" id="mainspinner" width="100px" alt=""></p>
 <div class="panel" id="controlpanel" style="display: none;">
 <div class="panel-body">
     <h3 class="title-hero">
-        <span class="hostname"></span>
+        <span class="hostname"></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="refresh"><span class="bs-label label-blue-alt"><i class="glyph-icon icon-rotate-left"></i> Refresh</span></a>
     </h3>
     <div class="example-box-wrapper">
     {{ form_start(form, {'attr': {'id': 'actionform'}}) }}
@@ -425,34 +472,7 @@ Access
    </div>
 </div>
 </div>
-<div class="modal fade" id="reinstall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-   <div class="modal-content">
-       <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-           <h4 class="modal-title">Reinstall OS</h4>
-       </div>
-       <div class="modal-body">
-       <p><strong>WARNING:</strong> All existing data will be lost</p><br>
-       <div class="form-group">
-       <label class="col-sm-3 control-label">New OS</label>
-       <div class="col-sm-6">
-       <select class="value form-control" data-value="reinstall">
-        {% for template in templates %}
-         <option value="{{ template.file }}">{{ template.name }}</option>
-        {% endfor %}
-       </select>
-       </div>
-       </div>
-       <br>
-       </div>
-       <div class="modal-footer">
-           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-           <button type="button" class="action btn btn-primary" data-dismiss="modal" data-value="reinstall">Confirm</button>
-       </div>
-   </div>
-</div>
-</div>
+
         </div>
         <div id="network">
         <div class="panel">

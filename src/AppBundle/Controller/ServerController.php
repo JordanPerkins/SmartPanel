@@ -179,7 +179,11 @@ class ServerController extends Controller
           $action = new LXCAction([$server, $node, null, $user, $request], $hash, "status");
           $data = $action->handle()[0];
           if ($data[0] == false) {
-            $data = false;
+            if ($data[1] == "Could not fetch status") {
+              $data = "vm-missing";
+            } else {
+              $data = false;
+            }
           }
         }
 
