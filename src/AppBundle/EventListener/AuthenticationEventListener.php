@@ -28,7 +28,7 @@ class AuthenticationEventListener implements AuthenticationSuccessHandlerInterfa
     {
       $user = $token->getUser();
       if ($user->getIsActive()) {
-        $log = new AuthenticationLog($user->getId(), new \DateTime("now"), $request->getClientIp(), true);
+        $log = new AuthenticationLog($user->getId(), new \DateTime("now"), $request->getClientIp(), true, $user->getIsAdmin());
         $this->em->persist($log);
         $this->em->flush();
         $response = new Response();

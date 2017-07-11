@@ -7,6 +7,7 @@ namespace AppBundle\Form\Model;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Log;
+use AppBundle\Entity\AdminLog;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Form\Model\Crypt;
@@ -48,7 +49,11 @@ class LXCAction
          $status = $this->getNode()->command("get", $this->getPath()."/status/current", $this->getHash());
        } catch (\Exception $e) {
          $error = "Host node is down";
-         $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), false, json_encode($error));
+         if ($this->getUser()->getIsAdmin()) {
+           $log = new AdminLog($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), false, json_encode($error));
+         } else {
+           $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), false, json_encode($error));
+         }
          return [[false, $error], $log];
        }
 
@@ -59,7 +64,11 @@ class LXCAction
        }
 
        $result = $this->$action($status);
-       $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
+       if ($this->getUser()->getIsAdmin()) {
+         $log = new AdminLog($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
+       } else {
+         $log = new Log($this->getAction(), new \DateTime("now"), $this->getRequest()->getClientIp(), $this->getValue(), $this->getServer()->getId(), $this->getUser()->getId(), $result[0], json_encode($result[1]));
+       }
        return [$result, $log];
      }
 

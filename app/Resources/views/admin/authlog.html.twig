@@ -82,6 +82,7 @@ There are no logs to show.
 <th>User ID</th>
 <th>IP</th>
 <th>Success</th>
+<th>Admin</th>
 </tr>
 </thead>
 
@@ -91,6 +92,7 @@ There are no logs to show.
 <th>User ID</th>
 <th>IP</th>
 <th>Success</th>
+<th>Admin</th>
 </tr>
 </tfoot>
 <tbody>
@@ -100,6 +102,7 @@ There are no logs to show.
   <td><a href="/admin/clients/{{ log.uid }}">#{{ log.uid }}</a></td>
   <td>{{ log.ip }}</td>
   <td>{% if log.success == 1 %}Yes{%else%}No{%endif%}</td>
+  <td>{% if log.admin == 1 %}Yes{%else%}No{%endif%}</td>
 </tr>
 {% endfor %}
 </tbody>

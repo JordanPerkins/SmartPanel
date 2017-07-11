@@ -42,11 +42,17 @@ class AuthenticationLog extends Controller
      */
     private $success;
 
-    public function __construct ($uid, $datetime, $ip, $success) {
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $admin;
+
+    public function __construct ($uid, $datetime, $ip, $success, $admin) {
       $this->uid = $uid;
       $this->datetime = $datetime;
       $this->ip = $ip;
       $this->success = $success;
+      $this->admin = $admin;
     }
 
 
@@ -154,5 +160,29 @@ class AuthenticationLog extends Controller
     public function getSuccess()
     {
         return $this->success;
+    }
+
+    /**
+     * Set admin
+     *
+     * @param boolean $admin
+     *
+     * @return AuthenticationLog
+     */
+    public function setAdmin($admin)
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    /**
+     * Get admin
+     *
+     * @return boolean
+     */
+    public function getAdmin()
+    {
+        return $this->admin;
     }
 }

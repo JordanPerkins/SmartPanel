@@ -174,7 +174,7 @@ class ClientsController extends Controller
         $password = $form->getData();
         $encoder = $this->container->get('security.password_encoder');
         $encoded = $encoder->encodePassword($usr, $password->getNewPassword());
-        $user->setPassword($usr);
+        $usr->setPassword($encoded);
 
         // Write to the database.
         $em = $this->getDoctrine()->getManager();
@@ -236,7 +236,7 @@ class ClientsController extends Controller
               $form->get('password')->addError(new FormError("Password must contain 8 characters or more."));
             } else {
 
-              $encoder = $this->container->get('security.password_encoder');
+              $encoder = $this->container->get('sesuccescurity.password_encoder');
               $encoded = $encoder->encodePassword($usr, $usr->getPassword());
               $usr->setPassword($encoded);
 

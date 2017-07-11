@@ -30,7 +30,7 @@ class SecurityController extends Controller
          $user = $this->getDoctrine()
            ->getRepository('AppBundle:User')
            ->findByUsername($lastUsername);
-         $log = new AuthenticationLog($user->getId(), new \DateTime("now"), $request->getClientIp(), false);
+         $log = new AuthenticationLog($user->getId(), new \DateTime("now"), $request->getClientIp(), false, $user->getIsAdmin());
          $em = $this->getDoctrine()->getManager();
          $em->persist($log);
          $em->flush();

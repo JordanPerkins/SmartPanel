@@ -33,7 +33,7 @@ class AuthenticationLog extends Controller
     private $datetime;
 
     /**
-     * @ORM\Column(type="integer", length=64)
+     * @ORM\Column(type="string", length=64)
      */
     private $ip;
 
@@ -42,4 +42,123 @@ class AuthenticationLog extends Controller
      */
     private $success;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $admin;
+
+    public function __construct ($uid, $datetime, $ip, $success, $admin) {
+      $this->uid = $uid;
+      $this->datetime = $datetime;
+      $this->ip = $ip;
+      $this->success = $success;
+      $this->admin = $admin;
+    }
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param integer $uid
+     *
+     * @return AuthenticationLog
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return integer
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * Set datetime
+     *
+     * @param \DateTime $datetime
+     *
+     * @return AuthenticationLog
+     */
+    public function setDatetime($datetime)
+    {
+        $this->datetime = $datetime;
+
+        return $this;
+    }
+
+    /**
+     * Get datetime
+     *
+     * @return \DateTime
+     */
+    public function getDatetime()
+    {
+        return $this->datetime;
+    }
+
+    /**
+     * Set ip
+     *
+     * @param integer $ip
+     *
+     * @return AuthenticationLog
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    /**
+     * Get ip
+     *
+     * @return integer
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
+     * Set success
+     *
+     * @param boolean $success
+     *
+     * @return AuthenticationLog
+     */
+    public function setSuccess($success)
+    {
+        $this->success = $success;
+
+        return $this;
+    }
+
+    /**
+     * Get success
+     *
+     * @return boolean
+     */
+    public function getSuccess()
+    {
+        return $this->success;
+    }
 }
