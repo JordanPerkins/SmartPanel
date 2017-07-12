@@ -14,8 +14,8 @@ use AppBundle\Entity\User;
 
 class LogController extends Controller
 {
-    // Applies to the /admin/clients route.
-    public function viewAction(UserInterface $user, Request $request)
+    // Applies to the /admin/logs/auth
+    public function authAction(UserInterface $user, Request $request)
     {
 
       // User is not admin, redirect to dashboard.
@@ -36,4 +36,57 @@ class LogController extends Controller
                             'settings' => $settings,
                             ]);
     }
+
+    public function viewAction($type = null, UserInterface $user)
+    {
+
+      $actions = [
+        'boot' => 'Start VM',
+        'shutdown' => 'Shutdown VM',
+        'restart' => 'Reboot VM',
+        'hostname' => 'Set Hostname',
+        'nameserver' => 'Set Nameservers',
+        'password' => 'Change Root Password',
+        'reinstall' => 'Reinstall OS',
+        'resize' => 'Resize Disk',
+      ];
+
+      $settings = $this->get('app.settings')->get();
+
+      // Is Event Log
+      if ($type == null) {
+
+        // Get logs using the entity repository using the active user's ID
+        $logs = $this->getDoctrine()->getRepository('AppBundle:Log')->findAllByID($user->getId());
+
+        $title = "Event Log";
+        $error = false;
+
+      } else if ($user->getIsAdmin()) {
+        $error = true;
+        if ($type == "client") {
+          $logs = $this->getDoctrine()->getRepository('AppBundle:Log')->findAll();
+          $title = "Client Log";
+        } else if ($type == "admin") {
+          $logs = $this->getDoctrine()->getRepository('AppBundle:AdminLog')->findAll();
+          $title = "Admin Log";
+        }
+      } else {
+        return new RedirectResponse('/');
+      }
+
+      foreach ($logs as $log) {
+        if ($log->getAction() == "reinstall") {
+          $os = $this->getDoctrine()->getRepository('AppBundle:Template')->findByFile($log->getValue());
+          if ($os != null) {
+            $log->setValue($os->getName());
+          }
+        }
+        $log->setAction($actions[$log->getAction()]);
+
+      }
+      return $this->render('server/logs.html.twig', ['page_title' => $title, 'logs' => $logs, 'settings' => $settings, 'error' => $error]);
+
+    }
+
   }

@@ -38,4 +38,11 @@ class LogRepository extends EntityRepository
     return false;
   }
 
+  public function findAll()
+  {
+    $results = $this->createQueryBuilder('u')
+        ->getQuery();
+    return $results->getResult();
+  }
+
 }

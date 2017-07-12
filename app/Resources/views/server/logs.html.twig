@@ -61,8 +61,7 @@
 
 
 <div id="page-title">
-<h2>Event Log</h2>
-<p>Your latest account actions.</p>
+<h2>{{ page_title }}</h2>
 
 </div>
 
@@ -72,8 +71,8 @@
 Logs
 </h3>
 <div class="example-box-wrapper">
-{% if events is empty %}
-There are no events to show.
+{% if logs is empty %}
+There are no logs to show.
 {% else %}
 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="datatable-example">
 <thead>
@@ -84,6 +83,9 @@ There are no events to show.
 <th>Action</th>
 <th>Value</th>
 <th>Result</th>
+{% if error == true %}
+<th>Error</th>
+{%endif%}
 </tr>
 </thead>
 
@@ -95,48 +97,23 @@ There are no events to show.
 <th>Action</th>
 <th>Value</th>
 <th>Result</th>
+{% if error == true %}
+<th>Error</th>
+{%endif%}
 </tr>
 </tfoot>
 <tbody>
-{% for event in events %}
+{% for event in logs %}
 <tr>
   <td>{{ event.datetime|date("d/m/Y H:i:s") }}</td>
   <td>{% if event.service == 0 %} n/a {%else%} <a href="/servers/{{ event.service }}">#{{ event.service }}</a> {%endif%}</td>
   <td>{{ event.ip }}</td>
-  <td>
-  {% if event.action == "login" %}
-  User Login
-  {% elseif event.action == "boot" %}
-  Start VM
-  {% elseif event.action == "shutdown" %}
-  Stop VM
-  {% elseif event.action == "restart" %}
-  Reboot VM
-  {% elseif event.action == "password" %}
-  Set VM Root Password
-  {% elseif event.action == "reinstall" %}
-  Reinstall OS
-  {% elseif event.action == "hostname" %}
-  Set VM Hostname
-  {% elseif event.action == "tuntap_enable" or event.action == "tuntap_disable"  %}
-  Toggle TUN/TAP
-  {% elseif event.action == "fuse_enable" or event.action == "fuse_disable"  %}
-  Toggle FUSE
-  {%endif %}
-
-
-  </td>
-  <td>
-  {% if event.action == "reinstall" %}
-  {% for template in templates %}
-  {% if template.file == event.value %}
-  {{ template.name }}
-  {% endif %}
-    {% endfor %}
-  {% else %}
-  {{ event.value }}
-  {% endif %}</td>
+  <td>{{ event.action }}</td>
+  <td>{{ event.value }}</td>
   <td>{% if event.result %} Success {%else%} Failed {%endif%}</td>
+  {% if error == true %}
+  <td>{{ event.error }}</td>
+  {%endif%}
 </tr>
 {% endfor %}
 </tbody>

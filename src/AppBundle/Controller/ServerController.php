@@ -242,35 +242,6 @@ class ServerController extends Controller
 
     }
 
-    public function logAction(UserInterface $user)
-    {
-
-      $settings = $this->get('app.settings')->get();
-
-      // Get logs using the entity repository using the active user's ID
-      $logs = $this->getDoctrine()
-        ->getRepository('AppBundle:Log')
-        ->findAllByID($user->getId());
-
-      $templates = $this->getDoctrine()
-          ->getRepository('AppBundle:Template')
-          ->findAll();
-
-      // No logs found
-      if (!$logs) {
-        return $this->render('default/error.html.twig', ['page_title' => 'Error', 'error' => 'Event Log is empty', 'settings' => $settings]);
-      }
-
-      // Render page returning logs
-      return $this->render('server/logs.html.twig', [
-                            'page_title' => 'Event Log',
-                            'events' => $logs,
-                            'templates' => $templates,
-                            'settings' => $settings,
-                          ]);
-
-  }
-
   // Used on route /admin/servers to display all servers
   public function listAllAction(UserInterface $user)
   {
