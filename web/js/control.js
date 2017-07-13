@@ -41,7 +41,7 @@ $(document).ready(function () {
                   if (data == 0) {
                     data = "";
                   }
-                  $.jGrowl("There was an error completing the requested action.<br>"+ data, {
+                  $.jGrowl("There was an error completing the requested action.<br><i class=\"glyph-icon icon-times-circle\"> "+ data, {
                     sticky: false,
                     life: 10000,
                     position: 'top-right',

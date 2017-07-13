@@ -115,6 +115,10 @@ class Plan
      * @ORM\Column(type="integer", length=20)
      */
     private $ipv6;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $snapshots;
 
 
     /**
@@ -581,5 +585,29 @@ class Plan
     public function getNameserver()
     {
         return $this->nameserver;
+    }
+
+    /**
+     * Set snapshots
+     *
+     * @param integer $snapshots
+     *
+     * @return Plan
+     */
+    public function setSnapshots($snapshots)
+    {
+        $this->snapshots = $snapshots;
+
+        return $this;
+    }
+
+    /**
+     * Get snapshots
+     *
+     * @return integer
+     */
+    public function getSnapshots()
+    {
+        return $this->snapshots;
     }
 }

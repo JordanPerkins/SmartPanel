@@ -130,6 +130,10 @@ class Server extends Controller
      * @ORM\Column(type="string", length=64)
      */
     private $search;
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $snapshots;
 
     /**
      * Get id
@@ -812,5 +816,29 @@ class Server extends Controller
     public function getSuspended()
     {
         return $this->suspended;
+    }
+
+    /**
+     * Set snapshots
+     *
+     * @param integer $snapshots
+     *
+     * @return Server
+     */
+    public function setSnapshots($snapshots)
+    {
+        $this->snapshots = $snapshots;
+
+        return $this;
+    }
+
+    /**
+     * Get snapshots
+     *
+     * @return integer
+     */
+    public function getSnapshots()
+    {
+        return $this->snapshots;
     }
 }

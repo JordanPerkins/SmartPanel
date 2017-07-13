@@ -14,29 +14,6 @@ use AppBundle\Entity\User;
 
 class LogController extends Controller
 {
-    // Applies to the /admin/logs/auth
-    public function authAction(UserInterface $user, Request $request)
-    {
-
-      // User is not admin, redirect to dashboard.
-      if (!$user->getIsAdmin()) {
-        return new RedirectResponse('/');
-      }
-
-      $settings = $this->get('app.settings')->get();
-
-      $logs = $this->getDoctrine()
-        ->getRepository('AppBundle:AuthenticationLog')
-        ->findAll();
-
-      // Render the page, passing on the user list for displaying.
-      return $this->render('admin/authlog.html.twig', [
-                            'page_title' => 'Authentication Log',
-                            'logs' => $logs,
-                            'settings' => $settings,
-                            ]);
-    }
-
     public function viewAction($type = null, UserInterface $user)
     {
 
@@ -52,6 +29,8 @@ class LogController extends Controller
       ];
 
       $settings = $this->get('app.settings')->get();
+
+      $page = 'server/logs.html.twig';
 
       // Is Event Log
       if ($type == null) {
@@ -70,22 +49,28 @@ class LogController extends Controller
         } else if ($type == "admin") {
           $logs = $this->getDoctrine()->getRepository('AppBundle:AdminLog')->findAll();
           $title = "Admin Log";
+        } else if ($type == "auth") {
+          $logs = $this->getDoctrine()->getRepository('AppBundle:AuthenticationLog')->findAll();
+          $title = "Authentication Log";
+          $page = 'admin/authlog.html.twig';
         }
       } else {
         return new RedirectResponse('/');
       }
 
-      foreach ($logs as $log) {
-        if ($log->getAction() == "reinstall") {
-          $os = $this->getDoctrine()->getRepository('AppBundle:Template')->findByFile($log->getValue());
-          if ($os != null) {
-            $log->setValue($os->getName());
+      if ($type != "auth") {
+        foreach ($logs as $log) {
+          if ($log->getAction() == "reinstall") {
+            $os = $this->getDoctrine()->getRepository('AppBundle:Template')->findByFile($log->getValue());
+            if ($os != null) {
+              $log->setValue($os->getName());
+            }
           }
+          $log->setAction($actions[$log->getAction()]);
         }
-        $log->setAction($actions[$log->getAction()]);
-
       }
-      return $this->render('server/logs.html.twig', ['page_title' => $title, 'logs' => $logs, 'settings' => $settings, 'error' => $error]);
+
+      return $this->render($page, ['page_title' => $title, 'logs' => $logs, 'settings' => $settings, 'error' => $error]);
 
     }
 

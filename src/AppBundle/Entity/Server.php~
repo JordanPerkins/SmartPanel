@@ -130,55 +130,10 @@ class Server extends Controller
      * @ORM\Column(type="string", length=64)
      */
     private $search;
-
-    // Fetch server status
-    public function getStatus($node, $hash)
-    {
-      if ($this->getType() == "lxc") {
-        $type = "lxc";
-      } else if ($this->getType() == "kvm") {
-        $type = "qemu";
-      }
-
-      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$type."/".$this->getCtid()."/status/current", $hash);
-      if ($result[0] && $result[1]) {
-        $result = $result[1];
-        $result["os"] = $this->getOs();
-        $result["tuntap"] = $this->getTuntap();
-        $result["node"] = $node->getName();
-        $result["mem"] = round($result["mem"]/(1024*1024), 0);
-        $result["swap"] = round($result["swap"]/(1024*1024), 0);
-        $result["disk"] = round($result["disk"]/(1024*1024*1024), 1);
-        $result["cpu"] = round($result["cpu"]*100, 1);
-        $result["availablemem"] = $this->getRam();
-        $result["availableswap"] = $this->getSwap();
-        $result["availabledisk"] = $this->getDisk();
-        $result["ram_percent"] = round($result["mem"]*100 / $this->getRam(), 0);
-        $result["swap_percent"] = round($result["swap"]*100 / $this->getSwap(), 0);
-        $result["disk_percent"] = round($result["disk"]*100 / $this->getDisk(), 0);
-        $result["ip"] = $this->getIp();
-        $result["nameserver"] = $this->getNameserver();
-        $dtF = new \DateTime('@0');
-        $dtT = new \DateTime("@".$result["uptime"]);
-        $result["uptime"] = $dtF->diff($dtT)->format('%a days, %h hours, %i mins');
-        return $result;
-      } else {
-        return false;
-      }
-
-    }
-
-    // Fetch graph
-    public function getGraph($node, $type, $period, $hash)
-    {
-      if ($this->getType() == "lxc") {
-        $vmtype = "lxc";
-      } else if ($this->getType() == "kvm") {
-        $vmtype = "qemu";
-      }
-      $result = $node->command("get", "/nodes/".$node->getIdentifier()."/".$vmtype."/".$this->getCtid()."/rrd", $hash, ['ds' => $type, 'timeframe' => $period], true);
-      return $result;
-    }
+    /**
+     * @ORM\Column(type="integer", length=20)
+     */
+    private $snapshots;
 
     /**
      * Get id
@@ -837,5 +792,29 @@ class Server extends Controller
     public function getSearch()
     {
         return $this->search;
+    }
+
+    /**
+     * Set suspended
+     *
+     * @param boolean $suspended
+     *
+     * @return Server
+     */
+    public function setSuspended($suspended)
+    {
+        $this->suspended = $suspended;
+
+        return $this;
+    }
+
+    /**
+     * Get suspended
+     *
+     * @return boolean
+     */
+    public function getSuspended()
+    {
+        return $this->suspended;
     }
 }

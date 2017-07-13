@@ -93,10 +93,6 @@ servers_list:
     path: /admin/servers
     defaults:  { _controller: AppBundle:Server:listAll }
 
-auth_log:
-    path: /admin/logs/auth
-    defaults:  { _controller: AppBundle:Log:auth }
-
 view_log:
     path: /admin/logs/{type}
     defaults:  { _controller: AppBundle:Log:view }

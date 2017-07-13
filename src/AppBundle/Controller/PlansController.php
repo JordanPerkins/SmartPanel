@@ -51,6 +51,7 @@ class PlansController extends Controller
               ->add('ipv4', IntegerType::class, array('error_bubbling' => true))
               ->add('ipv6', IntegerType::class, array('error_bubbling' => true))
               ->add('tty', IntegerType::class, array('error_bubbling' => true))
+              ->add('snapshots', IntegerType::class, array('error_bubbling' => true))
               ->add('bandwidth', IntegerType::class, array('error_bubbling' => true))
               ->add('nameserver', TextType::class, array('error_bubbling' => true))
               ->add('unprivileged', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
@@ -80,6 +81,7 @@ class PlansController extends Controller
                             'form' => $form->createView(),
                             'submitted' => $form->isSubmitted(),
                             'settings' => $settings,
+                            'type' => $type,
                             ]);
 
     }
@@ -161,17 +163,18 @@ class PlansController extends Controller
                 // Render the form to be used.
                 $form = $this->createFormBuilder($plan)
                 ->add('name', TextType::class, array('error_bubbling' => true))
-                ->add('disk', TextType::class, array('error_bubbling' => true))
-                ->add('ram', TextType::class, array('error_bubbling' => true))
-                ->add('swap', TextType::class, array('error_bubbling' => true))
+                ->add('disk', IntegerType::class, array('error_bubbling' => true))
+                ->add('ram', IntegerType::class, array('error_bubbling' => true))
+                ->add('swap', IntegerType::class, array('error_bubbling' => true))
                 ->add('console', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
                 ->add('cmode', ChoiceType::class, array('error_bubbling' => true, 'choices'  => array('/dev/tty' => 'tty', '/dev/console' => 'console', 'shell mode' => 'shell')))
-                ->add('cpu', TextType::class, array('error_bubbling' => true))
-                ->add('cpulimit', TextType::class, array('error_bubbling' => true))
-                ->add('cpuunits', TextType::class, array('error_bubbling' => true))
-                ->add('ipv4', TextType::class, array('error_bubbling' => true))
-                ->add('ipv6', TextType::class, array('error_bubbling' => true))
-                ->add('tty', TextType::class, array('error_bubbling' => true))
+                ->add('cpu', IntegerType::class, array('error_bubbling' => true))
+                ->add('cpulimit', IntegerType::class, array('error_bubbling' => true))
+                ->add('cpuunits', IntegerType::class, array('error_bubbling' => true))
+                ->add('ipv4', IntegerType::class, array('error_bubbling' => true))
+                ->add('ipv6', IntegerType::class, array('error_bubbling' => true))
+                ->add('snapshots', IntegerType::class, array('error_bubbling' => true))
+                ->add('tty', IntegerType::class, array('error_bubbling' => true))
                 ->add('bandwidth', IntegerType::class, array('error_bubbling' => true))
                 ->add('nameserver', TextType::class, array('error_bubbling' => true))
                 ->add('unprivileged', CheckboxType::class, array('error_bubbling' => true, 'required' => false))
